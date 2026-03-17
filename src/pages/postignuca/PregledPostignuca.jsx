@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import PostignucaService from "../../services/postignuca/PostignucaService.js";
 
-export default function Postignuca() {
+export default function PregledPostignuca() {
     const [postignuca, setPostignuca] = useState([]);
 
     async function ucitajPostignuca() {

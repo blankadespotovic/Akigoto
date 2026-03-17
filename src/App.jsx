@@ -6,7 +6,7 @@ import { Route, Routes } from 'react-router-dom'
 import { RouteNames } from './constants'
 import Home from './pages/Home'
 import Profil from './pages/profil/profil'
-import Postignuca from './pages/postignuca/Postignuca'
+import PregledPostignuca from './pages/postignuca/PregledPostignuca'
 
 function App() {
 
@@ -17,7 +17,7 @@ function App() {
       <Routes>
         <Route path={RouteNames.HOME} element={<Home />} />
         <Route path={RouteNames.PROFIL} element={<Profil />} />
-        <Route path={RouteNames.POSTIGNUCA} element={<Postignuca />} />
+        <Route path={RouteNames.POSTIGNUCA} element={<PregledPostignuca />} />
       </Routes>
       <hr />
       &copy; Akigoto
