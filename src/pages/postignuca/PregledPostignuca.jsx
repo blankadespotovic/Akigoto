@@ -19,7 +19,7 @@ export default function PregledPostignuca() {
     return (
 
         <>
-            <Table style={{ textAlign: 'center' }}>
+            <Table>
                 <thead>
                     <tr>
                         <th>Naziv postignuća</th>
@@ -42,6 +42,7 @@ export default function PregledPostignuca() {
                                         color={postignuce.zavrseno ? 'green' : 'red'}
                                     />
                                 </td>
+                                <td></td>
                             </tr>
                         ))
                     ))}
