@@ -33,7 +33,7 @@ export default function PregledPostignuca() {
                     {postignuca && postignuca.map((kategorija) => (
                         kategorija.postignuca.map((postignuce) => (
                             <tr>
-                                <td><i>{postignuce.naziv}</i></td>
+                                <td>{postignuce.naziv}</td>
                                 <td>{postignuce.opis}</td>
                                 <td>{postignuce.procjena}</td>
                                 <td>
