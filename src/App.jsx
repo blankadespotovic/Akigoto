@@ -7,6 +7,7 @@ import { RouteNames } from './constants'
 import Home from './pages/Home'
 import Profil from './pages/profil/profil'
 import PregledPostignuca from './pages/postignuca/PregledPostignuca'
+import NovaPostignuca from './pages/postignuca/NovaPostignuca'
 
 function App() {
 
@@ -18,6 +19,7 @@ function App() {
         <Route path={RouteNames.HOME} element={<Home />} />
         <Route path={RouteNames.PROFIL} element={<Profil />} />
         <Route path={RouteNames.POSTIGNUCA} element={<PregledPostignuca />} />
+        <Route path={RouteNames.POSTIGNUCA_NOVA} element={<NovaPostignuca />} />
       </Routes>
       <hr />
       &copy; Akigoto

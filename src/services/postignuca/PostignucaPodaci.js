@@ -27,6 +27,7 @@ const pocetnaPostignuca = [
         procjena: "1 h",
         zavrseno: true,
     },
+    /*
     {
         sifra: "pocetno-5",
         naziv: "Katakana starter",
@@ -139,6 +140,7 @@ const pocetnaPostignuca = [
         procjena: "40 min",
         zavrseno: true,
     },
+    */
 ]
 
 export const postignuca = [
