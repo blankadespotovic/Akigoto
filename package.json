@@ -2,7 +2,6 @@
   "name": "akigoto",
   "private": true,
   "version": "0.0.0",
-  "homepage": "/bootstrap",
   "type": "module",
   "scripts": {
     "dev": "vite",
