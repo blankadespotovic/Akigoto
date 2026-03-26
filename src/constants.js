@@ -4,5 +4,6 @@ export const RouteNames = {
     HOME: '/',
     PROFIL: '/profil',
     POSTIGNUCA: '/postignuca',
-    POSTIGNUCA_NOVA: '/postignuca/nova'
+    POSTIGNUCA_NOVA: '/postignuca/nova',
+    PROMJENA_POSTIGNUCA: '/postignuca/:kategorija/:sifra'
 }

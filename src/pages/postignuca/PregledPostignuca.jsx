@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import PostignucaService from "../../services/postignuca/PostignucaService.js";
-import { Table } from "react-bootstrap";
+import { Button, Table } from "react-bootstrap";
 import { GrValidate } from "react-icons/gr";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { RouteNames } from "../../constants.js";
 
 export default function PregledPostignuca() {
+
+    const navigate = useNavigate()
     const [postignuca, setPostignuca] = useState([]);
 
     async function ucitajPostignuca() {
@@ -26,7 +28,7 @@ export default function PregledPostignuca() {
         Dodavanje novog postignuća
         </Link>
 
-            <Table>
+            <Table striped hover responsive>
                 <thead>
                     <tr>
                         <th>Naziv postignuća</th>
@@ -49,7 +51,9 @@ export default function PregledPostignuca() {
                                         color={postignuce.zavrseno ? 'green' : 'red'}
                                     />
                                 </td>
-                                <td></td>
+                                <td><Button onClick={()=>{navigate(`/postignuca/${kategorija.sifra}/${postignuce.sifra}`)}}>
+                                    Promijeni postignuće
+                                    </Button></td>
                             </tr>
                         ))
                     ))}

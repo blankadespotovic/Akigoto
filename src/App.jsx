@@ -8,6 +8,7 @@ import Home from './pages/Home'
 import Profil from './pages/profil/profil'
 import PregledPostignuca from './pages/postignuca/PregledPostignuca'
 import NovaPostignuca from './pages/postignuca/NovaPostignuca'
+import PromjenaPostignuca from './pages/postignuca/PromjenaPostignuca'
 
 function App() {
 
@@ -20,6 +21,7 @@ function App() {
         <Route path={RouteNames.PROFIL} element={<Profil />} />
         <Route path={RouteNames.POSTIGNUCA} element={<PregledPostignuca />} />
         <Route path={RouteNames.POSTIGNUCA_NOVA} element={<NovaPostignuca />} />
+        <Route path={RouteNames.PROMJENA_POSTIGNUCA} element={<PromjenaPostignuca />} />
       </Routes>
       <hr />
       &copy; Akigoto
