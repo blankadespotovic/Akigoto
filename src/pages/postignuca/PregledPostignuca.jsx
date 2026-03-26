@@ -44,7 +44,7 @@ export default function PregledPostignuca() {
                             <tr key={postignuce.sifra}>
                                 <td>{postignuce.naziv}</td>
                                 <td>{postignuce.opis}</td>
-                                <td>{postignuce.procjena}</td>
+                                <td>{postignuce.procjena} min</td>
                                 <td>
                                     <GrValidate
                                         size={25}

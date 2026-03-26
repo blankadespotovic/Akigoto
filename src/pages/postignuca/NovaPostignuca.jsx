@@ -44,7 +44,7 @@ export default function NovaPostignuca() {
 
                 <Form.Group controlId="procjena">
                     <Form.Label>Vremenska procjena dolaska do postignuća</Form.Label>
-                    <Form.Control type="text" name="procjena" />
+                    <Form.Control type="number" min={5} name="procjena" />
                 </Form.Group>
 
                 <Form.Group controlId="zavrseno">

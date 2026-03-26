@@ -60,7 +60,7 @@ export default function PromjenaPostignuca() {
 
                 <Form.Group controlId="procjena">
                     <Form.Label>Vremenska procjena dolaska do postignuća</Form.Label>
-                    <Form.Control type="text" name="procjena" defaultValue={postignuce.procjena}/>
+                    <Form.Control type="number" min={5} name="procjena" defaultValue={postignuce.procjena}/>
                 </Form.Group>
 
                 <Form.Group controlId="zavrseno">
