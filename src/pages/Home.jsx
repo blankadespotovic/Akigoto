@@ -11,8 +11,8 @@ export default function Home() {
                     Naziv <b>明語都 (Akigoto)</b> nosi posebno značenje <i>mjesto gdje jezik postaje jasan</i>. Upravo to je i cilj ove aplikacije, kroz intuitivne i zabavne metode učenja razviti razumijevanje japanskog jezika.</p>
 
                 <div style={{ display: "flex" }}>
-                    <img src={shiba} style={{ maxWidth: "35%", margin: "auto" }} />
-                    <div style={{ maxWidth: "35%", margin: "auto" }}>
+                    <img src={shiba} style={{ maxWidth: "30%", margin: "auto" }} />
+                    <div style={{ maxWidth: "40%", margin: "auto" }}>
                         <DotLottieReact
                             src="/KoiFish.lottie"
 

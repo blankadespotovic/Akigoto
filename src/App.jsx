@@ -24,7 +24,9 @@ function App() {
         <Route path={RouteNames.PROMJENA_POSTIGNUCA} element={<PromjenaPostignuca />} />
       </Routes>
       <hr />
+      <div style={{textAlign: "center"}}>
       &copy; Akigoto
+      </div>
     </Container>
   )
 }
