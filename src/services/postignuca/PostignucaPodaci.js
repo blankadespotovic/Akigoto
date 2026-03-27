@@ -147,7 +147,7 @@ export const postignuca = [
     {
         sifra: 1,
         kategorija: "Početni napredak",
-        postignuca: pocetnaPostignuca,
+        postignuca: [...pocetnaPostignuca],
     },
     {
         sifra: 2,

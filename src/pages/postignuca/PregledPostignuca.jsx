@@ -20,11 +20,11 @@ export default function PregledPostignuca() {
         ucitajPostignuca();
     }, []);
 
-    async function obrisi(sifra) {
+    async function obrisi(kategorija, postignuce) {
         if (!confirm('Sigurno obrisati?')) {
             return
         }
-        await PostignucaService.obrisi(sifra)
+        await PostignucaService.obrisi(kategorija, postignuce)
         ucitajPostignuca()
     }
 
