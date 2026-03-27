@@ -20,28 +20,8 @@ const pocetnaPostignuca = [
         procjena: 45,
         zavrseno: false,
     },
-    {
-        sifra: "pocetno-4",
-        naziv: "Hiragana starter",
-        opis: "Završi prvi set znakova hiragane",
-        procjena: 60,
-        zavrseno: true,
-    },
+   
     /*
-    {
-        sifra: "pocetno-5",
-        naziv: "Katakana starter",
-        opis: "Završi prvi set znakova katakane",
-        procjena: 60,
-        zavrseno: false,
-    },
-    {
-        sifra: "pocetno-6",
-        naziv: "Prva riječ",
-        opis: "Nauči 1 riječ",
-        procjena: 5,
-        zavrseno: true,
-    },
     {
         sifra: "pocetno-7",
         naziv: "Prvih 10 riječi",
@@ -56,6 +36,7 @@ const pocetnaPostignuca = [
         procjena: 20,
         zavrseno: true,
     },
+
     {
         sifra: "pocetno-9",
         naziv: "Bez greške",
@@ -77,6 +58,7 @@ const pocetnaPostignuca = [
         procjena: 4320,
         zavrseno: false,
     },
+    
     {
         sifra: "pocetno-12",
         naziv: "Prvi kanji",
@@ -143,6 +125,31 @@ const pocetnaPostignuca = [
     */
 ]
 
+const ucenjeIZnanje = [
+     {
+        sifra: "pocetno-4",
+        naziv: "Hiragana starter",
+        opis: "Završi prvi set znakova hiragane",
+        procjena: 60,
+        zavrseno: true,
+    },
+    
+    {
+        sifra: "pocetno-5",
+        naziv: "Katakana starter",
+        opis: "Završi prvi set znakova katakane",
+        procjena: 60,
+        zavrseno: false,
+    },
+    {
+        sifra: "pocetno-6",
+        naziv: "Prva riječ",
+        opis: "Nauči 1 riječ",
+        procjena: 5,
+        zavrseno: true,
+    },
+]
+
 export const postignuca = [
     {
         sifra: 1,
@@ -152,6 +159,6 @@ export const postignuca = [
     {
         sifra: 2,
         kategorija: "Učenje i znanje",
-        postignuca: [],
+        postignuca: [...ucenjeIZnanje],
     }
 ]

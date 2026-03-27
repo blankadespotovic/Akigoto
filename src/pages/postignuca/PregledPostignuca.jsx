@@ -35,23 +35,25 @@ export default function PregledPostignuca() {
                 className="btn btn-success w-100 my-3">
                 Dodavanje novog postignuća
             </Link>
-
-            <Table striped hover responsive>
-                <thead>
-                    <tr>
-                        <th>Naziv postignuća</th>
-                        <th>Opis</th>
-                        <th>Procjena</th>
-                        <th>Postignuto</th>
-                        <th>Akcija</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {postignuca && postignuca.map((kategorija) => (
-                        kategorija.postignuca.map((postignuce) => (
+            {postignuca && postignuca.map((kategorija) => (
+                kategorija.postignuca.length > 0 &&
+                <>
+                <h2>{kategorija.kategorija}</h2>
+                <Table striped hover responsive>
+                    <thead>
+                        <tr>
+                            <th>Naziv postignuća</th>
+                            <th>Opis</th>
+                            <th>Procjena</th>
+                            <th>Postignuto</th>
+                            <th>Akcija</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {kategorija.postignuca.map((postignuce) => (
                             <tr key={postignuce.sifra}>
                                 <td>{postignuce.naziv}</td>
-                                <td>{postignuce.opis}</td>
+                                <td style={{minWidth:"250px"}}>{postignuce.opis}</td>
                                 <td>{postignuce.procjena} min</td>
                                 <td>
                                     <GrValidate
@@ -62,17 +64,19 @@ export default function PregledPostignuca() {
                                 <td><Button onClick={() => { navigate(`/postignuca/${kategorija.sifra}/${postignuce.sifra}`) }}>
                                     Promijeni postignuće
                                 </Button>
-                                &nbsp;&nbsp;
-                                <Button variant="danger" onClick={() => { obrisi(kategorija.sifra,postignuce.sifra) }}>
-                                    Obriši
-                                </Button>
+                                    &nbsp;&nbsp;
+                                    <Button variant="danger" onClick={() => { obrisi(kategorija.sifra, postignuce.sifra) }}>
+                                        Obriši
+                                    </Button>
                                 </td>
                             </tr>
-                        ))
-                    ))}
-                </tbody>
+                ))}
+                        </tbody>
+                </Table>
+                </>
 
-            </Table>
+            ))}
+
         </>
 
     )
