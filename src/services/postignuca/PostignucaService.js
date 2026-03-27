@@ -32,10 +32,17 @@ function nadiIndexPostignuca(kateogrijaIndex, sifraPostignuca) {
     return postignuca[kateogrijaIndex].postignuca.findIndex(pos => pos.sifra === sifraPostignuca);
 }
 
+async function obrisi(sifra,postignuceSifra){
+    const kategorijaIndex = nadiIndexKategorije(sifra)
+    const index = nadiIndexPostignuca(kategorijaIndex, postignuceSifra)
+    postignuca[kategorijaIndex].postignuca.splice(index,1)
+}
+
 
 export default {
     get,
     dodaj,
     getBySifra,
-    promjeni
+    promjeni,
+    obrisi
 }

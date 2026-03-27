@@ -20,13 +20,21 @@ export default function PregledPostignuca() {
         ucitajPostignuca();
     }, []);
 
+    async function obrisi(sifra) {
+        if (!confirm('Sigurno obrisati?')) {
+            return
+        }
+        await PostignucaService.obrisi(sifra)
+        ucitajPostignuca()
+    }
+
     return (
 
         <>
-        <Link to={RouteNames.POSTIGNUCA_NOVA}
-        className="btn btn-success w-100 my-3">
-        Dodavanje novog postignuća
-        </Link>
+            <Link to={RouteNames.POSTIGNUCA_NOVA}
+                className="btn btn-success w-100 my-3">
+                Dodavanje novog postignuća
+            </Link>
 
             <Table striped hover responsive>
                 <thead>
@@ -51,9 +59,14 @@ export default function PregledPostignuca() {
                                         color={postignuce.zavrseno ? 'green' : 'red'}
                                     />
                                 </td>
-                                <td><Button onClick={()=>{navigate(`/postignuca/${kategorija.sifra}/${postignuce.sifra}`)}}>
+                                <td><Button onClick={() => { navigate(`/postignuca/${kategorija.sifra}/${postignuce.sifra}`) }}>
                                     Promijeni postignuće
-                                    </Button></td>
+                                </Button>
+                                &nbsp;&nbsp;
+                                <Button variant="danger" onClick={() => { obrisi(kategorija.sifra,postignuce.sifra) }}>
+                                    Obriši
+                                </Button>
+                                </td>
                             </tr>
                         ))
                     ))}
