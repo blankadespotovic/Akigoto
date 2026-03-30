@@ -1,0 +1,40 @@
+.window {
+    background: var(--white);
+    border: groove white;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+.window-header {
+    background: linear-gradient(90deg, var(--pink-main), var(--purple-main));
+    padding: 0.6rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.window-title {
+    font-weight: 600;
+    color: white;
+    font-size: 1.5rem;
+}
+
+.window-controls {
+    display: flex;
+    gap: 6px;
+}
+
+.window-body{
+    font-size: 1.3rem;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.dot.pink { background: #FF8FA3; }
+.dot.yellow { background: #FFE58F; }
+.dot.green { background: #A8E6CF; }
