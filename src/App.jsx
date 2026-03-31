@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css'
 import Izbornik from './components/Izbornik'
@@ -10,8 +11,14 @@ import PregledPostignuca from './pages/postignuca/PregledPostignuca'
 import NovaPostignuca from './pages/postignuca/NovaPostignuca'
 import PromjenaPostignuca from './pages/postignuca/PromjenaPostignuca'
 import { Footer } from './components/Footer'
+import PostignucaService from './services/postignuca/PostignucaService'
 
 function App() {
+
+  
+    useEffect(() => {
+        PostignucaService.postaviKategorije();
+    }, []);
 
   return (
     <Container className='d-flex flex-column min-vh-100 w-75'>

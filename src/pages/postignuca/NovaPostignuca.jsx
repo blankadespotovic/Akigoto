@@ -1,13 +1,26 @@
+import {useEffect, useState} from 'react'
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { RouteNames } from "../../constants";
-import PostignucaService from "../../services/postignuca/PostignucaService";
-import { postignuca } from "../../services/postignuca/PostignucaPodaci";
 import { Card } from "../../components/Card";
+import PostignucaService from "../../services/postignuca/PostignucaService";
 
 export default function NovaPostignuca() {
 
     const navigate = useNavigate()
+
+    const [kategorije, setKategorije] = useState();
+
+    async function dohvatiKategorije() {
+        const dohvaceneKategorije = await PostignucaService.get()
+            .then(res => res.data.map(kat => ({ sifra: kat.sifra, kategorija: kat.kategorija, })));
+        setKategorije(dohvaceneKategorije);
+    }
+
+    useEffect(() => {
+        dohvatiKategorije()
+    }, [])
+
 
     async function dodaj(postignuce) {
         //console.table(postignuce)
@@ -32,16 +45,16 @@ export default function NovaPostignuca() {
 
     return (
 
-            <Card title={"Unos novog postignuća"} textAlign={"left"}>
+        <Card title={"Unos novog postignuća"} textAlign={"left"}>
             <Form onSubmit={odradiSubmit}>
 
                 <Form.Group controlId="kategorija">
                     <Form.Label>Kategorija</Form.Label>
-                    <Form.Select name="kategorija" defaultValue={postignuca[0].sifra}>
-                        {postignuca.map((postignuce) => (
+                    {kategorije && <Form.Select name="kategorija" defaultValue={kategorije[0].sifra}>
+                        {kategorije.map((postignuce) => (
                             <option key={postignuce.sifra} value={postignuce.sifra}>{postignuce.kategorija}</option>
                         ))}
-                    </Form.Select>
+                    </Form.Select>}
                 </Form.Group>
 
                 <Form.Group controlId="naziv">

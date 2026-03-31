@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import PostignucaService from "../../services/postignuca/PostignucaService.js";
 import { Button, Table } from "react-bootstrap";
 import { GrValidate } from "react-icons/gr";
 import { Link, useNavigate } from "react-router-dom";
 import { RouteNames } from "../../constants.js";
 import { Card } from "../../components/Card.jsx";
+import PostignucaService from "../../services/postignuca/PostignucaService.js";
 
 export default function PregledPostignuca() {
 
@@ -12,9 +12,8 @@ export default function PregledPostignuca() {
     const [postignuca, setPostignuca] = useState([]);
 
     async function ucitajPostignuca() {
-        await PostignucaService.get().then((odgovor) => {
-            setPostignuca(odgovor.data)
-        })
+        const res = await PostignucaService.get();
+        setPostignuca(res.data)
     }
 
     useEffect(() => {
@@ -38,7 +37,7 @@ export default function PregledPostignuca() {
                 Dodavanje novog postignuća
             </Link>
             {postignuca && postignuca.map((kategorija) => (
-                kategorija.postignuca.length > 0 &&
+                kategorija.postignuca && kategorija.postignuca.length > 0 &&
                 <Card
                 key={kategorija.kategorija}
                     title={kategorija.kategorija}
