@@ -21,6 +21,7 @@ export default function PregledPostignuca() {
         ucitajPostignuca();
     }, []);
 
+
     async function obrisi(kategorija, postignuce) {
         if (!confirm('Sigurno obrisati?')) {
             return
@@ -33,7 +34,7 @@ export default function PregledPostignuca() {
 
         <>
             <Link to={RouteNames.POSTIGNUCA_NOVA} id="btnAdd"
-                className="btn btn-success w-100 my-3">
+                className="btn btnAdd w-100 my-3">
                 Dodavanje novog postignuća
             </Link>
             {postignuca && postignuca.map((kategorija) => (
@@ -70,7 +71,7 @@ export default function PregledPostignuca() {
                                         Promijeni postignuće
                                     </Button>
                                         &nbsp;&nbsp;
-                                        <Button variant="danger" onClick={() => { obrisi(kategorija.sifra, postignuce.sifra) }}>
+                                        <Button className="btnCancel" onClick={() => { obrisi(kategorija.sifra, postignuce.sifra) }}>
                                             Obriši
                                         </Button>
                                     </td>

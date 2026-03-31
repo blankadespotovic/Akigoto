@@ -3,6 +3,7 @@ import PostignucaService from "../../services/postignuca/PostignucaService";
 import { RouteNames } from "../../constants";
 import { Button, Col, Row, Form } from "react-bootstrap";
 import { useEffect, useState } from "react";
+import { Card } from "../../components/Card";
 
 export default function PromjenaPostignuca() {
 
@@ -44,9 +45,8 @@ export default function PromjenaPostignuca() {
 
 
     return (
-        <>
 
-            <h3>Promjena postignuća</h3>
+        <Card title={"Promjena postignuća"} textAlign={"left"}>
             <Form onSubmit={odradiSubmit}>
                 <Form.Group controlId="naziv">
                     <Form.Label>Naziv</Form.Label>
@@ -69,19 +69,18 @@ export default function PromjenaPostignuca() {
 
                 <Row className="mt-4">
                     <Col>
-                        <Link to={RouteNames.POSTIGNUCA} className="btn btn-danger">
+                        <Link to={RouteNames.POSTIGNUCA} className="btn btnCancel">
                             Odustani
                         </Link>
                     </Col>
-                    <Col>
-                        <Button type="submit" variant="success">
+                    <Col className={"text-end"}>
+                        <Button type="submit" className="btn btnAdd">
                             Promijeni postignuće
                         </Button>
                     </Col>
                 </Row>
             </Form>
-
-        </>
+        </Card>
 
 
     )

@@ -2,6 +2,8 @@ import { Button, Col, Form, Row } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { RouteNames } from "../../constants";
 import PostignucaService from "../../services/postignuca/PostignucaService";
+import { postignuca } from "../../services/postignuca/PostignucaPodaci";
+import { Card } from "../../components/Card";
 
 export default function NovaPostignuca() {
 
@@ -19,6 +21,7 @@ export default function NovaPostignuca() {
         e.preventDefault()
         const podaci = new FormData(e.target)
         dodaj({
+            kategorija: podaci.get("kategorija"),
             naziv: podaci.get('naziv'),
             opis: podaci.get('opis'),
             procjena: podaci.get('procjena'),
@@ -28,10 +31,19 @@ export default function NovaPostignuca() {
 
 
     return (
-        <>
 
-            <h3>Unos novog postignuća</h3>
+            <Card title={"Unos novog postignuća"} textAlign={"left"}>
             <Form onSubmit={odradiSubmit}>
+
+                <Form.Group controlId="kategorija">
+                    <Form.Label>Kategorija</Form.Label>
+                    <Form.Select name="kategorija" defaultValue={postignuca[0].sifra}>
+                        {postignuca.map((postignuce) => (
+                            <option key={postignuce.sifra} value={postignuce.sifra}>{postignuce.kategorija}</option>
+                        ))}
+                    </Form.Select>
+                </Form.Group>
+
                 <Form.Group controlId="naziv">
                     <Form.Label>Naziv</Form.Label>
                     <Form.Control type="text" name="naziv" required />
@@ -53,19 +65,18 @@ export default function NovaPostignuca() {
 
                 <Row className="mt-4">
                     <Col>
-                        <Link to={RouteNames.POSTIGNUCA} className="btn btn-danger">
+                        <Link to={RouteNames.POSTIGNUCA} className="btn btnCancel">
                             Odustani
                         </Link>
                     </Col>
-                    <Col>
-                        <Button type="submit" variant="success">
+                    <Col className={"text-end"}>
+                        <Button type="submit" className="btn btnAdd">
                             Dodaj novo postignuće
                         </Button>
                     </Col>
                 </Row>
             </Form>
-
-        </>
+        </Card>
 
 
     )

@@ -1,20 +1,20 @@
 const pocetnaPostignuca = [
     {
-        sifra: "pocetno-1",
+        sifra: 1,
         naziv: "Prvi korak",
         opis: "Završi prvu lekciju",
         procjena: 30,
         zavrseno: false,
     },
     {
-        sifra: "pocetno-2",
+        sifra: 2,
         naziv: "Hiragana početnik",
         opis: "Nauči 5 znakova",
         procjena: 45,
         zavrseno: true,
     },
     {
-        sifra: "pocetno-3",
+        sifra: 3,
         naziv: "Katakana početnik",
         opis: "Nauči 5 znakova katakane",
         procjena: 45,
@@ -23,14 +23,14 @@ const pocetnaPostignuca = [
    
     /*
     {
-        sifra: "pocetno-7",
+        sifra: 7,
         naziv: "Prvih 10 riječi",
         opis: "Nauči 10 riječi",
         procjena: 45,
         zavrseno: false,
     },
     {
-        sifra: "pocetno-8",
+        sifra: 8,
         naziv: "Brojevi",
         opis: "Nauči sve brojeve",
         procjena: 20,
@@ -38,21 +38,21 @@ const pocetnaPostignuca = [
     },
 
     {
-        sifra: "pocetno-9",
+        sifra: 9,
         naziv: "Bez greške",
         opis: "Riješi lekciju bez ijedne greške",
         procjena: 45,
         zavrseno: false,
     },
     {
-        sifra: "pocetno-10",
+        sifra: 10,
         naziv: "Brzo učiš!",
         opis: "Završi lekciju za manje od 10 minuta",
         procjena: 10,
         zavrseno: true,
     },
     {
-        sifra: "pocetno-11",
+        sifra: 11,
         naziv: "Uči kontinuirano!",
         opis: "Uči 3 dana za redom",
         procjena: 4320,
@@ -60,63 +60,63 @@ const pocetnaPostignuca = [
     },
     
     {
-        sifra: "pocetno-12",
+        sifra: 12,
         naziv: "Prvi kanji",
         opis: "Nauči svoj prvi kanji znak",
         procjena: 25,
         zavrseno: true,
     },
     {
-        sifra: "pocetno-13",
+        sifra: 13,
         naziv: "Konnichiwa!",
         opis: "Nauči osnovne japanske pozdrave",
         procjena: 35,
         zavrseno: false,
     },
     {
-        sifra: "pocetno-14",
+        sifra: 14,
         naziv: "Mini kviz",
         opis: "Riješi prvi kviz znanja",
         procjena: 15,
         zavrseno: true,
     },
     {
-        sifra: "pocetno-15",
+        sifra: 15,
         naziv: "Točan odgovor",
         opis: "Odgovori točno na 10 pitanja zaredom",
         procjena: 15,
         zavrseno: false,
     },
     {
-        sifra: "pocetno-16",
+        sifra: 16,
         naziv: "Noćna ptica",
         opis: "Završi lekciju nakon 22 h",
         procjena: 15,
         zavrseno: true,
     },
     {
-        sifra: "pocetno-17",
+        sifra: 17,
         naziv: "Tko rano rani...",
         opis: "Započni lekciju prije 8 h",
         procjena: 20,
         zavrseno: false,
     },
     {
-        sifra: "pocetno-18",
+        sifra: 18,
         naziv: "Trud se isplati!",
         opis: "Uči 5 dana za redom",
         procjena: 7200,
         zavrseno: true,
     },
     {
-        sifra: "pocetno-19",
+        sifra: 19,
         naziv: "Prva rečenica",
         opis: "Sastavi svoju prvu rečenicu",
         procjena: 30,
         zavrseno: false,
     },
     {
-        sifra: "pocetno-20",
+        sifra: 20,
         naziv: "Ponovi i savladaj",
         opis: "Ponovi jednu lekciju 3 puta",
         procjena: 40,
@@ -127,7 +127,7 @@ const pocetnaPostignuca = [
 
 const ucenjeIZnanje = [
      {
-        sifra: "pocetno-4",
+        sifra: 1,
         naziv: "Hiragana starter",
         opis: "Završi prvi set znakova hiragane",
         procjena: 60,
@@ -135,14 +135,14 @@ const ucenjeIZnanje = [
     },
     
     {
-        sifra: "pocetno-5",
+        sifra: 2,
         naziv: "Katakana starter",
         opis: "Završi prvi set znakova katakane",
         procjena: 60,
         zavrseno: false,
     },
     {
-        sifra: "pocetno-6",
+        sifra: 3,
         naziv: "Prva riječ",
         opis: "Nauči 1 riječ",
         procjena: 5,

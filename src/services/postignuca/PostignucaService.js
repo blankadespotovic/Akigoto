@@ -5,17 +5,18 @@ async function get() {
 }
 
 async function getBySifra(kategorija,sifra) {
-    return { data: postignuca.find(p => p.sifra === parseInt(kategorija)).postignuca.find(pos => pos.sifra === sifra) }
+    return { data: postignuca.find(p => p.sifra === parseInt(kategorija)).postignuca.find(pos => pos.sifra === parseInt(sifra)) }
 }
 
 async function dodaj(postignuce) {
-    if (postignuca.length === 0) {
-        postignuce.sifra = 1
-    } else {
-        postignuce.sifra = postignuca[postignuca.length - 1].sifra + 1
-    }
+ const kategorijaIndex = nadiIndexKategorije(postignuce.kategorija)
+ if(postignuca[kategorijaIndex].postignuca.length === 0){
+    postignuce.sifra = 1
+ }else {
+    postignuce.sifra = postignuca[kategorijaIndex].postignuca.at(-1).sifra + 1
+ }
 
-    postignuca[0].postignuca.push(postignuce)
+ postignuca[kategorijaIndex].postignuca.push(postignuce)
 }
 
 async function promjeni(sifra, postignuce) {
