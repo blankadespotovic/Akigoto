@@ -1,11 +1,15 @@
 import { postignuca } from "./PostignucaPodaci"
 
+function postaviKategorije() {
+    return
+}
+
 async function get() {
-    return { data: [...postignuca] }
+    return { success: true, data: [...postignuca] }
 }
 
 async function getBySifra(kategorija,sifra) {
-    return { data: postignuca.find(p => p.sifra === parseInt(kategorija)).postignuca.find(pos => pos.sifra === parseInt(sifra)) }
+    return { success: true, data: postignuca.find(p => p.sifra === parseInt(kategorija)).postignuca.find(pos => pos.sifra === parseInt(sifra)) }
 }
 
 async function dodaj(postignuce) {
@@ -29,8 +33,8 @@ function nadiIndexKategorije(sifra) {
     return postignuca.findIndex(pos => pos.sifra === Number(sifra));
 }
 
-function nadiIndexPostignuca(kateogrijaIndex, sifraPostignuca) {
-    return postignuca[kateogrijaIndex].postignuca.findIndex(pos => pos.sifra === sifraPostignuca);
+function nadiIndexPostignuca(kategorijaIndex, sifraPostignuca) {
+    return postignuca[kategorijaIndex].postignuca.findIndex(pos => pos.sifra === sifraPostignuca);
 }
 
 async function obrisi(sifra,postignuceSifra){
@@ -41,6 +45,7 @@ async function obrisi(sifra,postignuceSifra){
 
 
 export default {
+    postaviKategorije,
     get,
     dodaj,
     getBySifra,

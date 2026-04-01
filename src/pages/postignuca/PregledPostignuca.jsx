@@ -12,8 +12,13 @@ export default function PregledPostignuca() {
     const [postignuca, setPostignuca] = useState([]);
 
     async function ucitajPostignuca() {
-        const res = await PostignucaService.get();
-        setPostignuca(res.data)
+        await PostignucaService.get().then((odgovor)=>{
+            if(!odgovor.success){
+                alert('Nije implementiran servis')
+                return
+            }
+        setPostignuca(odgovor.data)
+        })
     }
 
     useEffect(() => {

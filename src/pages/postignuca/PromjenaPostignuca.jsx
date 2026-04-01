@@ -18,6 +18,10 @@ export default function PromjenaPostignuca() {
 
     async function ucitajPostignuce() {
         await PostignucaService.getBySifra(params.kategorija, params.sifra).then((odgovor) => {
+            if(!odgovor.success){
+                alert('Nije implementiran servis')
+                return
+            }
             const p = odgovor.data
             setPostignuce(p)
             setZavrseno(p.zavrseno)
