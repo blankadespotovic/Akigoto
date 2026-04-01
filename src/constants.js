@@ -5,7 +5,10 @@ export const RouteNames = {
     PROFIL: '/profil',
     POSTIGNUCA: '/postignuca',
     POSTIGNUCA_NOVA: '/postignuca/nova',
-    PROMJENA_POSTIGNUCA: '/postignuca/:kategorija/:sifra'
+    PROMJENA_POSTIGNUCA: '/postignuca/:kategorija/:sifra',
+    KATEGORIJE: '/kategorije',
+    KATEGORIJE_NOVA: '/kategorije/nova',
+    PROMJENA_KATEGORIJE: '/kategorije/:sifra',
 }
 
-export const DATA_SOURCE = 'localStorage';
+export const DATA_SOURCE = 'memorija';

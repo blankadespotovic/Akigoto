@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { RouteNames } from "../../constants";
 import { Card } from "../../components/Card";
 import PostignucaService from "../../services/postignuca/PostignucaService";
+import KategorijeService from '../../services/kategorije/KategorijeService';
 
 export default function NovaPostignuca() {
 
@@ -12,7 +13,7 @@ export default function NovaPostignuca() {
     const [kategorije, setKategorije] = useState();
 
     async function dohvatiKategorije() {
-        const dohvaceneKategorije = await PostignucaService.get()
+        const dohvaceneKategorije = await KategorijeService.get()
             .then(res => res.data.map(kat => ({ sifra: kat.sifra, kategorija: kat.kategorija, })));
         setKategorije(dohvaceneKategorije);
     }
