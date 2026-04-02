@@ -11,4 +11,4 @@ export const RouteNames = {
     PROMJENA_KATEGORIJE: '/kategorije/:sifra',
 }
 
-export const DATA_SOURCE = 'memorija';
+export const DATA_SOURCE = 'localStorage';

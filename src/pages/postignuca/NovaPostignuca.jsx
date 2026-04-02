@@ -34,6 +34,42 @@ export default function NovaPostignuca() {
     function odradiSubmit(e) {
         e.preventDefault()
         const podaci = new FormData(e.target)
+
+        if(!podaci.get('naziv') || podaci.get('naziv').trim().length === 0){
+            alert ("Naziv je obvezan i ne smije sadržavati samo razmake!")
+            return
+        }
+
+        if(podaci.get('naziv').trim().length < 3){
+            alert ("Naziv postignuca mora imati najmanje 3 znaka!")
+            return
+        }
+
+        if(!podaci.get('opis') || podaci.get('opis').trim() === ""){
+            alert ("Opis postignuća je obvezan i ne smije sadržavati samo razmake!")
+            return
+        }
+
+         if(podaci.get('opis').trim().length < 5){
+            alert ("Opis postignuća mora imati najmanje 5 znakova!")
+            return
+        }
+
+        if(!podaci.get('procjena') || podaci.get('procjena').trim() === ""){
+            alert ("Vremenska procjena dolaska do postignuća je obvezna i ne smije sadržavati samo razmake!")
+            return
+        }
+
+        if(podaci.get('procjena') < 0){
+            alert ("Vremenska procjena dolaska do postignuća ne može biti negativan broj!")
+            return
+        }
+
+          if(podaci.get('procjena') <1 || podaci.get('procjena') > 500){
+            alert ("Vremenska procjena dolaska do postignuća mora biti između 1 i 500 sati!")
+            return
+        }
+
         dodaj({
             kategorija: podaci.get("kategorija"),
             naziv: podaci.get('naziv'),
@@ -51,7 +87,7 @@ export default function NovaPostignuca() {
 
                 <Form.Group controlId="kategorija">
                     <Form.Label>Kategorija</Form.Label>
-                    {kategorije && <Form.Select name="kategorija" defaultValue={kategorije[0].sifra}>
+                    {kategorije && <Form.Select name="kategorija" defaultValue={kategorije[0]?.sifra}>
                         {kategorije.map((postignuce) => (
                             <option key={postignuce.sifra} value={postignuce.sifra}>{postignuce.kategorija}</option>
                         ))}
@@ -70,7 +106,7 @@ export default function NovaPostignuca() {
 
                 <Form.Group controlId="procjena">
                     <Form.Label>Vremenska procjena dolaska do postignuća</Form.Label>
-                    <Form.Control type="number" min={5} name="procjena" />
+                    <Form.Control type="number"  name="procjena" />
                 </Form.Group>
 
                 <Form.Group controlId="zavrseno">
