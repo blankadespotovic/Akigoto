@@ -29,8 +29,7 @@ export default function PregledKategorija() {
         if (!confirm("Sigurno obrisati?")) {
             return
         }
-        const kategorijaIndex = kategorija - 1;
-        await KategorijeService.obrisi(kategorijaIndex)
+        await KategorijeService.obrisi(kategorija)
         ucitajKategorije()
     }
 

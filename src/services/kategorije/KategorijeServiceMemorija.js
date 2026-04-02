@@ -23,6 +23,7 @@ async function dodaj(kategorija) {
 async function promjeni(sifra, kategorija) {
     const kategorijaIndex = nadiIndexKategorije(sifra)
     kategorija.postignuca = nadiPostignucaZaKategoriju(kategorijaIndex)
+    kategorija.sifra = Number(sifra)
     postignuca[kategorijaIndex] = kategorija
 }
 
@@ -35,7 +36,8 @@ function nadiPostignucaZaKategoriju(kategorijaIndex) {
 }
 
 async function obrisi(sifra) {
-    postignuca.splice(sifra, 1)
+    const kategorijaIndex = Number(sifra) -1
+    postignuca.splice(kategorijaIndex, 1)
 }
 
 
