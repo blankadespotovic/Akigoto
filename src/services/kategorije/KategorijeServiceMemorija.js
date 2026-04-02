@@ -36,7 +36,10 @@ function nadiPostignucaZaKategoriju(kategorijaIndex) {
 }
 
 async function obrisi(sifra) {
-    const kategorijaIndex = Number(sifra) -1
+    let kategorijaIndex = Number(sifra) -1
+    if(postignuca.length === 1){
+        kategorijaIndex = 0
+    }
     postignuca.splice(kategorijaIndex, 1)
 }
 
