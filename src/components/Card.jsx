@@ -1,9 +1,9 @@
 import {DotLottieReact} from "@lottiefiles/dotlottie-react";
 import "../styles/card.css"
 
-export function Card({title, bodyImg, children, padding, textAlign, isHomepage = false}) {
+export function Card({title, bodyImg, children, padding, textAlign, isHomepage = false, style}) {
     return (
-        <div className="window">
+        <div className="window" style={style}>
             <div className="window-header">
                 <span className="window-title">{title}</span>
                 <div className="window-controls">
