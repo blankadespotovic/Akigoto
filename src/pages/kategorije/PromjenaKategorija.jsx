@@ -55,7 +55,7 @@ export default function PromjenaKategorije() {
                     </Col>
                     <Col className={"text-end"}>
                         <Button type="submit" className="btn btnAdd">
-                            Promijeni postignuće
+                            Promijeni kategoriju
                         </Button>
                     </Col>
                 </Row>

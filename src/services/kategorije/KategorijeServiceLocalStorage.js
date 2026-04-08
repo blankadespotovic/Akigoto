@@ -1,4 +1,4 @@
-const STORAGE_KEY = "sve_kategorije";
+const STORAGE_KEY = "kategorije";
 
 function dohvatiSveIzStorage() {
     const podaci = localStorage.getItem(STORAGE_KEY);

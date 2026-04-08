@@ -23,7 +23,7 @@ const PrazanServis = {
     dodaj: async (postignuce) => {
         console.error("Servis nije učitan");
     },
-    promjeni: async (sifra, postignuce) => {
+    promjeni: async (sifra, postignuce, novaKategorija) => {
         console.error("Servis nije učitan");
     },
     obrisi: async (sifra, postignuceSifra) => {
@@ -39,6 +39,6 @@ export default {
     get: () => AktivniServis.get(),
     getBySifra: (kategorija, sifra) => AktivniServis.getBySifra(kategorija, sifra),
     dodaj: (postignuce) => AktivniServis.dodaj(postignuce),
-    promjeni: (sifra, postignuce) => AktivniServis.promjeni(sifra, postignuce),
+    promjeni: (sifra, postignuce, novaKategorija) => AktivniServis.promjeni(sifra, postignuce, novaKategorija),
     obrisi: (sifra, postignuceSifra) => AktivniServis.obrisi(sifra, postignuceSifra)
 };

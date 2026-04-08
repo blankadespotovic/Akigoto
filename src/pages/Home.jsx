@@ -1,6 +1,7 @@
 import { Card } from "../components/Card";
 import { IME_APLIKACIJE } from "../constants";
 import shiba from '../assets/shiba.png'
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 export default function Home() {
     const homeCardChildren = (
@@ -18,12 +19,13 @@ export default function Home() {
 
 
     return (
-            <Card
-                title={`Što je ${IME_APLIKACIJE}?`}
-                bodyImg={shiba}
-            >
-                {homeCardChildren}
-            </Card>
+        <Card
+            title={`Što je ${IME_APLIKACIJE}?`}
+            bodyImg={shiba}
+            isHomepage={true}
+        >
+            {homeCardChildren}
+        </Card>
 
     );
 }

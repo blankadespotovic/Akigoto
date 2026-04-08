@@ -30,13 +30,13 @@ function spremiUStorage(podaci) {
 
 async function get() {
     const kategorije = dohvatiSveIzStorage();
-    return {success: true, data: [...kategorije]};
+    return { success: true, data: [...kategorije] };
 }
 
 async function getBySifra(kategorija, sifra) {
     const kategorije = dohvatiSveIzStorage();
     const postignuce = kategorije.find(p => p.sifra === parseInt(kategorija)).postignuca.find(pos => pos.sifra === parseInt(sifra));
-    return {success: true, data: postignuce}
+    return { success: true, data: postignuce }
 }
 
 async function dodaj(postignuce) {
@@ -51,22 +51,32 @@ async function dodaj(postignuce) {
 
     kategorije[kategorijaIndex].postignuca.push(postignuce)
     spremiUStorage(kategorije);
-    return {data: postignuce};
+    return { data: postignuce };
 
 }
 
-async function promjeni(sifra, postignuce) {
+async function promjeni(sifra, postignuce, novaKategorija) {
 
-    const kategorije = dohvatiSveIzStorage();
+    const kategorije = dohvatiSveIzStorage()
     const kategorijaIndex = nadiIndexKategorije(sifra)
     const index = nadiIndexPostignuca(kategorijaIndex, postignuce.sifra)
+    const kategorijaPromijenjena = Number(novaKategorija) !== Number(postignuce.kategorija)
+
 
     if (index !== -1) {
-        kategorije[kategorijaIndex].postignuca[index] = postignuce;
-        spremiUStorage(kategorije);
+        if (kategorijaPromijenjena) {
+            postignuce.kategorija = novaKategorija
+            const indexNoveKategorije = nadiIndexKategorije(novaKategorija)
+            kategorije[indexNoveKategorije].postignuca.push(postignuce)
+            kategorije[kategorijaIndex].postignuca.splice(index, 1)
+        } else {
+            kategorije[kategorijaIndex].postignuca[index] = postignuce
+        }
+        spremiUStorage(kategorije)
     }
-    return {data: kategorije[kategorijaIndex].postignuca[index]};
+    return { data: postignuce }
 }
+
 
 function nadiIndexKategorije(sifra) {
     const kategorije = dohvatiSveIzStorage();
@@ -83,7 +93,7 @@ async function obrisi(sifra, postignuceSifra) {
     const kategorijaIndex = nadiIndexKategorije(sifra);
     kategorije[kategorijaIndex].postignuca = kategorije[kategorijaIndex].postignuca.filter(s => s.sifra !== parseInt(postignuceSifra));
     spremiUStorage(kategorije);
-    return {message: "Obrisano"};
+    return { message: "Obrisano" };
 }
 
 export default {

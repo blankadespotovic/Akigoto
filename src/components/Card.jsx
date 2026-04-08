@@ -1,6 +1,7 @@
+import {DotLottieReact} from "@lottiefiles/dotlottie-react";
 import "../styles/card.css"
 
-export function Card({title, bodyImg, children, padding, textAlign}) {
+export function Card({title, bodyImg, children, padding, textAlign, isHomepage = false}) {
     return (
         <div className="window">
             <div className="window-header">
@@ -11,9 +12,24 @@ export function Card({title, bodyImg, children, padding, textAlign}) {
                     <div className="dot green"></div>
                 </div>
             </div>
-            {bodyImg && <div style={{display: "flex"}}>
-                <img src={bodyImg} style={{maxWidth: "20%", margin: "0 auto"}}/>
-            </div>}
+            {!isHomepage ? (
+                bodyImg && <div style={{display: "flex"}}>
+                    <img src={bodyImg} style={{maxWidth: "20%", margin: "0 auto"}}/>
+                </div>
+            ) : (
+                <div style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+                    {bodyImg &&
+                        <img src={bodyImg} style={{maxWidth: "20%"}}/>
+                    }
+                    <DotLottieReact
+                        style={{maxWidth: "30%"}}
+                        src="/KoiFish.lottie"
+
+                        loop
+                        autoplay
+                    />
+                </div>
+            )}
 
             <div className="window-body"
                  style={{
