@@ -63,6 +63,9 @@ async function obrisi(sifra) {
     let kategorije = dohvatiSveIzStorage();
     kategorije = kategorije.filter(s => s.sifra !== parseInt(sifra));
     spremiUStorage(kategorije);
+    if (kategorije.length === 0) {
+        localStorage.removeItem(STORAGE_KEY)
+    }
     return {message: "Obrisano"};
 }
 

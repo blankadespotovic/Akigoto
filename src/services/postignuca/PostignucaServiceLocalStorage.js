@@ -1,23 +1,5 @@
 const STORAGE_KEY = "kategorije";
 
-function postaviKategorije() {
-    const podaci = localStorage.getItem(STORAGE_KEY);
-    if (!podaci) {
-        const kategorije = [
-            {
-                sifra: 1,
-                kategorija: "Početni napredak",
-                postignuca: [],
-            },
-            {
-                sifra: 2,
-                kategorija: "Učenje i znanje",
-                postignuca: [],
-            }
-        ];
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(kategorije));
-    }
-}
 
 function dohvatiSveIzStorage() {
     const podaci = localStorage.getItem(STORAGE_KEY);
@@ -31,6 +13,15 @@ function spremiUStorage(podaci) {
 async function get() {
     const kategorije = dohvatiSveIzStorage();
     return { success: true, data: [...kategorije] };
+}
+
+async function getAll() {
+    const kategorije = dohvatiSveIzStorage();
+    let svaPostignuca = [];
+    for (let i = 0; i < kategorije.length; i++) {
+        svaPostignuca.push(...kategorije[i].postignuca)
+    }
+    return {success: true, data: [...svaPostignuca]};
 }
 
 async function getBySifra(kategorija, sifra) {
@@ -97,9 +88,9 @@ async function obrisi(sifra, postignuceSifra) {
 }
 
 export default {
-    postaviKategorije,
     dohvatiSveIzStorage,
     get,
+    getAll,
     dodaj,
     getBySifra,
     promjeni,

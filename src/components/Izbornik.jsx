@@ -30,6 +30,9 @@ export default function Izbornik() {
                         <Nav.Link
                             onClick={() => navigate(RouteNames.KATEGORIJE)}
                         >Kategorije</Nav.Link>
+                        <Nav.Link
+                            onClick={() => navigate(RouteNames.GENERIRANJE_PODATAKA)}
+                        >Generiraj podatke</Nav.Link>
 
                     </Nav>
                 </Navbar.Collapse>

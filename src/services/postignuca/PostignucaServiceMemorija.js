@@ -1,8 +1,5 @@
 import { postignuca } from "./PostignucaPodaci"
 
-function postaviKategorije() {
-    return
-}
 
 async function get() {
     return { success: true, data: [...postignuca] }
@@ -45,7 +42,6 @@ async function obrisi(sifra,postignuceSifra){
 
 
 export default {
-    postaviKategorije,
     get,
     dodaj,
     getBySifra,
