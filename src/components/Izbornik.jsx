@@ -18,19 +18,19 @@ export default function Izbornik() {
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
-                        <Nav.Link
+                        <Nav.Link className="home-nav"
                             onClick={() => navigate(RouteNames.HOME)}
                         >Početna</Nav.Link>
-                        <Nav.Link
+                        <Nav.Link className="home-nav"
                             onClick={() => navigate(RouteNames.PROFIL)}
                         >Profil</Nav.Link>
-                        <Nav.Link
+                        <Nav.Link className="home-nav"
                             onClick={() => navigate(RouteNames.POSTIGNUCA)}
                         >Postignuća</Nav.Link>
-                        <Nav.Link
+                        <Nav.Link className="home-nav"
                             onClick={() => navigate(RouteNames.KATEGORIJE)}
                         >Kategorije</Nav.Link>
-                        <Nav.Link
+                        <Nav.Link className="home-nav"
                             onClick={() => navigate(RouteNames.GENERIRANJE_PODATAKA)}
                         >Generiraj podatke</Nav.Link>
 

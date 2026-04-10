@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Table } from "react-bootstrap";
+import { Button, ButtonGroup, Col, Nav, Row, Tab, Table } from "react-bootstrap";
 import { GrValidate } from "react-icons/gr";
 import { Link, useNavigate } from "react-router-dom";
 import { RouteNames } from "../../constants.js";
@@ -58,51 +58,78 @@ export default function PregledPostignuca() {
                 </Link>
             )}
 
-            {postignuca && postignuca.map((kategorija) => (
-                kategorija.postignuca && kategorija.postignuca.length > 0 &&
+            {postignuca.length > 0 &&
                 <Card
-                    key={kategorija.kategorija}
-                    title={kategorija.kategorija}
+                    title={'Postignuća'}
                     padding={0}
-                    textAlign={"left"}
+                    textAlign={'left'}
                 >
-                    <Table striped hover responsive>
-                        <thead>
-                            <tr>
-                                <th>Naziv postignuća</th>
-                                <th>Opis</th>
-                                <th>Procjena</th>
-                                <th>Postignuto</th>
-                                <th>Akcija</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {kategorija.postignuca.map((postignuce) => (
-                                <tr key={postignuce.sifra}>
-                                    <td>{postignuce.naziv}</td>
-                                    <td style={{ minWidth: "250px" }}>{postignuce.opis}</td>
-                                    <td>{postignuce.procjena} min</td>
-                                    <td>
-                                        <GrValidate
-                                            size={25}
-                                            color={postignuce.zavrseno ? 'green' : 'red'}
-                                        />
-                                    </td>
-                                    <td><Button onClick={() => { navigate(`/postignuca/${kategorija.sifra}/${postignuce.sifra}`) }}>
-                                        Promijeni postignuće
-                                    </Button>
-                                        &nbsp;&nbsp;
-                                        <Button className="btnCancel" onClick={() => { obrisi(kategorija.sifra, postignuce.sifra) }}>
-                                            Obriši
-                                        </Button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </Table>
+                     <Tab.Container id="left-tabs-example">
+                        <Row>
+                            <Col sm={3}>
+                                <Nav variant="pills" className="flex-column">
+                                    {postignuca && postignuca.map((kategorija, idx) => (
+                                        kategorija.postignuca && kategorija.postignuca.length > 0 &&
+                                        <Nav.Item className="pill-nav-item">
+                                            <Nav.Link className="pill-nav" eventKey={idx}>{kategorija.kategorija}</Nav.Link>
+                                        </Nav.Item>
+                                    ))}
+                                </Nav>
+                            </Col>
+                            <Col sm={9}>
+                                <Tab.Content>
+                                    {postignuca && postignuca.map((kategorija, idx) => (
+                                        kategorija.postignuca && kategorija.postignuca.length > 0 &&
+                                        <Tab.Pane eventKey={idx}>
+                                            <Table striped hover responsive>
+                                                <thead>
+                                                <tr>
+                                                    <th>Naziv postignuća</th>
+                                                    <th>Opis</th>
+                                                    <th>Procjena</th>
+                                                    <th>Postignuto</th>
+                                                    <th>Akcija</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {kategorija.postignuca.map((postignuce) => (
+                                                    <tr key={postignuce.sifra}>
+                                                        <td>{postignuce.naziv}</td>
+                                                        <td style={{minWidth: "250px"}}>{postignuce.opis}</td>
+                                                        <td>{postignuce.procjena} min</td>
+                                                        <td>
+                                                            <GrValidate
+                                                                size={25}
+                                                                color={postignuce.zavrseno ? "green" : "red"}
+                                                            />
+                                                        </td>
+                                                        <td>
+                                                            <ButtonGroup className={"d-flex gap-2"}>
+                                                                <Button className="btnEdit" onClick={() => {
+                                                                    navigate(`/postignuca/${kategorija.sifra}/${postignuce.sifra}`)
+                                                                }}>
+                                                                    Promijeni
+                                                                </Button>
+                                                                <Button className="btnCancel" onClick={() => {
+                                                                    obrisi(kategorija.sifra, postignuce.sifra)
+                                                                }}>
+                                                                    Obriši
+                                                                </Button>
+                                                            </ButtonGroup>
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                                </tbody>
+                                            </Table>
+                                        </Tab.Pane>
+                                    ))}
+                                </Tab.Content>
+                            </Col>
+                        </Row>
+                    </Tab.Container>
                 </Card>
 
-            ))}
+            }
         </>
 
     )
