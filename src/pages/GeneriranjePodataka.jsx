@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { use, useCallback, useEffect, useState } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { Faker, hr } from "@faker-js/faker";
 import KategorijeService from "../services/kategorije/KategorijeService";
@@ -19,23 +19,23 @@ export default function GeneriranjePodataka() {
         locale: [hr]
     });
 
-    const dohvatiBrojKategorija = useCallback(async () => {
+    const dohvatiBrojKategorija = async () => {
         const sveKategorije = await KategorijeService.get()
         setUkupnoKategorija(sveKategorije?.data?.length)
-    }, [])
+    }
 
-    const dohvatiBrojPostignuca = useCallback(async () => {
+    const dohvatiBrojPostignuca = async () => {
         const svaPostignuca = await PostignucaService.getAll()
         setUkupnoPostignuca(svaPostignuca?.data?.length)
-    }, [])
+    }
 
     useEffect(() => {
         dohvatiBrojKategorija()
-    }, [dohvatiBrojKategorija])
+    }, [])
 
     useEffect(() => {
         dohvatiBrojPostignuca()
-    }, [dohvatiBrojPostignuca])
+    }, [])
 
     const generirajKategorije = async (broj) => {
         const naziviKategorija = [
@@ -201,6 +201,7 @@ export default function GeneriranjePodataka() {
         } finally {
             setLoading(false);
             dohvatiBrojKategorija()
+            dohvatiBrojPostignuca()
         }
     };
 
@@ -254,7 +255,7 @@ export default function GeneriranjePodataka() {
                     <Button
                         variant="danger"
                         onClick={handleObrisiKategorije}
-                        disabled={loading || brojKategorija <= 0}
+                        disabled={loading || brojKategorija < 1}
                         className="w-100 btn btnCancel"
                     >
                         {loading ? "Brisanje..." : "Obriši sve kategorije"}
@@ -287,7 +288,7 @@ export default function GeneriranjePodataka() {
                         <Button
                             variant="primary"
                             type="submit"
-                            disabled={loading}
+                            disabled={loading || ukupnoKategorija < 1}
                             className="w-100 btn btnAdd"
                         >
                             {loading ? "Generiranje..." : "Generiraj postignuća"}
