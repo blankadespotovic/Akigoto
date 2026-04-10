@@ -1,19 +1,41 @@
-import {useState} from "react";
-import {Alert, Button, Col, Container, Form, Row} from "react-bootstrap";
-import {en, Faker, hr} from "@faker-js/faker";
+import { useCallback, useEffect, useState } from "react";
+import { Button, Col, Form, Row } from "react-bootstrap";
+import { Faker, hr } from "@faker-js/faker";
 import KategorijeService from "../services/kategorije/KategorijeService";
 import PostignucaService from "../services/postignuca/PostignucaService";
+import { CustomAlert } from "../components/CustomAlert";
+import { Card } from "../components/Card";
 
 
 export default function GeneriranjePodataka() {
     const [brojKategorija, setBrojKategorija] = useState(5)
+    const [ukupnoKategorija, setUkupnoKategorija] = useState()
     const [brojPostignuca, setBrojPostignuca] = useState(20)
+    const [ukupnoPostignuca, setUkupnoPostignuca] = useState()
     const [poruka, setPoruka] = useState(null);
     const [loading, setLoading] = useState(false);
 
     const faker = new Faker({
-        locale: [hr, en]
+        locale: [hr]
     });
+
+    const dohvatiBrojKategorija = useCallback(async () => {
+        const sveKategorije = await KategorijeService.get()
+        setUkupnoKategorija(sveKategorije?.data?.length)
+    }, [])
+
+    const dohvatiBrojPostignuca = useCallback(async () => {
+        const svaPostignuca = await PostignucaService.getAll()
+        setUkupnoPostignuca(svaPostignuca?.data?.length)
+    }, [])
+
+    useEffect(() => {
+        dohvatiBrojKategorija()
+    }, [dohvatiBrojKategorija])
+
+    useEffect(() => {
+        dohvatiBrojPostignuca()
+    }, [dohvatiBrojPostignuca])
 
     const generirajKategorije = async (broj) => {
         const naziviKategorija = [
@@ -35,27 +57,44 @@ export default function GeneriranjePodataka() {
                 kategorija: naziviKategorija[i % naziviKategorija.length] + (i >= naziviKategorija.length ? ` ${Math.floor(i / naziviKategorija.length) + 1}` : ""),
             });
         }
+        dohvatiBrojKategorija()
     };
 
     const generirajPostignuca = async (broj) => {
 
         const sveKategorije = await KategorijeService.get();
         for (let i = 0; i < broj; i++) {
+            const naziv = faker.helpers.arrayElement([
+                'Prvi korak',
+                'Osnove hiragane',
+                'Hiragana majstor',
+                'Osnove katakane',
+                'Katakana majstor',
+                'Kanji istraživač',
+                'Rječnik u porastu',
+                'Temeljno znanje gramatike'
+            ]);
             const opis = faker.helpers.arrayElement([
-                `Successfully ${faker.word.verb()} ${faker.word.noun()}.`,
-                `You have ${faker.word.verb()} ${faker.word.noun()}.`,
-                `A reward for ${faker.word.verb()}ing ${faker.word.noun()}.`,
-                `Complete the ${faker.word.adjective()} ${faker.word.noun()}.`,
+                'Završio si svoju prvu lekciju japanskog jezika',
+                'Naučio si osnovne hiragana znakove',
+                'Savladao si svih 46 znakova hiragane',
+                'Naučio si osnovne katakana znakove',
+                'Savladao si svih 46 znakova katakane',
+                'Naučio si 20 kanji znakova',
+                'Naučio si 50 novih japanskih riječi.',
+                'Savladao si osnovne gramatičke strukture'
+
             ]);
             const postignuce = {
                 kategorija: faker.helpers.arrayElement(sveKategorije.data).sifra,
-                naziv: `${faker.word.adjective()[0].toUpperCase()}${faker.word.adjective().slice(1)} ${faker.word.noun()[0].toUpperCase()}${faker.word.noun().slice(1)}`,
+                naziv: naziv,
                 opis: opis,
-                procjena: faker.number.int({min: 1, max: 500}),
+                procjena: faker.number.int({ min: 1, max: 500 }),
                 zavrseno: faker.datatype.boolean(),
             };
             await PostignucaService.dodaj(postignuce);
         }
+        dohvatiBrojPostignuca()
     };
 
     const handleGenerirajKategorije = async (e) => {
@@ -116,7 +155,7 @@ export default function GeneriranjePodataka() {
             const postignuca = rezultat.data;
 
             for (const postignuce of postignuca) {
-                await PostignucaService.obrisi(postignuce.kategorija, postignuce.sifra);
+                await PostignucaService.obrisi(postignuce.kategorija, postignuce.sifra)
             }
 
             setPoruka({
@@ -129,7 +168,8 @@ export default function GeneriranjePodataka() {
                 tekst: "Greška pri brisanju postignuća: " + error.message
             });
         } finally {
-            setLoading(false);
+            setLoading(false)
+            dohvatiBrojPostignuca()
         }
     };
 
@@ -160,24 +200,29 @@ export default function GeneriranjePodataka() {
             });
         } finally {
             setLoading(false);
+            dohvatiBrojKategorija()
         }
     };
 
     return (
-        <Container className="mt-4">
-            <h1>Generiranje podataka</h1>
-            <p className="text-muted">
-                Koristite ovaj alat za generiranje testnih podataka s lažnim (fake) podacima na hrvatskom jeziku.
-            </p>
-
-            {poruka && (
-                <Alert variant={poruka.tip} dismissible onClose={() => setPoruka(null)}>
-                    {poruka.tekst}
-                </Alert>
-            )}
-
-            <Row>
-                <Col md={6}>
+        <Row className="mt-2">
+            <Col md={12}>
+                <CustomAlert variant={"info"} className={"mb-0"}>
+                    Koristite ovaj alat za generiranje testnih podataka s lažnim (fake) podacima ili brisanje svih
+                    podataka
+                    iz baze.
+                </CustomAlert>
+                {poruka && (
+                    <CustomAlert variant={poruka.tip} className={'mt-2 mb-0'} dismissible onClose={() => setPoruka(null)}>
+                        {poruka.tekst}
+                    </CustomAlert>
+                )}
+            </Col>
+            <Col md={6}>
+                <Card
+                    title={`Kategorije [trenutno: ${ukupnoKategorija}]`}
+                    textAlign={"start"}
+                >
                     <Form onSubmit={handleGenerirajKategorije}>
                         <Form.Group className="mb-3">
                             <Form.Label>Broj kategorija</Form.Label>
@@ -197,13 +242,33 @@ export default function GeneriranjePodataka() {
                             variant="primary"
                             type="submit"
                             disabled={loading}
-                            className="w-100"
+                            className="w-100 btn btnAdd"
                         >
                             {loading ? "Generiranje..." : "Generiraj kategorije"}
                         </Button>
+                        <CustomAlert variant="warning" className="mt-2" style={{ fontSize: ".9rem" }}>
+                            <strong>Upozorenje:</strong> Ove akcije će dodati nove podatke u postojeće.
+                            Ako želite početi ispočetka, prvo obrišite postojeće podatke.
+                        </CustomAlert>
                     </Form>
-                </Col>
-                <Col md={6}>
+                    <Button
+                        variant="danger"
+                        onClick={handleObrisiKategorije}
+                        disabled={loading || brojKategorija <= 0}
+                        className="w-100 btn btnCancel"
+                    >
+                        {loading ? "Brisanje..." : "Obriši sve kategorije"}
+                    </Button>
+                    <CustomAlert variant="danger" className="mt-2">
+                        <strong>Oprez!</strong> Brisanje podataka je trajna akcija i ne može se poništiti.
+                    </CustomAlert>
+                </Card>
+            </Col>
+            <Col md={6}>
+                <Card
+                    title={`Postignuća [trenutno: ${ukupnoPostignuca}]`}
+                    textAlign={"start"}
+                >
                     <Form onSubmit={handleGenerirajPostignuca}>
                         <Form.Group className="mb-3">
                             <Form.Label>Broj postignuća</Form.Label>
@@ -223,52 +288,28 @@ export default function GeneriranjePodataka() {
                             variant="primary"
                             type="submit"
                             disabled={loading}
-                            className="w-100"
+                            className="w-100 btn btnAdd"
                         >
                             {loading ? "Generiranje..." : "Generiraj postignuća"}
                         </Button>
+                        <CustomAlert variant="warning" className="mt-2" style={{ fontSize: ".9rem" }}>
+                            <strong>Upozorenje:</strong> Ove akcije će dodati nove podatke u postojeće.
+                            Ako želite početi ispočetka, prvo obrišite postojeće podatke.
+                        </CustomAlert>
                     </Form>
-                </Col>
-            </Row>
-
-            <Alert variant="warning" className="mt-3">
-                <strong>Upozorenje:</strong> Ove akcije će dodati nove podatke u postojeće.
-                Ako želite početi ispočetka, prvo obrišite postojeće podatke.
-            </Alert>
-
-            <hr className="my-4"/>
-
-            <h3>Brisanje podataka</h3>
-            <p className="text-muted">
-                Koristite ove opcije za brisanje svih podataka iz baze.
-            </p>
-
-            <Row className="mt-3">
-                <Col md={6}>
-                    <Button
-                        variant="danger"
-                        onClick={handleObrisiKategorije}
-                        disabled={loading}
-                        className="w-100 mb-2"
-                    >
-                        {loading ? "Brisanje..." : "Obriši sve kategorije"}
-                    </Button>
-                </Col>
-                <Col md={6}>
                     <Button
                         variant="danger"
                         onClick={handleObrisiPostignuca}
-                        disabled={loading}
-                        className="w-100 mb-2"
+                        disabled={loading || ukupnoPostignuca < 1}
+                        className="w-100 mb-2 btn btnCancel"
                     >
                         {loading ? "Brisanje..." : "Obriši sva postignuća"}
                     </Button>
-                </Col>
-            </Row>
-
-            <Alert variant="danger" className="mt-3">
-                <strong>Oprez!</strong> Brisanje podataka je trajna akcija i ne može se poništiti.
-            </Alert>
-        </Container>
+                    <CustomAlert variant="danger" className="mt-1" style={{ fontSize: ".9rem" }}>
+                        <strong>Oprez!</strong> Brisanje podataka je trajna akcija i ne može se poništiti.
+                    </CustomAlert>
+                </Card>
+            </Col>
+        </Row>
     );
 }

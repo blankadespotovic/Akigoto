@@ -1,0 +1,47 @@
+custom-alert-primary {
+    background: linear-gradient(135deg, var(--pink-soft), var(--purple-soft));
+    color: var(--text-dark);
+    border: groove var(--white);
+}
+
+.custom-alert-secondary {
+    background: linear-gradient(135deg, #E5D9FF, #D6EEFF);
+    color: var(--text-dark);
+    border: groove var(--white);
+}
+
+.custom-alert-success {
+    background: linear-gradient(135deg, #DFF8E3, #E6F6FF);
+    color: var(--text-dark);
+    border: groove var(--white);
+}
+
+.custom-alert-danger {
+    background: linear-gradient(135deg, #FFD6D6, #FFA8A8);
+    color: var(--text-dark);
+    border: groove var(--white);
+}
+
+.custom-alert-warning {
+    background: linear-gradient(135deg, #FFF7C0, #FFE4E8);
+    color: var(--text-dark);
+    border: groove var(--white);
+}
+
+.custom-alert-info {
+    background: linear-gradient(135deg, #D7EEFF, #EAF6FF);
+    color: var(--text-dark);
+    border: groove var(--white);
+}
+
+.custom-alert-light {
+    background: linear-gradient(135deg, var(--white), var(--pink-soft));
+    color: var(--text-dark);
+    border: groove var(--border);
+}
+
+.custom-alert-dark {
+    background: linear-gradient(135deg, #A0A0A0, #5A5A5A);
+    color: var(--white);
+    border: groove var(--white);
+}
