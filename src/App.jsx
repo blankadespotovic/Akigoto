@@ -19,7 +19,7 @@ function App() {
 
 
   return (
-    <Container className='d-flex flex-column min-vh-100 w-75'>
+    <Container className='d-flex flex-column min-vh-100'>
       <Izbornik />
 
       <Routes>

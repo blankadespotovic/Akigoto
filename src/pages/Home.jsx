@@ -85,7 +85,7 @@ export default function Home() {
 
 
     return (
-        <div style={{ display: "flex", gap: "1rem" }}>
+        <div className="d-flex flex-column flex-lg-row gap-3">
             <Card
                 style={{
                     flex: 1,

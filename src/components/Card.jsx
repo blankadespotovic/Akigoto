@@ -17,12 +17,12 @@ export function Card({title, bodyImg, children, padding, textAlign, isHomepage =
                     <img src={bodyImg} style={{maxWidth: "20%", margin: "0 auto"}}/>
                 </div>
             ) : (
-                <div style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+                <div className="d-flex flex-column flex-lg-row align-items-center justify-content-center">
                     {bodyImg &&
-                        <img src={bodyImg} style={{maxWidth: "20%"}}/>
+                        <img className="body-img-hp" src={bodyImg}/>
                     }
                     <DotLottieReact
-                        style={{maxWidth: "30%"}}
+                        className="lottie-hp"
                         src="/KoiFish.lottie"
 
                         loop
