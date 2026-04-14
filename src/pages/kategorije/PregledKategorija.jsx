@@ -59,7 +59,7 @@ export default function PregledKategorija() {
                             <tr key={kategorija.sifra}>
                                 <td>{kategorija.kategorija}</td>
                                 <td style={{minWidth: "250px"}}>{kategorija?.postignuca?.length}</td>
-                                <td><Button onClick={() => {
+                                <td><Button className="btnEdit" onClick={() => {
                                     navigate(`/kategorije/${kategorija.sifra}`)
                                 }}>
                                     Promijeni kategoriju

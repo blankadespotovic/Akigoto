@@ -11,7 +11,15 @@ export const RouteNames = {
     KATEGORIJE_NOVA: '/kategorije/nova',
     PROMJENA_KATEGORIJE: '/kategorije/:sifra',
 
-    GENERIRANJE_PODATAKA: '/generiraj-podatke'
+    GENERIRANJE_PODATAKA: '/generiraj-podatke',
+
+    UCENICI: '/ucenici',
+    UCENICI_NOVI: '/ucenici/novi',
+    PROMJENA_UCENIKA: '/ucenici/:sifra',
+    
+    LEKCIJE: '/lekcije',
+    LEKCIJE_NOVE: '/lekcije/nova',
+    PROMJENA_LEKCIJA: '/lekcije/:sifra'
 }
 
 export const DATA_SOURCE = 'localStorage';

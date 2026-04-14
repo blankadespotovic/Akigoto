@@ -14,6 +14,12 @@ import PromjenaKategorije from './pages/kategorije/PromjenaKategorija'
 import NovaKategorija from './pages/kategorije/NovaKategorija'
 import PregledKategorija from './pages/kategorije/PregledKategorija'
 import GeneriranjePodatka from './pages/GeneriranjePodataka'
+import PregledUcenika from './pages/ucenici/PregledUcenika'
+import NoviUcenici from './pages/ucenici/NoviUcenici'
+import PromjenaUcenika from './pages/ucenici/PromjenaUcenika'
+import PregledLekcija from './pages/lekcije/PregledLekcija'
+import NoveLekcije from './pages/lekcije/NoveLekcije'
+import PromjenaLekcija from './pages/lekcije/PromjenaLekcije'
 
 function App() {
 
@@ -32,7 +38,16 @@ function App() {
         <Route path={RouteNames.KATEGORIJE} element={<PregledKategorija />} />
          <Route path={RouteNames.KATEGORIJE_NOVA} element={<NovaKategorija />} />
           <Route path={RouteNames.PROMJENA_KATEGORIJE} element={<PromjenaKategorije />} />
+
            <Route path={RouteNames.GENERIRANJE_PODATAKA} element={<GeneriranjePodatka />} />
+
+           <Route path={RouteNames.UCENICI} element={<PregledUcenika />} />
+           <Route path={RouteNames.UCENICI_NOVI} element={<NoviUcenici />} />
+           <Route path={RouteNames.PROMJENA_UCENIKA} element={<PromjenaUcenika />} />
+
+           <Route path={RouteNames.LEKCIJE} element={<PregledLekcija />} />
+           <Route path={RouteNames.LEKCIJE_NOVE} element={<NoveLekcije />} />
+           <Route path={RouteNames.PROMJENA_LEKCIJA} element={<PromjenaLekcija />} />
       </Routes>
        <Footer />
     </Container>

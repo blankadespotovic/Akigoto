@@ -192,6 +192,7 @@ td>button,
 
 table {
   margin-bottom: 0 !important;
+  overflow: hidden;
 }
 
 .table thead {
@@ -269,6 +270,20 @@ table {
 .lottie-hp{
     max-width: 30%;
   }
+
+  .generiraj-ucenike .form-check-input:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.generiraj-ucenike .form-check-input:checked {
+  background-color: var(--purple-main);
+  border-color: var(--border);
+}
+
+.generiraj-ucenike .form-check-input[type="radio"] {
+  border-radius: 0;
+}
 
 @media screen and (max-width: 600px) {
   .table {

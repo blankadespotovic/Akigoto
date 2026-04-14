@@ -1,0 +1,69 @@
+const STORAGE_KEY = "ucenici";
+
+
+function dohvatiSveIzStorage() {
+    const podaci = localStorage.getItem(STORAGE_KEY);
+    return podaci ? JSON.parse(podaci) : [];
+}
+
+function spremiUStorage(podaci) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(podaci));
+}
+
+async function get() {
+    const ucenici = dohvatiSveIzStorage();
+    return { success: true, data: [...ucenici] };
+}
+
+async function getBySifra(sifra) {
+    const ucenici = dohvatiSveIzStorage();
+    const ucenik = ucenici.find(p => p.sifra === parseInt(sifra));
+    return { success: true, data: ucenik }
+}
+
+async function dodaj(ucenik) {
+    let ucenici = dohvatiSveIzStorage();
+
+    if (ucenici.length === 0) {
+        ucenik.sifra = 1
+    } else {
+        ucenik.sifra = ucenici.at(-1).sifra + 1
+    }
+
+    ucenici.push(ucenik)
+    spremiUStorage(ucenici);
+    return { data: ucenik };
+
+}
+
+async function promjeni(ucenik) {
+
+    const ucenici = dohvatiSveIzStorage()
+    const index = ucenici.findIndex(u => u.sifra === parseInt(ucenik.sifra))
+
+
+    if (index !== -1) {
+    
+    ucenici[index] = ucenik
+        
+        spremiUStorage(ucenici)
+    }
+    return { data: ucenik }
+}
+
+
+async function obrisi(sifra) {
+    let ucenici = dohvatiSveIzStorage();
+    ucenici = ucenici.filter(u => u.sifra !== parseInt(sifra))
+    spremiUStorage(ucenici);
+    return { message: "Obrisano" };
+}
+
+export default {
+    dohvatiSveIzStorage,
+    get,
+    dodaj,
+    getBySifra,
+    promjeni,
+    obrisi
+}

@@ -64,7 +64,7 @@ export default function PregledPostignuca() {
                     padding={0}
                     textAlign={'left'}
                 >
-                     <Tab.Container id="left-tabs-example">
+                     <Tab.Container id="left-tabs-example" defaultActiveKey={0}>
                         <Row>
                             <Col sm={3}>
                                 <Nav variant="pills" className="flex-column">

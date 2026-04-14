@@ -3,13 +3,19 @@ import { IME_APLIKACIJE } from "../constants";
 import shiba from '../assets/shiba.png'
 import { useEffect, useState } from "react";
 import KategorijeService from "../services/kategorije/KategorijeService";
+import UceniciService from "../services/ucenici/UceniciService";
+import LekcijeService from "../services/lekcije/LekcijeService";
 
 export default function Home() {
 
     const [brojPostignuca, setBrojPostignuca] = useState(0)
     const [brojKategorija, setBrojKategorija] = useState(0)
+    const [brojUcenika, setBrojUcenika] = useState(0)
+    const [brojLekcija, setBrojLekcija] = useState(0)
     const [animatedPostignuca, setAnimatedPostignuca] = useState(0)
     const [animatedKategorija, setAnimatedKategorija] = useState(0)
+    const [animatedUcenici, setAnimatedUcenici] = useState(0)
+    const [animatedLekcije, setAnimatedLekcije] = useState(0)
 
     useEffect(() => {
         const fetchData = async () => {
@@ -18,7 +24,7 @@ export default function Home() {
 
                 let ukupnoPostignuca = 0
 
-                for(let i = 0; i < kategorijeRezultat.data.length; i++){
+                for (let i = 0; i < kategorijeRezultat.data.length; i++) {
                     ukupnoPostignuca += kategorijeRezultat.data[i].postignuca.length
                 }
 
@@ -26,6 +32,34 @@ export default function Home() {
                 setBrojKategorija(kategorijeRezultat.data.length)
             } catch (error) {
                 console.error('Greška pri dohvaćanju podataka:', error)
+            }
+        }
+
+        fetchData()
+    }, [])
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const uceniciRezultat = await UceniciService.get()
+
+                setBrojUcenika(uceniciRezultat.data.length)
+            } catch (error) {
+                console.error('Greška pri dohvaćanju učenika:', error)
+            }
+        }
+
+        fetchData()
+    }, [])
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const lekcijeRezultat = await LekcijeService.get()
+
+                setBrojLekcija(lekcijeRezultat.data.length)
+            } catch (error) {
+                console.error('Greška pri dohvaćanju učenika:', error)
             }
         }
 
@@ -50,6 +84,24 @@ export default function Home() {
         }
     }, [animatedKategorija, brojKategorija])
 
+    useEffect(() => {
+        if (animatedUcenici < brojUcenika) {
+            const timer = setTimeout(() => {
+                setAnimatedUcenici(prev => Math.min(prev + 1, brojUcenika))
+            }, 100)
+            return () => clearTimeout(timer)
+        }
+    }, [animatedUcenici, brojUcenika])
+
+    useEffect(() => {
+        if (animatedLekcije < brojLekcija) {
+            const timer = setTimeout(() => {
+                setAnimatedLekcije(prev => Math.min(prev + 1, brojLekcija))
+            }, 100)
+            return () => clearTimeout(timer)
+        }
+    }, [animatedLekcije, brojLekcija])
+
 
 
 
@@ -68,8 +120,7 @@ export default function Home() {
     );
 
     const statsCardChildren = (
-        <>
-            <div className="statistikaContainer">
+            <div className="d-flex flex-row gap-3 align-items-center justify-content-center flex-wrap">
                 <div className="statKartica">
                     <span className="statLabel">Postignuća</span>
                     <span className="statValue">{animatedPostignuca}</span>
@@ -79,8 +130,17 @@ export default function Home() {
                     <span className="statLabel">Kategorije</span>
                     <span className="statValue">{animatedKategorija}</span>
                 </div>
+
+                <div className="statKartica">
+                    <span className="statLabel">Učenici</span>
+                    <span className="statValue">{animatedUcenici}</span>
+                </div>
+
+                <div className="statKartica">
+                    <span className="statLabel">Lekcije</span>
+                    <span className="statValue">{animatedLekcije}</span>
+                </div>
             </div>
-        </>
     )
 
 
@@ -97,6 +157,9 @@ export default function Home() {
                 {homeCardChildren}
             </Card>
             <Card
+                style={{
+                    flex: "0 0 25%",
+                }}
                 title={"Statistika"}
             >
                 {statsCardChildren}
