@@ -24,11 +24,11 @@ export default function Home() {
 
                 let ukupnoPostignuca = 0
 
-                for (let i = 0; i < kategorijeRezultat.data.length; i++) {
+                for (let i = 0; i < kategorijeRezultat.data; i++) {
                     ukupnoPostignuca += kategorijeRezultat.data[i].postignuca.length
                 }
 
-                setBrojPostignuca(ukupnoPostignuca)
+                setBrojPostignuca(ukupnoPostignuca.length)
                 setBrojKategorija(kategorijeRezultat.data.length)
             } catch (error) {
                 console.error('Greška pri dohvaćanju podataka:', error)

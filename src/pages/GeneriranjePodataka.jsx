@@ -1,11 +1,12 @@
-import {useEffect, useState} from "react";
-import {Button, Col, Form, Row} from "react-bootstrap";
-import {Faker, hr} from "@faker-js/faker";
+import { useEffect, useState } from "react";
+import { Button, Col, Form, Row } from "react-bootstrap";
+import { Faker, hr } from "@faker-js/faker";
 import KategorijeService from "../services/kategorije/KategorijeService";
 import PostignucaService from "../services/postignuca/PostignucaService";
-import {CustomAlert} from "../components/CustomAlert";
-import {Card} from "../components/Card";
+import { CustomAlert } from "../components/CustomAlert";
+import { Card } from "../components/Card";
 import UceniciService from "../services/ucenici/UceniciService.js";
+import LekcijeService from "../services/lekcije/LekcijeService.js";
 
 
 export default function GeneriranjePodataka() {
@@ -104,7 +105,7 @@ export default function GeneriranjePodataka() {
                 naziv: naziv,
                 opis: opis,
                 kategorija: kat,
-                procjena: faker.number.int({min: 1, max: 500}),
+                procjena: faker.number.int({ min: 1, max: 500 }),
                 zavrseno: faker.datatype.boolean(),
             };
             await PostignucaService.dodaj(postignuce);
@@ -244,7 +245,9 @@ export default function GeneriranjePodataka() {
             const rezultat = await KategorijeService.get();
             const kategorije = rezultat.data;
             const postignuca = await PostignucaService.get()
-            const postignucaPodaci  = postignuca.data;
+            const postignucaPodaci = postignuca.data;
+            const lekcije = await LekcijeService.get()
+            const lekcijePodaci = lekcije.data;
 
             for (const kategorija of kategorije) {
                 await KategorijeService.obrisi(kategorija.sifra);
@@ -252,6 +255,13 @@ export default function GeneriranjePodataka() {
 
             for (const postignuce of postignucaPodaci) {
                 await PostignucaService.obrisi(postignuce.sifra)
+            }
+
+            for (const lekcija of lekcijePodaci) {
+                await LekcijeService.promjeni({
+                    ...lekcija,
+                    postignuca: []
+                })
             }
 
             setPoruka({
@@ -342,7 +352,7 @@ export default function GeneriranjePodataka() {
                 </CustomAlert>
                 {poruka && (
                     <CustomAlert variant={poruka.tip} className={"mt-2 mb-0"} dismissible
-                                 onClose={() => setPoruka(null)}>
+                        onClose={() => setPoruka(null)}>
                         {poruka.tekst}
                     </CustomAlert>
                 )}
@@ -375,7 +385,7 @@ export default function GeneriranjePodataka() {
                         >
                             {loading ? "Generiranje..." : "Generiraj kategorije"}
                         </Button>
-                        <CustomAlert variant="warning" className="mt-2" style={{fontSize: ".9rem"}}>
+                        <CustomAlert variant="warning" className="mt-2" style={{ fontSize: ".9rem" }}>
                             <strong>Upozorenje:</strong> Ove akcije će dodati nove podatke u postojeće.
                             Ako želite početi ispočetka, prvo obrišite postojeće podatke.
                         </CustomAlert>
@@ -421,7 +431,7 @@ export default function GeneriranjePodataka() {
                         >
                             {loading ? "Generiranje..." : "Generiraj postignuća"}
                         </Button>
-                        <CustomAlert variant="warning" className="mt-2" style={{fontSize: ".9rem"}}>
+                        <CustomAlert variant="warning" className="mt-2" style={{ fontSize: ".9rem" }}>
                             <strong>Upozorenje:</strong> Ove akcije će dodati nove podatke u postojeće.
                             Ako želite početi ispočetka, prvo obrišite postojeće podatke.
                         </CustomAlert>
@@ -495,7 +505,7 @@ export default function GeneriranjePodataka() {
                                 disabled={loading}
                             />
                         </Form.Group>
-                        <CustomAlert variant="warning" className="mt-2" style={{fontSize: ".9rem"}}>
+                        <CustomAlert variant="warning" className="mt-2" style={{ fontSize: ".9rem" }}>
                             <strong>Upozorenje:</strong> Ove akcije će dodati nove podatke u postojeće.
                             Ako želite početi ispočetka, prvo obrišite postojeće podatke.
                         </CustomAlert>
