@@ -37,7 +37,6 @@ const AktivniServis = Servis || PrazanServis;
 
 export default {
     get: () => AktivniServis.get(),
-    getAll: () => AktivniServis.getAll(),
     getBySifra: (sifra) => AktivniServis.getBySifra(sifra),
     dodaj: (lekcija) => AktivniServis.dodaj(lekcija),
     promjeni: (lekcija) => AktivniServis.promjeni(lekcija),

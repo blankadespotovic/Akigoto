@@ -1,9 +1,10 @@
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { RouteNames } from "../../constants";
-import { Button, Col, Row, Form } from "react-bootstrap";
-import { useEffect, useState } from "react";
-import { Card } from "../../components/Card";
+import {Link, useNavigate, useParams} from "react-router-dom";
+import {RouteNames} from "../../constants";
+import {Button, Col, Form, Row} from "react-bootstrap";
+import {useEffect, useState} from "react";
+import {Card} from "../../components/Card";
 import UceniciService from "../../services/ucenici/UceniciService";
+import {CustomInput} from "../../components/customInputs/CustomInput.jsx";
 
 export default function PromjenaUcenika() {
 
@@ -14,7 +15,7 @@ export default function PromjenaUcenika() {
     async function ucitajUcenike() {
         await UceniciService.getBySifra(params.sifra).then((odgovor) => {
             if (!odgovor.success) {
-                alert('Nije implementiran servis')
+                alert("Nije implementiran servis")
                 return
             }
             const p = odgovor.data
@@ -25,7 +26,6 @@ export default function PromjenaUcenika() {
     useEffect(() => {
         ucitajUcenike()
     }, [])
-
 
 
     async function promjeni(ucenik) {
@@ -65,9 +65,9 @@ export default function PromjenaUcenika() {
 
         promjeni({
             sifra: ucenik.sifra,
-            ime: podaci.get('ime'),
-            prezime: podaci.get('prezime'),
-            email: podaci.get('email'),
+            ime: podaci.get("ime"),
+            prezime: podaci.get("prezime"),
+            email: podaci.get("email"),
         })
     }
 
@@ -76,21 +76,28 @@ export default function PromjenaUcenika() {
 
         <Card title={"Promjena učenika"} textAlign={"left"}>
             <Form onSubmit={odradiSubmit}>
-                
-                <Form.Group controlId="ime">
-                    <Form.Label>Ime</Form.Label>
-                    <Form.Control type="text" name="ime" required defaultValue={ucenik.ime} />
-                </Form.Group>
-
-                <Form.Group controlId="prezime">
-                    <Form.Label>Prezime</Form.Label>
-                    <Form.Control type="text" name="prezime" defaultValue={ucenik.prezime} />
-                </Form.Group>
-
-                <Form.Group controlId="email">
-                    <Form.Label>E-mail adresa</Form.Label>
-                    <Form.Control type="email" name="email" defaultValue={ucenik.email} />
-                </Form.Group>
+                <CustomInput
+                    id={"ime"}
+                    type={"text"}
+                    label={"Ime"}
+                    placeholder={"Unesite ime"}
+                    required={true}
+                    defaultValue={ucenik.ime}
+                />
+                <CustomInput
+                    id={"prezime"}
+                    type={"text"}
+                    label={"Prezime"}
+                    placeholder={"Unesite prezime"}
+                    defaultValue={ucenik.prezime}
+                />
+                <CustomInput
+                    id={"email"}
+                    type={"email"}
+                    label={"E-mail adresa učenika"}
+                    placeholder={"Unesite e-mail"}
+                    defaultValue={ucenik.email}
+                />
 
                 <Row className="mt-4">
                     <Col>

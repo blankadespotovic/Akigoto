@@ -1,48 +1,46 @@
-import {postignuca} from "../postignuca/PostignucaPodaci"
+import {kategorije} from "./KategorijePodaci.js";
+import {postignuca} from "../postignuca/PostignucaPodaci.js";
+
+function nadiIndexKategorije(sifra) {
+    return kategorije.findIndex(kat => kat.sifra === Number(sifra))
+}
 
 async function get() {
-    return {success: true, data: [...postignuca]}
+    return {success: true, data: [...kategorije]}
 }
 
 async function getBySifra(sifra) {
-    return {success: true, data: postignuca.find(p => p.sifra === parseInt(sifra))}
+    return {success: true, data: kategorije.find(p => p.sifra === parseInt(sifra))}
 }
 
 async function dodaj(kategorija) {
-
-    if (postignuca.length === 0) {
+    if (kategorije.length === 0) {
         kategorija.sifra = 1
     } else {
-        kategorija.sifra = postignuca.at(-1).sifra + 1
+        kategorija.sifra = kategorije.at(-1).sifra + 1
     }
-    kategorija.postignuca = []
-
-    postignuca.push(kategorija)
+    kategorije.push(kategorija)
 }
 
-async function promjeni(sifra, kategorija) {
-    const kategorijaIndex = nadiIndexKategorije(sifra)
-    kategorija.postignuca = nadiPostignucaZaKategoriju(kategorijaIndex)
-    kategorija.sifra = Number(sifra)
-    postignuca[kategorijaIndex] = kategorija
+async function promjeni(kategorija) {
+    const kategorijaIndex = nadiIndexKategorije(kategorija.sifra)
+    kategorije[kategorijaIndex] = kategorija
 }
 
-function nadiIndexKategorije(sifra) {
-    return postignuca.findIndex(pos => pos.sifra === Number(sifra))
-}
-
-function nadiPostignucaZaKategoriju(kategorijaIndex) {
-    return postignuca[kategorijaIndex].postignuca ?? []
+function obrisiPostignucaKategorije(sifraKategorije) {
+    const postignucaKategorije = postignuca
+        .filter(pos => pos.kategorija === parseInt(sifraKategorije))
+        .map(() => postignuca.findIndex(pos => pos.kategorija === parseInt(sifraKategorije)))
+    for(const sifra of postignucaKategorije) {
+        postignuca.splice(sifra, 1)
+    }
 }
 
 async function obrisi(sifra) {
-    let kategorijaIndex = Number(sifra) -1
-    if(postignuca.length === 1){
-        kategorijaIndex = 0
-    }
-    postignuca.splice(kategorijaIndex, 1)
+    let kategorijaIndex = nadiIndexKategorije(sifra)
+    obrisiPostignucaKategorije(sifra)
+    kategorije.splice(kategorijaIndex, 1)
 }
-
 
 export default {
     get,

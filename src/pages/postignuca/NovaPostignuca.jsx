@@ -1,10 +1,13 @@
-import {useEffect, useState} from 'react'
-import { Button, Col, Form, Row } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
-import { RouteNames } from "../../constants";
-import { Card } from "../../components/Card";
+import {useEffect, useState} from "react"
+import {Button, Col, Form, Row} from "react-bootstrap";
+import {Link, useNavigate} from "react-router-dom";
+import {RouteNames} from "../../constants";
+import {Card} from "../../components/Card";
 import PostignucaService from "../../services/postignuca/PostignucaService";
-import KategorijeService from '../../services/kategorije/KategorijeService';
+import KategorijeService from "../../services/kategorije/KategorijeService";
+import {CustomSelect} from "../../components/customInputs/CustomSelect.jsx";
+import {CustomInput} from "../../components/customInputs/CustomInput.jsx";
+import {CustomCheckbox} from "../../components/customInputs/CustomCheckbox.jsx";
 
 export default function NovaPostignuca() {
 
@@ -14,7 +17,7 @@ export default function NovaPostignuca() {
 
     async function dohvatiKategorije() {
         const dohvaceneKategorije = await KategorijeService.get()
-            .then(res => res.data.map(kat => ({ sifra: kat.sifra, kategorija: kat.kategorija, })));
+            .then(res => res.data.map(kat => ({value: kat.sifra, label: kat.naziv,})));
         setKategorije(dohvaceneKategorije);
     }
 
@@ -35,47 +38,47 @@ export default function NovaPostignuca() {
         e.preventDefault()
         const podaci = new FormData(e.target)
 
-        if(!podaci.get('naziv') || podaci.get('naziv').trim().length === 0){
-            alert ("Naziv je obvezan i ne smije sadržavati samo razmake!")
+        if (!podaci.get("naziv") || podaci.get("naziv").trim().length === 0) {
+            alert("Naziv je obvezan i ne smije sadržavati samo razmake!")
             return
         }
 
-        if(podaci.get('naziv').trim().length < 3){
-            alert ("Naziv postignuca mora imati najmanje 3 znaka!")
+        if (podaci.get("naziv").trim().length < 3) {
+            alert("Naziv postignuca mora imati najmanje 3 znaka!")
             return
         }
 
-        if(!podaci.get('opis') || podaci.get('opis').trim() === ""){
-            alert ("Opis postignuća je obvezan i ne smije sadržavati samo razmake!")
+        if (!podaci.get("opis") || podaci.get("opis").trim() === "") {
+            alert("Opis postignuća je obvezan i ne smije sadržavati samo razmake!")
             return
         }
 
-         if(podaci.get('opis').trim().length < 5){
-            alert ("Opis postignuća mora imati najmanje 5 znakova!")
+        if (podaci.get("opis").trim().length < 5) {
+            alert("Opis postignuća mora imati najmanje 5 znakova!")
             return
         }
 
-        if(!podaci.get('procjena') || podaci.get('procjena').trim() === ""){
-            alert ("Vremenska procjena dolaska do postignuća je obvezna i ne smije sadržavati samo razmake!")
+        if (!podaci.get("procjena") || podaci.get("procjena").trim() === "") {
+            alert("Vremenska procjena dolaska do postignuća je obvezna i ne smije sadržavati samo razmake!")
             return
         }
 
-        if(podaci.get('procjena') < 0){
-            alert ("Vremenska procjena dolaska do postignuća ne može biti negativan broj!")
+        if (podaci.get("procjena") < 0) {
+            alert("Vremenska procjena dolaska do postignuća ne može biti negativan broj!")
             return
         }
 
-          if(podaci.get('procjena') <1 || podaci.get('procjena') > 500){
-            alert ("Vremenska procjena dolaska do postignuća mora biti između 1 i 500 sati!")
+        if (podaci.get("procjena") < 1 || podaci.get("procjena") > 500) {
+            alert("Vremenska procjena dolaska do postignuća mora biti između 1 i 500 sati!")
             return
         }
 
         dodaj({
-            kategorija: podaci.get("kategorija"),
-            naziv: podaci.get('naziv'),
-            opis: podaci.get('opis'),
-            procjena: podaci.get('procjena'),
-            zavrseno: podaci.get('zavrseno') === 'on'
+            kategorija: parseInt(podaci.get("kategorija")),
+            naziv: podaci.get("naziv"),
+            opis: podaci.get("opis"),
+            procjena: podaci.get("procjena"),
+            zavrseno: podaci.get("zavrseno") === "on"
         })
     }
 
@@ -85,33 +88,41 @@ export default function NovaPostignuca() {
         <Card title={"Unos novog postignuća"} textAlign={"left"}>
             <Form onSubmit={odradiSubmit}>
 
-                <Form.Group controlId="kategorija">
-                    <Form.Label>Kategorija</Form.Label>
-                    {kategorije && <Form.Select name="kategorija" defaultValue={kategorije[0]?.sifra}>
-                        {kategorije.map((postignuce) => (
-                            <option key={postignuce.sifra} value={postignuce.sifra}>{postignuce.kategorija}</option>
-                        ))}
-                    </Form.Select>}
-                </Form.Group>
+                <CustomSelect
+                    id={"kategorija"}
+                    label={"Kategorija"}
+                    podaci={kategorije}
+                />
 
-                <Form.Group controlId="naziv">
-                    <Form.Label>Naziv</Form.Label>
-                    <Form.Control type="text" name="naziv" required />
-                </Form.Group>
+                <CustomInput
+                    id={"naziv"}
+                    type={"text"}
+                    label={"Naziv"}
+                    placeholder={'Unesite naziv'}
+                    required={true}
+                />
 
-                <Form.Group controlId="opis">
-                    <Form.Label>Opis postignuća</Form.Label>
-                    <Form.Control type="text" name="opis" />
-                </Form.Group>
+                <CustomInput
+                    id={"opis"}
+                    type={"text"}
+                    label={"Opis postignuća"}
+                    placeholder={'Unesite opis'}
+                    required={true}
+                />
 
-                <Form.Group controlId="procjena">
-                    <Form.Label>Vremenska procjena dolaska do postignuća</Form.Label>
-                    <Form.Control type="number"  name="procjena" />
-                </Form.Group>
+                <CustomInput
+                    id={"procjena"}
+                    type={"number"}
+                    label={"Vremenska procjena dolaska do postignuća"}
+                    placeholder={'5'}
+                    suffix={"min"}
+                    trebaFormatiratuVrijeme={true}
+                />
 
-                <Form.Group controlId="zavrseno">
-                    <Form.Check label="Postignuto" name="zavrseno" />
-                </Form.Group>
+                <CustomCheckbox
+                    id={"zavrseno"}
+                    label={"Postignuto"}
+                />
 
                 <Row className="mt-4">
                     <Col>

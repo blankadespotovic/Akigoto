@@ -3,6 +3,7 @@ import KategorijeService from "../../services/kategorije/KategorijeService.js";
 import {RouteNames} from "../../constants.js";
 import {Card} from "../../components/Card.jsx";
 import {Button, Col, Form, Row} from "react-bootstrap";
+import {CustomInput} from "../../components/customInputs/CustomInput.jsx";
 
 export default function NovaKategorija() {
     const navigate = useNavigate()
@@ -17,17 +18,19 @@ export default function NovaKategorija() {
     function odradiSubmit(e) {
         e.preventDefault()
         const podaci = new FormData(e.target)
-        dodaj({kategorija: podaci.get("kategorija")})
+        dodaj({naziv: podaci.get("naziv")})
     }
 
     return (
         <Card title={"Unos nove kategorije"} textAlign={"left"}>
             <Form onSubmit={odradiSubmit}>
-
-                <Form.Group controlId="kategorija">
-                    <Form.Label>Naziv</Form.Label>
-                    <Form.Control type="text" name="kategorija" required/>
-                </Form.Group>
+                <CustomInput
+                    id={"naziv"}
+                    type={"text"}
+                    label={"Naziv"}
+                    placeholder={'Unesite naziv'}
+                    required={true}
+                />
                 <Row className="mt-4">
                     <Col>
                         <Link to={RouteNames.KATEGORIJE} className="btn btnCancel">

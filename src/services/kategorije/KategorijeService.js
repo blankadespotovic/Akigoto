@@ -19,14 +19,14 @@ switch (DATA_SOURCE) {
 
 const PrazanServis = {
     get: async () => ({success: false, data: []}),
-    getBySifra: async (kategorija, sifra) => ({success: false, data: {}}),
-    dodaj: async (postignuce) => {
+    getBySifra: async (sifra) => ({success: false, data: {}}),
+    dodaj: async (kategorija) => {
         console.error("Servis nije učitan");
     },
-    promjeni: async (sifra, postignuce) => {
+    promjeni: async (kategorija) => {
         console.error("Servis nije učitan");
     },
-    obrisi: async (sifra, postignuceSifra) => {
+    obrisi: async (sifra) => {
         console.error("Servis nije učitan");
     }
 };
@@ -38,6 +38,6 @@ export default {
     get: () => AktivniServis.get(),
     getBySifra: (sifra) => AktivniServis.getBySifra(sifra),
     dodaj: (kategorija) => AktivniServis.dodaj(kategorija),
-    promjeni: (sifra, kategorija) => AktivniServis.promjeni(sifra, kategorija),
+    promjeni: (kategorija) => AktivniServis.promjeni(kategorija),
     obrisi: (sifra) => AktivniServis.obrisi(sifra)
 };

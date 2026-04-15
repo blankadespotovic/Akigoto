@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { RouteNames } from "../../constants";
 import { Card } from "../../components/Card";
 import UceniciService from "../../services/ucenici/UceniciService";
+import {CustomInput} from "../../components/customInputs/CustomInput.jsx";
 
 export default function NoviUcenici() {
 
@@ -68,21 +69,26 @@ export default function NoviUcenici() {
 
         <Card title={"Unos novog učenika"} textAlign={"left"}>
             <Form onSubmit={odradiSubmit}>
-
-                <Form.Group controlId="ime">
-                    <Form.Label>Ime</Form.Label>
-                    <Form.Control type="text" name="ime" required />
-                </Form.Group>
-
-                <Form.Group controlId="prezime">
-                    <Form.Label>Prezime</Form.Label>
-                    <Form.Control type="text" name="prezime" />
-                </Form.Group>
-
-                <Form.Group controlId="email">
-                    <Form.Label>E-mail adresa učenika</Form.Label>
-                    <Form.Control type="email"  name="email" />
-                </Form.Group>
+                <CustomInput
+                    id={"ime"}
+                    type={"text"}
+                    label={"Ime"}
+                    placeholder={"Unesite ime"}
+                    required={true}
+                />
+                <CustomInput
+                    id={"prezime"}
+                    type={"text"}
+                    label={"Prezime"}
+                    placeholder={"Unesite prezime"}
+                />
+                <CustomInput
+                    id={"email"}
+                    type={"email"}
+                    label={"E-mail adresa učenika"}
+                    placeholder={"Unesite e-mail"}
+                    required={true}
+                />
 
                 <Row className="mt-4">
                     <Col>

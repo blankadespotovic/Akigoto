@@ -1,10 +1,13 @@
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { RouteNames } from "../../constants";
-import { Button, Col, Row, Form } from "react-bootstrap";
-import { useEffect, useState } from "react";
-import { Card } from "../../components/Card";
+import {Link, useNavigate, useParams} from "react-router-dom";
+import {RouteNames} from "../../constants";
+import {Button, Col, Form, Row} from "react-bootstrap";
+import {useEffect, useState} from "react";
+import {Card} from "../../components/Card";
 import PostignucaService from "../../services/postignuca/PostignucaService";
 import KategorijeService from "../../services/kategorije/KategorijeService";
+import {CustomSelect} from "../../components/customInputs/CustomSelect.jsx";
+import {CustomInput} from "../../components/customInputs/CustomInput.jsx";
+import {CustomCheckbox} from "../../components/customInputs/CustomCheckbox.jsx";
 
 export default function PromjenaPostignuca() {
 
@@ -13,15 +16,11 @@ export default function PromjenaPostignuca() {
     const [postignuce, setPostignuce] = useState({})
     const [zavrseno, setZavrseno] = useState(false)
     const [kategorije, setKategorije] = useState();
-    const [odabranaKategorija, setOdabranaKategorija] = useState()
 
     async function dohvatiKategorije() {
         const dohvaceneKategorije = await KategorijeService.get()
-            .then(res => res.data.map(kat => ({ sifra: kat.sifra, kategorija: kat.kategorija, })));
-        const kategorijaPostignuca = Number(postignuce.kategorija)
-        const dohvacenaKategorija = dohvaceneKategorije.find(e => e.sifra === kategorijaPostignuca)
-        setOdabranaKategorija(dohvacenaKategorija)
-        setKategorije(dohvaceneKategorije);
+            .then(res => res.data.map(kat => ({value: kat.sifra, label: kat.naziv,})));
+        setKategorije(dohvaceneKategorije)
     }
 
     useEffect(() => {
@@ -31,9 +30,9 @@ export default function PromjenaPostignuca() {
     }, [postignuce])
 
     async function ucitajPostignuce() {
-        await PostignucaService.getBySifra(params.kategorija, params.sifra).then((odgovor) => {
+        await PostignucaService.getBySifra(params.sifra).then((odgovor) => {
             if (!odgovor.success) {
-                alert('Nije implementiran servis')
+                alert("Nije implementiran servis")
                 return
             }
             const p = odgovor.data
@@ -47,9 +46,8 @@ export default function PromjenaPostignuca() {
     }, [])
 
 
-
-    async function promjeni(postignuce, novaKategorija) {
-        await PostignucaService.promjeni(params.kategorija, postignuce, novaKategorija).then(() => {
+    async function promjeni(postignuce) {
+        await PostignucaService.promjeni(postignuce).then(() => {
             navigate(RouteNames.POSTIGNUCA)
         })
     }
@@ -58,49 +56,49 @@ export default function PromjenaPostignuca() {
         e.preventDefault()
         const podaci = new FormData(e.target)
 
-        if (!podaci.get('naziv') || podaci.get('naziv').trim().length === 0) {
+        if (!podaci.get("naziv") || podaci.get("naziv").trim().length === 0) {
             alert("Naziv je obvezan i ne smije sadržavati samo razmake!")
             return
         }
 
-        if (podaci.get('naziv').trim().length < 3) {
+        if (podaci.get("naziv").trim().length < 3) {
             alert("Naziv postignuća mora imati najmanje 3 znaka!")
             return
         }
 
-        if (!podaci.get('opis') || podaci.get('opis').trim() === "") {
+        if (!podaci.get("opis") || podaci.get("opis").trim() === "") {
             alert("Opis postignuća je obvezan i ne smije sadržavati samo razmake!")
             return
         }
 
-        if (podaci.get('opis').trim().length < 5) {
+        if (podaci.get("opis").trim().length < 5) {
             alert("Opis postignuća mora imati najmanje 5 znakova!")
             return
         }
 
-        if (!podaci.get('procjena') || podaci.get('procjena').trim() === "") {
+        if (!podaci.get("procjena") || podaci.get("procjena").trim() === "") {
             alert("Vremenska procjena dolaska do postignuća je obvezna i ne smije sadržavati samo razmake!")
             return
         }
 
-        if (podaci.get('procjena') < 0) {
+        if (podaci.get("procjena") < 0) {
             alert("Vremenska procjena dolaska do postignuća ne može biti negativan broj!")
             return
         }
 
-        if (podaci.get('procjena') < 1 || podaci.get('procjena') > 500) {
+        if (podaci.get("procjena") < 1 || podaci.get("procjena") > 500) {
             alert("Vremenska procjena dolaska do postignuća mora biti između 1 i 500 sati!")
             return
         }
 
         promjeni({
             sifra: postignuce.sifra,
-            naziv: podaci.get('naziv'),
-            opis: podaci.get('opis'),
-            procjena: podaci.get('procjena'),
+            naziv: podaci.get("naziv"),
+            opis: podaci.get("opis"),
+            procjena: podaci.get("procjena"),
             zavrseno: zavrseno,
-            kategorija: postignuce.kategorija,
-        }, podaci.get('kategorija'))
+            kategorija: parseInt(podaci.get("kategorija")),
+        })
     }
 
 
@@ -108,33 +106,43 @@ export default function PromjenaPostignuca() {
 
         <Card title={"Promjena postignuća"} textAlign={"left"}>
             <Form onSubmit={odradiSubmit}>
-                <Form.Group controlId="kategorija">
-                    <Form.Label>Kategorija</Form.Label>
-                    {kategorije && odabranaKategorija && <Form.Select name="kategorija" defaultValue={odabranaKategorija?.sifra}>
-                        {kategorije.map((postignuce) => (
-                            <option key={postignuce.sifra} value={postignuce.sifra}>{postignuce.kategorija}</option>
-                        ))}
-                    </Form.Select>}
-                </Form.Group>
 
-                <Form.Group controlId="naziv">
-                    <Form.Label>Naziv</Form.Label>
-                    <Form.Control type="text" name="naziv" required defaultValue={postignuce.naziv} />
-                </Form.Group>
+                <CustomSelect
+                    id={"kategorija"}
+                    label={"Kategorija"}
+                    podaci={kategorije}
+                    defaultValue={kategorije?.find(e => e.value === postignuce?.kategorija).value}
+                />
 
-                <Form.Group controlId="opis">
-                    <Form.Label>Opis postignuća</Form.Label>
-                    <Form.Control type="text" name="opis" defaultValue={postignuce.opis} />
-                </Form.Group>
+                <CustomInput
+                    id={"naziv"}
+                    type={"text"}
+                    label={"Naziv"}
+                    required={true}
+                    defaultValue={postignuce.naziv}
+                />
 
-                <Form.Group controlId="procjena">
-                    <Form.Label>Vremenska procjena dolaska do postignuća</Form.Label>
-                    <Form.Control type="number" name="procjena" defaultValue={postignuce.procjena} />
-                </Form.Group>
+                <CustomInput
+                    id={"opis"}
+                    type={"text"}
+                    label={"Opis postignuća"}
+                    required={true}
+                    defaultValue={postignuce.opis}
+                />
 
-                <Form.Group controlId="zavrseno">
-                    <Form.Check label="Postignuto" name="zavrseno" checked={zavrseno} onChange={(e) => { setZavrseno(e.target.checked) }} />
-                </Form.Group>
+                <CustomInput
+                    id={"procjena"}
+                    type={"number"}
+                    label={"Vremenska procjena dolaska do postignuća"}
+                    defaultValue={postignuce.procjena}
+                />
+
+                <CustomCheckbox
+                    id={"zavrseno"}
+                    label={"Postignuto"}
+                    checked={zavrseno}
+                    setOnChange={setZavrseno}
+                />
 
                 <Row className="mt-4">
                     <Col>
@@ -150,8 +158,6 @@ export default function PromjenaPostignuca() {
                 </Row>
             </Form>
         </Card>
-
-
     )
 
 }

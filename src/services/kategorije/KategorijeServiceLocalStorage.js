@@ -1,12 +1,19 @@
+import {kategorije} from "./KategorijePodaci.js";
+import {POS_STORAGE_KEY} from "../postignuca/PostignucaServiceLocalStorage.js";
+
 const STORAGE_KEY = "kategorije";
+
+function nadiIndexKategorije(sifra) {
+    return kategorije.findIndex(kat => kat.sifra === Number(sifra))
+}
 
 function dohvatiSveIzStorage() {
     const podaci = localStorage.getItem(STORAGE_KEY);
     return podaci ? JSON.parse(podaci) : [];
 }
 
-function spremiUStorage(podaci) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(podaci));
+function spremiUStorage(podaci, key) {
+    localStorage.setItem(key, JSON.stringify(podaci));
 }
 
 async function get() {
@@ -28,49 +35,46 @@ async function dodaj(kategorija) {
     } else {
         kategorija.sifra = kategorije.at(-1).sifra + 1
     }
-    kategorija.postignuca = [];
     kategorije.push(kategorija)
-    spremiUStorage(kategorije);
+    spremiUStorage(kategorije, STORAGE_KEY);
     return {data: kategorija};
-
 }
 
-async function promjeni(sifra, kategorija) {
+async function promjeni(kategorija) {
 
     const kategorije = dohvatiSveIzStorage();
-    const kategorijaIndex = nadiIndexKategorije(sifra)
+    const kategorijaIndex = nadiIndexKategorije(kategorija.sifra)
 
     if (kategorijaIndex !== -1) {
-        kategorija.sifra = Number(sifra);
-        kategorija.postignuca = nadiPostignucaZaKategoriju(kategorijaIndex)
         kategorije[kategorijaIndex] = kategorija;
-        spremiUStorage(kategorije);
+        spremiUStorage(kategorije, STORAGE_KEY);
     }
     return {data: kategorije[kategorijaIndex]};
 }
 
-function nadiIndexKategorije(sifra) {
-    const kategorije = dohvatiSveIzStorage();
-    return kategorije.findIndex(pos => pos.sifra === Number(sifra));
-}
-
-function nadiPostignucaZaKategoriju(kategorijaIndex) {
-    const kategorije = dohvatiSveIzStorage();
-    return kategorije[kategorijaIndex].postignuca ?? []
+function obrisiPostignucaKategorije(sifraKategorije) {
+    let postignuca = JSON.parse(localStorage.getItem(POS_STORAGE_KEY));
+    if (postignuca && postignuca.length > 0) {
+        postignuca.filter(pos => pos.kategorija !== parseInt(sifraKategorije))
+        spremiUStorage(postignuca, POS_STORAGE_KEY)
+        if (postignuca.length <= 0) {
+            localStorage.removeItem(POS_STORAGE_KEY)
+        }
+    }
 }
 
 async function obrisi(sifra) {
     let kategorije = dohvatiSveIzStorage();
     kategorije = kategorije.filter(s => s.sifra !== parseInt(sifra));
-    spremiUStorage(kategorije);
-    if (kategorije.length === 0) {
+    spremiUStorage(kategorije, STORAGE_KEY);
+    obrisiPostignucaKategorije(sifra)
+    if (kategorije.length <= 0) {
         localStorage.removeItem(STORAGE_KEY)
     }
     return {message: "Obrisano"};
 }
 
 export default {
-    dohvatiSveIzStorage,
     get,
     dodaj,
     getBySifra,

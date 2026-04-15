@@ -4,6 +4,7 @@ import {Button, Col, Form, Row} from "react-bootstrap";
 import {useEffect, useState} from "react";
 import {Card} from "../../components/Card";
 import KategorijeService from "../../services/kategorije/KategorijeService.js";
+import {CustomInput} from "../../components/customInputs/CustomInput.jsx";
 
 export default function PromjenaKategorije() {
     const navigate = useNavigate()
@@ -27,7 +28,7 @@ export default function PromjenaKategorije() {
 
 
     async function promjeni(kategorija) {
-        await KategorijeService.promjeni(params.sifra, kategorija).then(() => {
+        await KategorijeService.promjeni(kategorija).then(() => {
             navigate(RouteNames.KATEGORIJE)
         })
     }
@@ -35,7 +36,10 @@ export default function PromjenaKategorije() {
     function odradiSubmit(e) {
         e.preventDefault()
         const podaci = new FormData(e.target)
-        promjeni({kategorija: podaci.get("kategorija")})
+        promjeni({
+            sifra: kategorija.sifra,
+            naziv: podaci.get("naziv")
+        })
     }
 
 
@@ -43,10 +47,14 @@ export default function PromjenaKategorije() {
 
         <Card title={"Promjena kategorije"} textAlign={"left"}>
             <Form onSubmit={odradiSubmit}>
-                <Form.Group controlId="kategorija">
-                    <Form.Label>Naziv</Form.Label>
-                    <Form.Control type="text" name="kategorija" required defaultValue={kategorija?.kategorija}/>
-                </Form.Group>
+                <CustomInput
+                    id={"naziv"}
+                    type={"text"}
+                    label={"Naziv"}
+                    placeholder={"Unesite naziv"}
+                    required={true}
+                    defaultValue={kategorija?.naziv}
+                />
                 <Row className="mt-4">
                     <Col>
                         <Link to={RouteNames.KATEGORIJE} className="btn btnCancel">

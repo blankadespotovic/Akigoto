@@ -22,4 +22,7 @@ export const RouteNames = {
     PROMJENA_LEKCIJA: '/lekcije/:sifra'
 }
 
-export const DATA_SOURCE = 'localStorage';
+const L = 'localStorage';
+const M = 'memorija';
+
+export const DATA_SOURCE = L

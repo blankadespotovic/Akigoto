@@ -33,7 +33,7 @@ export default function GeneriranjePodataka() {
     }, [])
 
     const dohvatiBrojPostignuca = async () => {
-        const svaPostignuca = await PostignucaService.getAll()
+        const svaPostignuca = await PostignucaService.get()
         setUkupnoPostignuca(svaPostignuca?.data?.length)
     }
 
@@ -68,7 +68,7 @@ export default function GeneriranjePodataka() {
 
         for (let i = 0; i < broj; i++) {
             await KategorijeService.dodaj({
-                kategorija: naziviKategorija[i % naziviKategorija.length] + (i >= naziviKategorija.length ? ` ${Math.floor(i / naziviKategorija.length) + 1}` : ""),
+                naziv: naziviKategorija[i % naziviKategorija.length] + (i >= naziviKategorija.length ? ` ${Math.floor(i / naziviKategorija.length) + 1}` : ""),
             });
         }
         await dohvatiBrojKategorija()
@@ -99,10 +99,11 @@ export default function GeneriranjePodataka() {
                 "Savladao si osnovne gramatičke strukture"
 
             ]);
+            const kat = parseInt(faker.helpers.arrayElement(sveKategorije.data).sifra)
             const postignuce = {
-                kategorija: faker.helpers.arrayElement(sveKategorije.data).sifra,
                 naziv: naziv,
                 opis: opis,
+                kategorija: kat,
                 procjena: faker.number.int({min: 1, max: 500}),
                 zavrseno: faker.datatype.boolean(),
             };
@@ -111,11 +112,11 @@ export default function GeneriranjePodataka() {
         await dohvatiBrojPostignuca()
     };
 
-    const fixLastNameSpacing = (str) => {
+    const popraviRazmakeUPrezimenu = (str) => {
         return str.replaceAll(/([a-zčćžšđ])([A-ZČĆŽŠĐ])/g, "$1 $2");
     };
 
-    const normalizeForEmail = (str) => {
+    const normalizirajZaEMail = (str) => {
         return str
             .replaceAll("đ", "d")
             .replaceAll("Đ", "D")
@@ -147,10 +148,10 @@ export default function GeneriranjePodataka() {
             const spolParsed = spol || undefined;
             const imeRaw = faker.person.firstName(spolParsed);
             const prezimeRaw = faker.person.lastName(spolParsed);
-            const prezimePrikaz = fixLastNameSpacing(prezimeRaw);
+            const prezimePrikaz = popraviRazmakeUPrezimenu(prezimeRaw);
 
-            const firstNameEmail = normalizeForEmail(imeRaw);
-            const lastNameEmail = normalizeForEmail(prezimeRaw);
+            const firstNameEmail = normalizirajZaEMail(imeRaw);
+            const lastNameEmail = normalizirajZaEMail(prezimeRaw);
 
             const email = `${firstNameEmail}.${lastNameEmail}@${faker.helpers.arrayElement(domene)}.${faker.helpers.arrayElement(topLevelDomena)}`;
             const ucenik = {
@@ -232,7 +233,7 @@ export default function GeneriranjePodataka() {
     };
 
     const handleObrisiKategorije = async () => {
-        if (!window.confirm("Jeste li sigurni da želite obrisati sve kategorije?")) {
+        if (!window.confirm("Jeste li sigurni da želite obrisati sve kategorije?\nOPREZ! Obrisat ćete sva postignuća iz te kategorije.")) {
             return;
         }
 
@@ -242,9 +243,15 @@ export default function GeneriranjePodataka() {
         try {
             const rezultat = await KategorijeService.get();
             const kategorije = rezultat.data;
+            const postignuca = await PostignucaService.get()
+            const postignucaPodaci  = postignuca.data;
 
             for (const kategorija of kategorije) {
                 await KategorijeService.obrisi(kategorija.sifra);
+            }
+
+            for (const postignuce of postignucaPodaci) {
+                await PostignucaService.obrisi(postignuce.sifra)
             }
 
             setPoruka({
@@ -272,11 +279,11 @@ export default function GeneriranjePodataka() {
         setPoruka(null);
 
         try {
-            const rezultat = await PostignucaService.getAll();
+            const rezultat = await PostignucaService.get();
             const postignuca = rezultat.data;
 
             for (const postignuce of postignuca) {
-                await PostignucaService.obrisi(postignuce.kategorija, postignuce.sifra)
+                await PostignucaService.obrisi(postignuce.sifra)
             }
 
             setPoruka({
@@ -376,7 +383,7 @@ export default function GeneriranjePodataka() {
                     <Button
                         variant="danger"
                         onClick={handleObrisiKategorije}
-                        disabled={loading || brojKategorija < 1}
+                        disabled={loading || ukupnoKategorija < 1}
                         className="w-100 btn btnCancel"
                     >
                         {loading ? "Brisanje..." : "Obriši sve kategorije"}
