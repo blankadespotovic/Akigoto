@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import KategorijeService from "../services/kategorije/KategorijeService";
 import UceniciService from "../services/ucenici/UceniciService";
 import LekcijeService from "../services/lekcije/LekcijeService";
+import PostignucaService from "../services/postignuca/PostignucaService.js";
 
 export default function Home() {
 
@@ -21,45 +22,16 @@ export default function Home() {
         const fetchData = async () => {
             try {
                 const kategorijeRezultat = await KategorijeService.get()
-
-                let ukupnoPostignuca = 0
-
-                for (let i = 0; i < kategorijeRezultat.data; i++) {
-                    ukupnoPostignuca += kategorijeRezultat.data[i].postignuca.length
-                }
-
-                setBrojPostignuca(ukupnoPostignuca.length)
-                setBrojKategorija(kategorijeRezultat.data.length)
-            } catch (error) {
-                console.error('Greška pri dohvaćanju podataka:', error)
-            }
-        }
-
-        fetchData()
-    }, [])
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
+                const postignucaReultat = await PostignucaService.get()
                 const uceniciRezultat = await UceniciService.get()
-
-                setBrojUcenika(uceniciRezultat.data.length)
-            } catch (error) {
-                console.error('Greška pri dohvaćanju učenika:', error)
-            }
-        }
-
-        fetchData()
-    }, [])
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
                 const lekcijeRezultat = await LekcijeService.get()
 
                 setBrojLekcija(lekcijeRezultat.data.length)
+                setBrojUcenika(uceniciRezultat.data.length)
+                setBrojKategorija(kategorijeRezultat.data.length)
+                setBrojPostignuca(postignucaReultat.data.length)
             } catch (error) {
-                console.error('Greška pri dohvaćanju učenika:', error)
+                console.error('Greška pri dohvaćanju podataka:', error)
             }
         }
 
