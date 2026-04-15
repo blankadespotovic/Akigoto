@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
-import { Button, Col, Form, Row } from "react-bootstrap";
-import { Faker, hr } from "@faker-js/faker";
+import {useEffect, useState} from "react";
+import {Button, Col, Form, Row} from "react-bootstrap";
+import {Faker, hr} from "@faker-js/faker";
 import KategorijeService from "../services/kategorije/KategorijeService";
 import PostignucaService from "../services/postignuca/PostignucaService";
-import { CustomAlert } from "../components/CustomAlert";
-import { Card } from "../components/Card";
+import {CustomAlert} from "../components/CustomAlert";
+import {Card} from "../components/Card";
 import UceniciService from "../services/ucenici/UceniciService.js";
 import LekcijeService from "../services/lekcije/LekcijeService.js";
 
@@ -14,8 +14,12 @@ export default function GeneriranjePodataka() {
     const [ukupnoKategorija, setUkupnoKategorija] = useState()
     const [brojPostignuca, setBrojPostignuca] = useState(20)
     const [ukupnoPostignuca, setUkupnoPostignuca] = useState()
+    const [svaPostignuca, setSvaPostignuca] = useState()
     const [brojUcenika, setBrojUcenika] = useState(15)
     const [ukupnoUcenika, setUkupnoUcenika] = useState()
+    const [sviUcenici, setSviUcenici] = useState()
+    const [brojLekcija, setBrojLekcija] = useState(5)
+    const [ukupnoLekcija, setUkupnoLekcija] = useState()
     const [poruka, setPoruka] = useState(null);
     const [loading, setLoading] = useState(false);
     const [spol, setSpol] = useState(null);
@@ -35,6 +39,7 @@ export default function GeneriranjePodataka() {
 
     const dohvatiBrojPostignuca = async () => {
         const svaPostignuca = await PostignucaService.get()
+        setSvaPostignuca(svaPostignuca?.data)
         setUkupnoPostignuca(svaPostignuca?.data?.length)
     }
 
@@ -44,6 +49,7 @@ export default function GeneriranjePodataka() {
 
     const dohvatiBrojUcenika = async () => {
         const sviUcenici = await UceniciService.get()
+        setSviUcenici(sviUcenici?.data)
         setUkupnoUcenika(sviUcenici?.data?.length)
     }
 
@@ -51,6 +57,14 @@ export default function GeneriranjePodataka() {
         dohvatiBrojUcenika()
     }, [])
 
+    const dohvatiBrojLekcija = async () => {
+        const sveLekcije = await LekcijeService.get()
+        setUkupnoLekcija(sveLekcije?.data?.length)
+    }
+
+    useEffect(() => {
+        dohvatiBrojLekcija()
+    }, [])
 
     const generirajKategorije = async (broj) => {
         const naziviKategorija = [
@@ -105,7 +119,7 @@ export default function GeneriranjePodataka() {
                 naziv: naziv,
                 opis: opis,
                 kategorija: kat,
-                procjena: faker.number.int({ min: 1, max: 500 }),
+                procjena: faker.number.int({min: 1, max: 500}),
                 zavrseno: faker.datatype.boolean(),
             };
             await PostignucaService.dodaj(postignuce);
@@ -164,6 +178,46 @@ export default function GeneriranjePodataka() {
         }
         dohvatiBrojUcenika()
     };
+
+    const generirajLekcije = async (broj) => {
+        const svaPostignucaIds = svaPostignuca?.map(p => parseInt(p.sifra))
+        const sviUceniciIds = sviUcenici?.map(u => parseInt(u.sifra))
+        for (let i = 0; i < broj; i++) {
+            // TODO: smisli neke nazive za lekcije [uzeto iz postignuća]
+            const naziv = faker.helpers.arrayElement([
+                "Prvi korak",
+                "Osnove hiragane",
+                "Hiragana majstor",
+                "Osnove katakane",
+                "Katakana majstor",
+                "Kanji istraživač",
+                "Rječnik u porastu",
+                "Temeljno znanje gramatike"
+            ]);
+
+            // TODO: smisli neke opise za lekcije [uzeto iz postignuća]
+            const opis = faker.helpers.arrayElement([
+                "Završio si svoju prvu lekciju japanskog jezika",
+                "Naučio si osnovne hiragana znakove",
+                "Savladao si svih 46 znakova hiragane",
+                "Naučio si osnovne katakana znakove",
+                "Savladao si svih 46 znakova katakane",
+                "Naučio si 20 kanji znakova",
+                "Naučio si 50 novih japanskih riječi.",
+                "Savladao si osnovne gramatičke strukture"
+            ]);
+
+            const lekcija = {
+                naziv: naziv,
+                opis: opis,
+                trajanje: faker.number.int({min: 1, max: 500}),
+                postignuca: faker.helpers.arrayElements(svaPostignucaIds),
+                ucenici: faker.helpers.arrayElements(sviUceniciIds),
+            };
+            await LekcijeService.dodaj(lekcija);
+        }
+        dohvatiBrojLekcija()
+    }
 
     const handleGenerirajKategorije = async (e) => {
         e.preventDefault();
@@ -233,6 +287,29 @@ export default function GeneriranjePodataka() {
         }
     };
 
+    const handleGenerirajLekcije = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setPoruka(null);
+
+        try {
+
+            await generirajLekcije(brojLekcija);
+
+            setPoruka({
+                tip: "success",
+                tekst: `Uspješno generirano ${brojLekcija} lekcija!`
+            });
+        } catch (error) {
+            setPoruka({
+                tip: "danger",
+                tekst: "Greška pri generiranju lekcija: " + error.message
+            });
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const handleObrisiKategorije = async () => {
         if (!window.confirm("Jeste li sigurni da želite obrisati sve kategorije?\nOPREZ! Obrisat ćete sva postignuća iz te kategorije.")) {
             return;
@@ -245,7 +322,7 @@ export default function GeneriranjePodataka() {
             const rezultat = await KategorijeService.get();
             const kategorije = rezultat.data;
             const postignuca = await PostignucaService.get()
-            const postignucaPodaci = postignuca.data;
+            const postignucaPodaci  = postignuca.data;
             const lekcije = await LekcijeService.get()
             const lekcijePodaci = lekcije.data;
 
@@ -342,6 +419,37 @@ export default function GeneriranjePodataka() {
         }
     };
 
+    const handleObrisiLekcije = async () => {
+        if (!window.confirm("Jeste li sigurni da želite obrisati sve lekcije?")) {
+            return;
+        }
+
+        setLoading(true);
+        setPoruka(null);
+
+        try {
+            const sveLekcije = await LekcijeService.get();
+            const lekcijePodaci = sveLekcije.data;
+
+            for (const lekcija of lekcijePodaci) {
+                await LekcijeService.obrisi(lekcija.sifra);
+            }
+
+            setPoruka({
+                tip: "success",
+                tekst: `Uspješno obrisano ${lekcijePodaci.length} lekcija!`
+            });
+        } catch (error) {
+            setPoruka({
+                tip: "danger",
+                tekst: "Greška pri brisanju lekcija: " + error.message
+            });
+        } finally {
+            setLoading(false);
+            dohvatiBrojLekcija()
+        }
+    }
+
     return (
         <Row className="mt-2">
             <Col md={12}>
@@ -352,7 +460,7 @@ export default function GeneriranjePodataka() {
                 </CustomAlert>
                 {poruka && (
                     <CustomAlert variant={poruka.tip} className={"mt-2 mb-0"} dismissible
-                        onClose={() => setPoruka(null)}>
+                                 onClose={() => setPoruka(null)}>
                         {poruka.tekst}
                     </CustomAlert>
                 )}
@@ -385,7 +493,7 @@ export default function GeneriranjePodataka() {
                         >
                             {loading ? "Generiranje..." : "Generiraj kategorije"}
                         </Button>
-                        <CustomAlert variant="warning" className="mt-2" style={{ fontSize: ".9rem" }}>
+                        <CustomAlert variant="warning" className="mt-2" style={{fontSize: ".9rem"}}>
                             <strong>Upozorenje:</strong> Ove akcije će dodati nove podatke u postojeće.
                             Ako želite početi ispočetka, prvo obrišite postojeće podatke.
                         </CustomAlert>
@@ -431,7 +539,7 @@ export default function GeneriranjePodataka() {
                         >
                             {loading ? "Generiranje..." : "Generiraj postignuća"}
                         </Button>
-                        <CustomAlert variant="warning" className="mt-2" style={{ fontSize: ".9rem" }}>
+                        <CustomAlert variant="warning" className="mt-2" style={{fontSize: ".9rem"}}>
                             <strong>Upozorenje:</strong> Ove akcije će dodati nove podatke u postojeće.
                             Ako želite početi ispočetka, prvo obrišite postojeće podatke.
                         </CustomAlert>
@@ -469,7 +577,7 @@ export default function GeneriranjePodataka() {
                                 Unesite broj učenika (1-50)
                             </Form.Text>
                         </Form.Group>
-                        <Form.Group className="mb-3 d-flex align-items-center gap-3 justify-content-center generiraj-ucenike">
+                        <Form.Group className="d-flex align-items-center gap-3 justify-content-center generiraj-ucenike">
                             <Button
                                 variant="primary"
                                 type="submit"
@@ -505,7 +613,7 @@ export default function GeneriranjePodataka() {
                                 disabled={loading}
                             />
                         </Form.Group>
-                        <CustomAlert variant="warning" className="mt-2" style={{ fontSize: ".9rem" }}>
+                        <CustomAlert variant="warning" className="mt-2" style={{fontSize: ".9rem"}}>
                             <strong>Upozorenje:</strong> Ove akcije će dodati nove podatke u postojeće.
                             Ako želite početi ispočetka, prvo obrišite postojeće podatke.
                         </CustomAlert>
@@ -513,10 +621,56 @@ export default function GeneriranjePodataka() {
                     <Button
                         variant="danger"
                         onClick={handleObrisiUcenike}
-                        disabled={loading || brojUcenika < 1}
+                        disabled={loading || ukupnoUcenika < 1}
                         className="w-100 btn btnCancel"
                     >
                         {loading ? "Brisanje..." : "Obriši sve učenike"}
+                    </Button>
+                    <CustomAlert variant="danger" className="mt-2">
+                        <strong>Oprez!</strong> Brisanje podataka je trajna akcija i ne može se poništiti.
+                    </CustomAlert>
+                </Card>
+            </Col>
+            <Col md={6}>
+                <Card
+                    title={`Lekcije [trenutno: ${ukupnoLekcija}]`}
+                    textAlign={"start"}
+                >
+                    <Form onSubmit={handleGenerirajLekcije}>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Broj lekcija</Form.Label>
+                            <Form.Control
+                                type="number"
+                                min="1"
+                                max="50"
+                                value={brojLekcija}
+                                onChange={(e) => setBrojLekcija(parseInt(e.target.value))}
+                                disabled={loading}
+                            />
+                            <Form.Text className="text-muted">
+                                Unesite broj lekcija (1-50)
+                            </Form.Text>
+                        </Form.Group>
+                            <Button
+                                variant="primary"
+                                type="submit"
+                                disabled={loading}
+                                className="w-100 btn btnAdd"
+                            >
+                                {loading ? "Generiranje..." : "Generiraj lekcije"}
+                            </Button>
+                        <CustomAlert variant="warning" className="mt-2" style={{fontSize: ".9rem"}}>
+                            <strong>Upozorenje:</strong> Ove akcije će dodati nove podatke u postojeće.
+                            Ako želite početi ispočetka, prvo obrišite postojeće podatke.
+                        </CustomAlert>
+                    </Form>
+                    <Button
+                        variant="danger"
+                        onClick={handleObrisiLekcije}
+                        disabled={loading || ukupnoLekcija < 1}
+                        className="w-100 btn btnCancel"
+                    >
+                        {loading ? "Brisanje..." : "Obriši sve lekcije"}
                     </Button>
                     <CustomAlert variant="danger" className="mt-2">
                         <strong>Oprez!</strong> Brisanje podataka je trajna akcija i ne može se poništiti.

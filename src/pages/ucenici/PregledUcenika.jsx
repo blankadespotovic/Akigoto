@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
-import { Button, ButtonGroup, Table } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { RouteNames } from "../../constants.js";
-import { Card } from "../../components/Card.jsx";
 import UceniciService from "../../services/ucenici/UceniciService.js";
+import { PregledUcenikaTablica } from "./PregledUcenikaTablica.jsx";
+import useBreakpoint from "../../hooks/useBreakpoint.js";
+import { PregledUcenikaGrid } from "./PregledUcenikaGrid.jsx";
 
 export default function PregledUcenika() {
 
     const navigate = useNavigate()
+    const sirina = useBreakpoint();
+
     const [ucenici, setUcenici] = useState([]);
 
     async function ucitajUcenike() {
@@ -44,45 +47,21 @@ export default function PregledUcenika() {
 
 
             {ucenici.length > 0 &&
-                <Card
-                    title={'Lista učenika'}
-                    padding={0}
-                    textAlign={'left'}
-                >
-                        <Table striped hover responsive>
-                            <thead>
-                                <tr>
-                                    <th>Ime</th>
-                                    <th>Prezime</th>
-                                    <th>E-mail adresa</th>
-                                    <th>Akcija</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {ucenici.map((ucenik) => (
-                                    <tr key={ucenik.sifra}>
-                                        <td>{ucenik.ime}</td>
-                                        <td>{ucenik.prezime}</td>
-                                        <td>{ucenik.email}</td>
-                                        <td>
-                                            <ButtonGroup className={"d-flex gap-2"}>
-                                                <Button className="btnEdit" onClick={() => {
-                                                    navigate(`${ucenik.sifra}`)
-                                                }}>
-                                                    Promijeni
-                                                </Button>
-                                                <Button className="btnCancel" onClick={() => {
-                                                    obrisi(ucenik.sifra)
-                                                }}>
-                                                    Obriši
-                                                </Button>
-                                            </ButtonGroup>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </Table>
-                </Card>
+                (["xs", "sm", "md"].includes(sirina) ? (
+                    <PregledUcenikaGrid
+                        ucenici={ucenici}
+                        navigate={navigate}
+                        obrisi={obrisi}
+                    />
+                ) : (
+                    <PregledUcenikaTablica
+                        ucenici={ucenici}
+                        navigate={navigate}
+                        obrisi={obrisi}
+                    />
+                )
+
+                )
 
             }
         </>

@@ -209,7 +209,6 @@ table {
     padding: 0.7rem 1rem;
     color: var(--text-dark);
     border-bottom: 1px solid var(--border);
-    /*TODO: ako ne želiš centrirano, makni align*/
     align-content: center;
 }
 
@@ -362,7 +361,6 @@ table {
     }
 }
 
-/*TODO: Accordion CSS*/
 .custom-accordion-item {
     background: var(--white);
     border: none;
@@ -428,6 +426,8 @@ table {
 ul.custom-list {
     list-style: none;
     padding-left: 0;
+    overflow: auto;
+    max-height: calc(50vh - 1.5rem);
 }
 
 ul.custom-list li {
@@ -451,6 +451,10 @@ ul.custom-list li.done::before {
 
 ul.custom-list li.not-done::before {
     background: linear-gradient(135deg, #F6C1CC, #E57373);
+}
+
+ul.custom-list li.ucenik::before {
+    background: linear-gradient(135deg, #b6d2f1, #5e64b3);
 }
 
 .rs__control {

@@ -1,15 +1,17 @@
 import {useEffect, useState} from "react";
-import {Button, ButtonGroup, Table} from "react-bootstrap";
 import {Link, useNavigate} from "react-router-dom";
 import {RouteNames} from "../../constants.js";
-import {Card} from "../../components/Card.jsx";
 import LekcijeService from "../../services/lekcije/LekcijeService.js";
 import {DetaljiLekcije} from "../../components/DetaljiLekcije.jsx";
+import {PregledLekcijaTablica} from "./PregledLekcijaTablica.jsx";
+import useBreakpoint from "../../hooks/useBreakpoint.js";
+import {PregledLekcijaGrid} from "./PregledLekcijaGrid.jsx";
 
 export default function PregledLekcija() {
 
     const navigate = useNavigate()
     const [lekcije, setLekcije] = useState([]);
+    const sirina = useBreakpoint();
 
     async function ucitajLekcije() {
         await LekcijeService.get().then((odgovor) => {
@@ -47,59 +49,25 @@ export default function PregledLekcija() {
             </Link>
 
 
-            {lekcije.length > 0 &&
-                <Card
-                    title={"Lekcije"}
-                    padding={0}
-                    textAlign={"left"}
-                >
-                    <Table striped hover responsive>
-                        <thead>
-                        <tr>
-                            <th>Naziv lekcije</th>
-                            <th>Očekivano trajanje</th>
-                            <th>Broj postignuća</th>
-                            <th>Broj učenika</th>
-                            <th>Akcija</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {lekcije.map((lekcija) => (
-                            <tr key={lekcija.sifra}>
-                                <td>{lekcija.naziv}</td>
-                                <td>{lekcija.trajanje}</td>
-                                <td className="text-center">
-                                    {lekcija.postignuca ? lekcija.postignuca.length : 0}
-                                </td>
-                                <td className="text-center">
-                                    {lekcija.ucenici ? lekcija.ucenici.length : 0}
-                                </td>
-                                <td>
-                                    <ButtonGroup className={"d-flex gap-2"}>
-                                        <Button className="btnInfo" onClick={() => {
-                                            setPodaci(lekcija)
-                                            setModalShow(true)
-                                        }}>
-                                            Detalji
-                                        </Button>
-                                        <Button className="btnEdit" onClick={() => {
-                                            navigate(`${lekcija.sifra}`)
-                                        }}>
-                                            Promijeni
-                                        </Button>
-                                        <Button className="btnCancel" onClick={() => {
-                                            obrisi(lekcija.sifra)
-                                        }}>
-                                            Obriši
-                                        </Button>
-                                    </ButtonGroup>
-                                </td>
-                            </tr>
-                        ))}
-                        </tbody>
-                    </Table>
-                </Card>
-
+            {lekcije.length > 0 && (
+                ["xs", "sm", "md"].includes(sirina) ? (
+                    <PregledLekcijaGrid
+                        lekcije={lekcije}
+                        setPodaci={setPodaci}
+                        setModalShow={setModalShow}
+                        navigate={navigate}
+                        obrisi={obrisi}
+                    />
+                ) : (
+                    <PregledLekcijaTablica
+                        lekcije={lekcije}
+                        setPodaci={setPodaci}
+                        setModalShow={setModalShow}
+                        navigate={navigate}
+                        obrisi={obrisi}
+                    />
+                )
+            )
             }
             <DetaljiLekcije
                 show={modalShow}
