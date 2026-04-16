@@ -1,5 +1,6 @@
 import {Button, Col, Container, Row} from "react-bootstrap";
 import {Card} from "../../components/Card.jsx";
+import {FaMedal} from "react-icons/fa";
 
 export function PregledKategorijaGrid(
     {kategorije, postignuca, navigate, obrisi}
@@ -8,7 +9,8 @@ export function PregledKategorijaGrid(
     return (
         <Container className="pt-0 py-3 px-0">
             {kategorije.map((kategorija) => {
-                const brojPostignucaUKategoriji = postignuca.filter(pos => pos.kategorija === kategorija.sifra).length;
+                const brojPostignucaUKategoriji = postignuca.filter(pos => pos.kategorija === kategorija.sifra).length
+                const tekst = `postignuć${brojPostignucaUKategoriji === 1 ? "e" : "a"}`
                 return (
                     <Card
                         key={kategorija.sifra}
@@ -16,15 +18,22 @@ export function PregledKategorijaGrid(
                         textAlign={"start"}
                         padding={".5rem 1rem"}
                     >
-                        <p className={"mb-0"}>Kategorija ima {brojPostignucaUKategoriji} postignuća.</p>
+
+                        <Row className={"mt-2"}>
+                            <Col xs={7}>
+                                <FaMedal color={"lightblue"} className={"mb-1"}/>&nbsp;<b>{brojPostignucaUKategoriji}</b>&nbsp;{tekst}
+                            </Col>
+                            <Col xs={5}>
+
+                            </Col>
+                        </Row>
                         <Row>
                             <Col xs={12} className={"mt-4 mb-2 d-flex align-items-center justify-content-between"}>
                                 <Button className="btnEdit" onClick={() => {
                                     navigate(`/kategorije/${kategorija.sifra}`)
                                 }}>
-                                    Promijeni kategoriju
+                                    Promijeni
                                 </Button>
-                                &nbsp;&nbsp;
                                 <Button className="btnCancel" onClick={() => {
                                     obrisi(kategorija.sifra)
                                 }}>

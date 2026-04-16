@@ -3,12 +3,14 @@ import { useEffect, useState } from "react";
 import PostignucaService from "../services/postignuca/PostignucaService.js";
 import { Card } from "./Card.jsx";
 import UceniciService from "../services/ucenici/UceniciService.js";
+import DOMPurify from "dompurify";
 
 export function DetaljiLekcije(props) {
     const podaci = props.podaci;
 
     const [postignuca, setPostignuca] = useState()
     const [ucenici, setUcenici] = useState()
+    const safeOpis = DOMPurify.sanitize(podaci?.opis);
 
     const ucitajPostignuca = async () => {
         const ucitanaPostignuca = [];
@@ -39,19 +41,19 @@ export function DetaljiLekcije(props) {
     return podaci && (
         <Modal
             {...props}
-            size="lg"
-            aria-labelledby="contained-modal-title-vcenter"
+            size={"lg"}
+            aria-labelledby={"contained-modal-title-vcenter"}
             centered
         >
             <Card
                 title={podaci.naziv}
                 style={{ marginTop: "0" }}
                 textAlign={"start"}
+                isModal={true}
+                onClickModal={props.onHide}
             >
                 <h4>Sadržaj</h4>
-                <p>
-                    {podaci.opis}
-                </p>
+                <div dangerouslySetInnerHTML={{ __html: safeOpis }} />
                 <hr />
                 <Row>
                     <Col xs={12} md={6} className={"px-4"} style={{ maxHeight: "250px !important" }}>
@@ -83,9 +85,9 @@ export function DetaljiLekcije(props) {
                         {ucenici && ucenici.length > 0 ?
                             <ul className={"custom-list"}>
                                 {ucenici?.map(ucenik => (
-                                    <li 
-                                    key={ucenik.sifra}
-                                    className={'ucenik'}
+                                    <li
+                                        key={ucenik.sifra}
+                                        className={"ucenik"}
                                     >
                                         <OverlayTrigger
                                             key={ucenik.sifra}
@@ -96,8 +98,8 @@ export function DetaljiLekcije(props) {
                                                 </Tooltip>
                                             }
                                         >
-                                       <span>{ucenik.ime} {ucenik.prezime}</span>
-                                       </OverlayTrigger>
+                                            <span>{ucenik.ime} {ucenik.prezime}</span>
+                                        </OverlayTrigger>
                                     </li>
                                 ))}
                             </ul> : <p>U ovoj lekciji nema učenika.</p>

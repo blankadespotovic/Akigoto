@@ -8,11 +8,13 @@ import KategorijeService from "../../services/kategorije/KategorijeService";
 import {CustomSelect} from "../../components/customInputs/CustomSelect.jsx";
 import {CustomInput} from "../../components/customInputs/CustomInput.jsx";
 import {CustomCheckbox} from "../../components/customInputs/CustomCheckbox.jsx";
+import useBreakpoint from "../../hooks/useBreakpoint.js";
 
 export default function NovaPostignuca() {
 
     const navigate = useNavigate()
-
+    const sirina = useBreakpoint()
+    const mobilnaSirina = ["xs", "sm", "md"].includes(sirina)
     const [kategorije, setKategorije] = useState();
 
     async function dohvatiKategorije() {
@@ -124,15 +126,16 @@ export default function NovaPostignuca() {
                     label={"Postignuto"}
                 />
 
-                <Row className="mt-4">
-                    <Col>
-                        <Link to={RouteNames.POSTIGNUCA} className="btn btnCancel">
+                <Row className="mt-4 justi">
+                    <Col xs={12} md={6} className={"order-2 order-md-1"}>
+                        <Link to={RouteNames.POSTIGNUCA}
+                              className={`btn btnCancel${mobilnaSirina ? " w-100 my-1" : ""}`}>
                             Odustani
                         </Link>
                     </Col>
-                    <Col className={"text-end"}>
-                        <Button type="submit" className="btn btnAdd">
-                            Dodaj novo postignuće
+                    <Col xs={12} md={6} className={"order-1 order-md-2 text-end"}>
+                        <Button type="submit" className={`btn btnAdd${mobilnaSirina ? " w-100 my-1" : ""}`}>
+                            Spremi
                         </Button>
                     </Col>
                 </Row>

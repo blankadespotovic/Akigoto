@@ -11,7 +11,7 @@ export default function PregledLekcija() {
 
     const navigate = useNavigate()
     const [lekcije, setLekcije] = useState([]);
-    const sirina = useBreakpoint();
+    const sirina = useBreakpoint()
 
     async function ucitajLekcije() {
         await LekcijeService.get().then((odgovor) => {

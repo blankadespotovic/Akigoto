@@ -1,5 +1,5 @@
 import {Card} from "../../components/Card.jsx";
-import {Button, Table} from "react-bootstrap";
+import {Button, ButtonGroup, Table} from "react-bootstrap";
 
 export function PregledKategorijaTablica(
     {kategorije, postignuca, navigate, obrisi}
@@ -15,8 +15,8 @@ export function PregledKategorijaTablica(
                 <thead>
                 <tr>
                     <th>Naziv</th>
-                    <th>Broj postignuća</th>
-                    <th>Akcija</th>
+                    <th className={"text-end"}>Broj postignuća</th>
+                    <th className={"text-center"}>Akcija</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -25,18 +25,22 @@ export function PregledKategorijaTablica(
                     return (
                         <tr key={kategorija.sifra}>
                             <td>{kategorija.naziv}</td>
-                            <td style={{minWidth: "250px"}}>{brojPostignucaUKategoriji}</td>
-                            <td><Button className="btnEdit" onClick={() => {
-                                navigate(`/kategorije/${kategorija.sifra}`)
-                            }}>
-                                Promijeni kategoriju
-                            </Button>
-                                &nbsp;&nbsp;
-                                <Button className="btnCancel" onClick={() => {
-                                    obrisi(kategorija.sifra)
-                                }}>
-                                    Obriši
-                                </Button>
+                            <td className={"text-end"}>{brojPostignucaUKategoriji}</td>
+                            <td>
+                                <ButtonGroup className={"d-flex justify-content-center gap-2"}>
+                                    <Button
+                                        className={"btnEdit"}
+                                        onClick={() => navigate(`/kategorije/${kategorija.sifra}`)}
+                                    >
+                                        Promijeni
+                                    </Button>
+                                    <Button
+                                        className={"btnCancel"}
+                                        onClick={() => obrisi(kategorija.sifra)}
+                                    >
+                                        Obriši
+                                    </Button>
+                                </ButtonGroup>
                             </td>
                         </tr>
                     )

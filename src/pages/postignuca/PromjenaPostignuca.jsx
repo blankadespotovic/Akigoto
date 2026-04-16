@@ -8,6 +8,7 @@ import KategorijeService from "../../services/kategorije/KategorijeService";
 import {CustomSelect} from "../../components/customInputs/CustomSelect.jsx";
 import {CustomInput} from "../../components/customInputs/CustomInput.jsx";
 import {CustomCheckbox} from "../../components/customInputs/CustomCheckbox.jsx";
+import useBreakpoint from "../../hooks/useBreakpoint.js";
 
 export default function PromjenaPostignuca() {
 
@@ -16,6 +17,8 @@ export default function PromjenaPostignuca() {
     const [postignuce, setPostignuce] = useState({})
     const [zavrseno, setZavrseno] = useState(false)
     const [kategorije, setKategorije] = useState();
+    const sirina = useBreakpoint()
+    const mobilnaSirina = ["xs", "sm", "md"].includes(sirina)
 
     async function dohvatiKategorije() {
         const dohvaceneKategorije = await KategorijeService.get()
@@ -134,7 +137,10 @@ export default function PromjenaPostignuca() {
                     id={"procjena"}
                     type={"number"}
                     label={"Vremenska procjena dolaska do postignuća"}
+                    placeholder={'5'}
+                    suffix={"min"}
                     defaultValue={postignuce.procjena}
+                    trebaFormatiratuVrijeme={true}
                 />
 
                 <CustomCheckbox
@@ -144,15 +150,16 @@ export default function PromjenaPostignuca() {
                     setOnChange={setZavrseno}
                 />
 
-                <Row className="mt-4">
-                    <Col>
-                        <Link to={RouteNames.POSTIGNUCA} className="btn btnCancel">
+                <Row className="mt-4 justi">
+                    <Col xs={12} md={6} className={"order-2 order-md-1"}>
+                        <Link to={RouteNames.POSTIGNUCA}
+                              className={`btn btnCancel${mobilnaSirina ? " w-100 my-1" : ""}`}>
                             Odustani
                         </Link>
                     </Col>
-                    <Col className={"text-end"}>
-                        <Button type="submit" className="btn btnAdd">
-                            Promijeni postignuće
+                    <Col xs={12} md={6} className={"order-1 order-md-2 text-end"}>
+                        <Button type="submit" className={`btn btnAdd${mobilnaSirina ? " w-100 my-1" : ""}`}>
+                            Promijeni
                         </Button>
                     </Col>
                 </Row>

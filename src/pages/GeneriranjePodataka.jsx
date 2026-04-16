@@ -7,9 +7,12 @@ import {CustomAlert} from "../components/CustomAlert";
 import {Card} from "../components/Card";
 import UceniciService from "../services/ucenici/UceniciService.js";
 import LekcijeService from "../services/lekcije/LekcijeService.js";
+import {CustomInput} from "../components/customInputs/CustomInput.jsx";
+import useBreakpoint from "../hooks/useBreakpoint.js";
 
 
 export default function GeneriranjePodataka() {
+    const sirina = useBreakpoint()
     const [brojKategorija, setBrojKategorija] = useState(5)
     const [ukupnoKategorija, setUkupnoKategorija] = useState()
     const [brojPostignuca, setBrojPostignuca] = useState(20)
@@ -20,9 +23,10 @@ export default function GeneriranjePodataka() {
     const [sviUcenici, setSviUcenici] = useState()
     const [brojLekcija, setBrojLekcija] = useState(5)
     const [ukupnoLekcija, setUkupnoLekcija] = useState()
-    const [poruka, setPoruka] = useState(null);
-    const [loading, setLoading] = useState(false);
-    const [spol, setSpol] = useState(null);
+    const [poruka, setPoruka] = useState(null)
+    const [loading, setLoading] = useState(false)
+    const [spol, setSpol] = useState(null)
+    const moiblnaSirina = ["xs", "sm", "md"].includes(sirina)
 
     const faker = new Faker({
         locale: [hr]
@@ -183,28 +187,24 @@ export default function GeneriranjePodataka() {
         const svaPostignucaIds = svaPostignuca?.map(p => parseInt(p.sifra))
         const sviUceniciIds = sviUcenici?.map(u => parseInt(u.sifra))
         for (let i = 0; i < broj; i++) {
-            // TODO: smisli neke nazive za lekcije [uzeto iz postignuća]
-            const naziv = faker.helpers.arrayElement([
-                "Prvi korak",
-                "Osnove hiragane",
-                "Hiragana majstor",
-                "Osnove katakane",
-                "Katakana majstor",
-                "Kanji istraživač",
-                "Rječnik u porastu",
-                "Temeljno znanje gramatike"
+           const naziv = faker.helpers.arrayElement([
+                "Prvi koraci",
+                "Hiragana: temelj pisma",
+                "Katakana i strane riječi",
+                "Osnove izgovora i naglaska",
+                "Jednostavne fraze za svakodnevni život",
+                "Uvod u gramatiku i rečenične strukture",
+                "Prvi razgovori na japanskom",
             ]);
 
-            // TODO: smisli neke opise za lekcije [uzeto iz postignuća]
             const opis = faker.helpers.arrayElement([
-                "Završio si svoju prvu lekciju japanskog jezika",
-                "Naučio si osnovne hiragana znakove",
-                "Savladao si svih 46 znakova hiragane",
-                "Naučio si osnovne katakana znakove",
-                "Savladao si svih 46 znakova katakane",
-                "Naučio si 20 kanji znakova",
-                "Naučio si 50 novih japanskih riječi.",
-                "Savladao si osnovne gramatičke strukture"
+                "U ovoj lekciji upoznat ćeš se s osnovama japanskog jezika, načinom pisanja i kulturnim kontekstom koji je važan za razumijevanje jezika.",
+                "Naučit ćeš hiraganu - osnovno japansko pismo, kako se čita i piše, te ćeš početi prepoznavati jednostavne riječi. osnovne hiragana znakove",
+                "U ovoj lekciji usvojit ćeš katakanu, pismo koje se koristi za strane riječi, imena i posuđenice.",
+                "Fokus je na pravilnom izgovoru japanskih glasova i razumijevanju naglaska kako bi tvoj govor zvučao prirodnije.",
+                "Naučit ćeš osnovne izraze i fraze koje se koriste u svakodnevnim situacijama poput pozdravljanja, predstavljanja i zahvaljivanja.",
+                "Ovdje ćeš upoznati osnovna gramatička pravila i naučiti kako slagati jednostavne rečenice.",
+                "Primijenit ćeš sve što si naučio kroz kratke dijaloge i jednostavne razgovorne vježbe.",
             ]);
 
             const lekcija = {
@@ -322,7 +322,7 @@ export default function GeneriranjePodataka() {
             const rezultat = await KategorijeService.get();
             const kategorije = rezultat.data;
             const postignuca = await PostignucaService.get()
-            const postignucaPodaci  = postignuca.data;
+            const postignucaPodaci = postignuca.data;
             const lekcije = await LekcijeService.get()
             const lekcijePodaci = lekcije.data;
 
@@ -472,11 +472,11 @@ export default function GeneriranjePodataka() {
                 >
                     <Form onSubmit={handleGenerirajKategorije}>
                         <Form.Group className="mb-3">
-                            <Form.Label>Broj kategorija</Form.Label>
-                            <Form.Control
+                            <CustomInput
+                                label={"Broj kategorija"}
                                 type="number"
-                                min="1"
-                                max="50"
+                                min={1}
+                                max={50}
                                 value={brojKategorija}
                                 onChange={(e) => setBrojKategorija(parseInt(e.target.value))}
                                 disabled={loading}
@@ -518,11 +518,11 @@ export default function GeneriranjePodataka() {
                 >
                     <Form onSubmit={handleGenerirajPostignuca}>
                         <Form.Group className="mb-3">
-                            <Form.Label>Broj postignuća</Form.Label>
-                            <Form.Control
-                                type="number"
-                                min="1"
-                                max="200"
+                            <CustomInput
+                                label={"Broj postignuća"}
+                                type={"number"}
+                                min={1}
+                                max={200}
                                 value={brojPostignuca}
                                 onChange={(e) => setBrojPostignuca(parseInt(e.target.value))}
                                 disabled={loading}
@@ -564,11 +564,11 @@ export default function GeneriranjePodataka() {
                 >
                     <Form onSubmit={handleGenerirajUcenike}>
                         <Form.Group className="mb-3">
-                            <Form.Label>Broj učenika</Form.Label>
-                            <Form.Control
-                                type="number"
-                                min="1"
-                                max="50"
+                            <CustomInput
+                                label={"Broj učenika"}
+                                type={"number"}
+                                min={1}
+                                max={50}
                                 value={brojUcenika}
                                 onChange={(e) => setBrojUcenika(parseInt(e.target.value))}
                                 disabled={loading}
@@ -577,41 +577,46 @@ export default function GeneriranjePodataka() {
                                 Unesite broj učenika (1-50)
                             </Form.Text>
                         </Form.Group>
-                        <Form.Group className="d-flex align-items-center gap-3 justify-content-center generiraj-ucenike">
-                            <Button
-                                variant="primary"
-                                type="submit"
-                                disabled={loading}
-                                className="w-100 btn btnAdd"
-                            >
-                                {loading ? "Generiranje..." : "Generiraj učenike"}
-                            </Button>
+                        <Form.Group className="generiraj-ucenike">
+                            <Row>
+                                <Col xs={12} lg={6} className={moiblnaSirina && "my-2"}>
+                                    <Button
+                                        variant="primary"
+                                        type="submit"
+                                        disabled={loading}
+                                        className="w-100 btn btnAdd"
+                                    >
+                                        {loading ? "Generiranje..." : "Generiraj učenike"}
+                                    </Button>
+                                </Col>
+                                <Col xs={12} lg={6} className={`d-flex gap-3 align-items-center justify-content-evenly ${moiblnaSirina && "my-2"}`}>
+                                    <Form.Check
+                                        type="radio"
+                                        label="M"
+                                        name="spol"
+                                        checked={spol === "male"}
+                                        onChange={() => setSpol("male")}
+                                        disabled={loading}
+                                    />
 
-                            <Form.Check
-                                type="radio"
-                                label="M"
-                                name="spol"
-                                checked={spol === "male"}
-                                onChange={() => setSpol("male")}
-                                disabled={loading}
-                            />
-
-                            <Form.Check
-                                type="radio"
-                                label="Ž"
-                                name="spol"
-                                checked={spol === "female"}
-                                onChange={() => setSpol("female")}
-                                disabled={loading}
-                            />
-                            <Form.Check
-                                type="radio"
-                                label="Oba"
-                                name="spol"
-                                checked={spol === null}
-                                onChange={() => setSpol(null)}
-                                disabled={loading}
-                            />
+                                    <Form.Check
+                                        type="radio"
+                                        label="Ž"
+                                        name="spol"
+                                        checked={spol === "female"}
+                                        onChange={() => setSpol("female")}
+                                        disabled={loading}
+                                    />
+                                    <Form.Check
+                                        type="radio"
+                                        label="Oba"
+                                        name="spol"
+                                        checked={spol === null}
+                                        onChange={() => setSpol(null)}
+                                        disabled={loading}
+                                    />
+                                </Col>
+                            </Row>
                         </Form.Group>
                         <CustomAlert variant="warning" className="mt-2" style={{fontSize: ".9rem"}}>
                             <strong>Upozorenje:</strong> Ove akcije će dodati nove podatke u postojeće.
@@ -638,11 +643,11 @@ export default function GeneriranjePodataka() {
                 >
                     <Form onSubmit={handleGenerirajLekcije}>
                         <Form.Group className="mb-3">
-                            <Form.Label>Broj lekcija</Form.Label>
-                            <Form.Control
-                                type="number"
-                                min="1"
-                                max="50"
+                            <CustomInput
+                                label={"Broj lekcija"}
+                                type={"number"}
+                                min={1}
+                                max={50}
                                 value={brojLekcija}
                                 onChange={(e) => setBrojLekcija(parseInt(e.target.value))}
                                 disabled={loading}
@@ -651,14 +656,14 @@ export default function GeneriranjePodataka() {
                                 Unesite broj lekcija (1-50)
                             </Form.Text>
                         </Form.Group>
-                            <Button
-                                variant="primary"
-                                type="submit"
-                                disabled={loading}
-                                className="w-100 btn btnAdd"
-                            >
-                                {loading ? "Generiranje..." : "Generiraj lekcije"}
-                            </Button>
+                        <Button
+                            variant="primary"
+                            type="submit"
+                            disabled={loading}
+                            className="w-100 btn btnAdd"
+                        >
+                            {loading ? "Generiranje..." : "Generiraj lekcije"}
+                        </Button>
                         <CustomAlert variant="warning" className="mt-2" style={{fontSize: ".9rem"}}>
                             <strong>Upozorenje:</strong> Ove akcije će dodati nove podatke u postojeće.
                             Ako želite početi ispočetka, prvo obrišite postojeće podatke.

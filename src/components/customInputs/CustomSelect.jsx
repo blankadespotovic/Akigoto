@@ -2,12 +2,18 @@ import {Form} from "react-bootstrap";
 import '../../styles/customComponents.css'
 
 export function CustomSelect(
-    {id, label, podaci, defaultValue}
+    {id, label, podaci, defaultValue, onChange = undefined, value = undefined}
 ) {
     return podaci && (
         <Form.Group controlId={id}>
             <Form.Label column={"lg"}>{label}</Form.Label>
-            <Form.Select name={id} defaultValue={defaultValue ?? podaci[0].value} className={"custom-select"}>
+            <Form.Select
+                name={id}
+                defaultValue={defaultValue ?? podaci[0].value}
+                value={value}
+                className={"custom-select"}
+                onChange={onChange}
+            >
                 {podaci.map((podatak) => (
                     <option key={podatak.value} value={podatak.value}>{podatak.label}</option>
                 ))}

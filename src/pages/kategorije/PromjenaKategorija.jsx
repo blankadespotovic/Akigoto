@@ -5,9 +5,13 @@ import {useEffect, useState} from "react";
 import {Card} from "../../components/Card";
 import KategorijeService from "../../services/kategorije/KategorijeService.js";
 import {CustomInput} from "../../components/customInputs/CustomInput.jsx";
+import useBreakpoint from "../../hooks/useBreakpoint.js";
 
 export default function PromjenaKategorije() {
     const navigate = useNavigate()
+    const sirina = useBreakpoint()
+    const mobilnaSirina = ["xs", "sm", "md"].includes(sirina);
+
     const params = useParams()
     const [kategorija, setKategorija] = useState()
 
@@ -55,15 +59,16 @@ export default function PromjenaKategorije() {
                     required={true}
                     defaultValue={kategorija?.naziv}
                 />
-                <Row className="mt-4">
-                    <Col>
-                        <Link to={RouteNames.KATEGORIJE} className="btn btnCancel">
+                <Row className="mt-4 justi">
+                    <Col xs={12} md={6} className={"order-2 order-md-1"}>
+                        <Link to={RouteNames.KATEGORIJE}
+                              className={`btn btnCancel${mobilnaSirina ? " w-100 my-1" : ""}`}>
                             Odustani
                         </Link>
                     </Col>
-                    <Col className={"text-end"}>
-                        <Button type="submit" className="btn btnAdd">
-                            Promijeni kategoriju
+                    <Col xs={12} md={6} className={"order-1 order-md-2 text-end"}>
+                        <Button type="submit" className={`btn btnAdd${mobilnaSirina ? " w-100 my-1" : ""}`}>
+                            Promijeni
                         </Button>
                     </Col>
                 </Row>

@@ -5,12 +5,15 @@ import {useEffect, useState} from "react";
 import {Card} from "../../components/Card";
 import UceniciService from "../../services/ucenici/UceniciService";
 import {CustomInput} from "../../components/customInputs/CustomInput.jsx";
+import useBreakpoint from "../../hooks/useBreakpoint.js";
 
 export default function PromjenaUcenika() {
 
     const navigate = useNavigate()
     const params = useParams()
-    const [ucenik, setUcenici] = useState({})
+    const sirina = useBreakpoint()
+    const mobilnaSirina = ["xs", "sm", "md"].includes(sirina)
+    const [ucenik, setUcenik] = useState({})
 
     async function ucitajUcenike() {
         await UceniciService.getBySifra(params.sifra).then((odgovor) => {
@@ -19,7 +22,7 @@ export default function PromjenaUcenika() {
                 return
             }
             const p = odgovor.data
-            setUcenici(p)
+            setUcenik(p)
         })
     }
 
@@ -99,15 +102,16 @@ export default function PromjenaUcenika() {
                     defaultValue={ucenik.email}
                 />
 
-                <Row className="mt-4">
-                    <Col>
-                        <Link to={RouteNames.UCENICI} className="btn btnCancel">
+                <Row className="mt-4 justi">
+                    <Col xs={12} md={6} className={"order-2 order-md-1"}>
+                        <Link to={RouteNames.UCENICI}
+                              className={`btn btnCancel${mobilnaSirina ? " w-100 my-1" : ""}`}>
                             Odustani
                         </Link>
                     </Col>
-                    <Col className={"text-end"}>
-                        <Button type="submit" className="btn btnAdd">
-                            Unesi izmjene
+                    <Col xs={12} md={6} className={"order-1 order-md-2 text-end"}>
+                        <Button type="submit" className={`btn btnAdd${mobilnaSirina ? " w-100 my-1" : ""}`}>
+                            Promijeni
                         </Button>
                     </Col>
                 </Row>

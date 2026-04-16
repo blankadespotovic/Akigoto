@@ -1,11 +1,13 @@
 import {Form, InputGroup} from "react-bootstrap";
 import "../../styles/customComponents.css"
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 export function CustomInput(
     {
         id, label, type, required = false, placeholder = undefined, defaultValue = undefined,
-        prefix = undefined, suffix = undefined, trebaFormatiratuVrijeme = false
+        prefix = undefined, suffix = undefined, trebaFormatiratuVrijeme = false,
+        min = undefined, max = undefined, value = undefined, onChange = undefined,
+        disabled = false
     }
 ) {
     const [vrijednost, setVrijednost] = useState(0)
@@ -23,9 +25,20 @@ export function CustomInput(
     }
 
     const handleChange = (e) => {
+        if (onChange) onChange(e);
         if (!trebaFormatiratuVrijeme) return;
         setVrijednost(e.target.value);
     };
+
+    useEffect(() => {
+        const provjeriZadanuVrijednost = () => {
+            if (trebaFormatiratuVrijeme && defaultValue) {
+                setVrijednost(defaultValue)
+            }
+        }
+
+        provjeriZadanuVrijednost();
+    }, [defaultValue, trebaFormatiratuVrijeme]);
 
     return (
         <Form.Group controlId={id}>
@@ -40,6 +53,10 @@ export function CustomInput(
                     defaultValue={defaultValue}
                     placeholder={placeholder}
                     onChange={handleChange}
+                    min={type === "number" && min ? min : undefined}
+                    max={type === "number" && max ? max : undefined}
+                    value={value}
+                    disabled={disabled}
                 />
                 {suffix && <InputGroup.Text className={"custom-addon"}>{suffix}</InputGroup.Text>}
             </InputGroup>

@@ -1,19 +1,23 @@
 import {Link, useNavigate, useParams} from "react-router-dom";
 import {RouteNames} from "../../constants";
 import {Button, Col, Form, Row} from "react-bootstrap";
-import {useCallback, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {Card} from "../../components/Card";
 import LekcijeService from "../../services/lekcije/LekcijeService";
 import UceniciService from "../../services/ucenici/UceniciService";
 import {CustomInput} from "../../components/customInputs/CustomInput.jsx";
 import Select from "react-select";
 import PostignucaService from "../../services/postignuca/PostignucaService.js";
+import useBreakpoint from "../../hooks/useBreakpoint.js";
+import {WYSIWYGEditor} from "../../components/customInputs/WYSIWYGEditor.jsx";
 
 export default function PromjenaLekcije() {
 
     const navigate = useNavigate()
     const params = useParams()
+    const sirina = useBreakpoint()
     const [lekcija, setLekcija] = useState({})
+    const [opisVrijednost, setOpisVrijednost] = useState()
 
     const [ucenici, setUcenici] = useState([])
     const [odabraniUcenik, setOdabraniUcenik] = useState()
@@ -31,6 +35,7 @@ export default function PromjenaLekcije() {
             }
             const p = odgovor.data
             setLekcija(p)
+            setOpisVrijednost(p.opis)
         })
     }
 
@@ -71,7 +76,6 @@ export default function PromjenaLekcije() {
         }
     }, [lekcija])
 
-    // TODO: XX
 
     useEffect(() => {
         const pronadjiOdabraneUcenike = async () => {
@@ -142,7 +146,6 @@ export default function PromjenaLekcije() {
         setOdabranaPostignuca(prev => prev.filter(p => p.value !== sifra));
     }
 
-    // TODO: XX
 
     async function promjeni(lekcija) {
         await LekcijeService.promjeni(lekcija).then(() => {
@@ -186,13 +189,12 @@ export default function PromjenaLekcije() {
         promjeni({
             sifra: lekcija.sifra,
             naziv: podaci.get("naziv"),
-            opis: podaci.get("opis"),
+            opis: opisVrijednost,
             trajanje: podaci.get("trajanje"),
             postignuca: postignucaIds,
             ucenici: uceniciIds,
         })
     }
-
 
     return (
 
@@ -206,13 +208,23 @@ export default function PromjenaLekcije() {
                     required={true}
                     defaultValue={lekcija.naziv}
                 />
-                <CustomInput
-                    id={"opis"}
-                    type={"text"}
-                    label={"Sadržaj lekcije"}
-                    placeholder={"Unesite sadržaj lekcije"}
-                    defaultValue={lekcija.opis}
-                />
+                {/*<CustomInput*/}
+                {/*    id={"opis"}*/}
+                {/*    type={"text"}*/}
+                {/*    label={"Sadržaj lekcije"}*/}
+                {/*    placeholder={"Unesite sadržaj lekcije"}*/}
+                {/*    defaultValue={lekcija.opis}*/}
+                {/*/>*/}
+
+
+                <Form.Group controlId={"opis"}>
+                    <Form.Label column={"lg"}>Sadržaj lekcije</Form.Label>
+                    <WYSIWYGEditor
+                        value={opisVrijednost}
+                        onChange={(e) => setOpisVrijednost(e.target.value)}
+                        name={"opis"}
+                    />
+                </Form.Group>
                 <CustomInput
                     id={"trajanje"}
                     type={"number"}
@@ -237,8 +249,8 @@ export default function PromjenaLekcije() {
                                 className="custom-react-select"
                                 classNamePrefix="rs"
                                 menuPortalTarget={document.body}
-                                closeMenuOnSelect={false}
-                                blurInputOnSelect={false}
+                                closeMenuOnSelect={["xs", "sm", "md"].includes(sirina)}
+                                blurInputOnSelect={["xs", "sm", "md"].includes(sirina)}
                             />
                         </Form.Group>
                     </Col>
@@ -247,7 +259,11 @@ export default function PromjenaLekcije() {
                         {odabraniUcenici.length > 0 ? (
                             <ul className="retro-list">
                                 {odabraniUcenici.map((p) => (
-                                    <li key={p.value} className="retro-item">
+                                    <li
+                                        key={p.value}
+                                        className="retro-item"
+                                        onClick={() => ukloniUcenike(p.value)}
+                                    >
                                         <span className="retro-label">{p.label}</span>
 
                                         <Button
@@ -278,8 +294,8 @@ export default function PromjenaLekcije() {
                                 className="custom-react-select"
                                 classNamePrefix="rs"
                                 menuPortalTarget={document.body}
-                                closeMenuOnSelect={false}
-                                blurInputOnSelect={false}
+                                closeMenuOnSelect={["xs", "sm", "md"].includes(sirina)}
+                                blurInputOnSelect={["xs", "sm", "md"].includes(sirina)}
                             />
                         </Form.Group>
                     </Col>
@@ -288,12 +304,15 @@ export default function PromjenaLekcije() {
                         {odabranaPostignuca.length > 0 ? (
                             <ul className="retro-list">
                                 {odabranaPostignuca.map((p) => (
-                                    <li key={p.value} className="retro-item">
+                                    <li
+                                        key={p.value}
+                                        className="retro-item"
+                                        onClick={() => ukloniPostignuca(p.value)}
+                                    >
                                         <span className="retro-label">{p.label}</span>
-
                                         <Button
                                             variant="light"
-                                            size="sm"
+                                            size="lg"
                                             className="retro-remove"
                                             onClick={() => ukloniPostignuca(p.value)}
                                         >
@@ -314,7 +333,7 @@ export default function PromjenaLekcije() {
                     </Col>
                     <Col className={"text-end"}>
                         <Button type="submit" className="btn btnAdd">
-                            Unesi izmjene
+                            Promijeni
                         </Button>
                     </Col>
                 </Row>

@@ -8,10 +8,13 @@ import UceniciService from "../../services/ucenici/UceniciService";
 import {CustomInput} from "../../components/customInputs/CustomInput.jsx";
 import Select from "react-select";
 import PostignucaService from "../../services/postignuca/PostignucaService.js";
+import useBreakpoint from "../../hooks/useBreakpoint.js";
+import {WYSIWYGEditor} from "../../components/customInputs/WYSIWYGEditor.jsx";
 
 export default function NoveLekcije() {
 
     const navigate = useNavigate()
+    const sirina = useBreakpoint()
 
     const [ucenici, setUcenici] = useState([])
     const [odabraniUcenik, setOdabraniUcenik] = useState()
@@ -135,12 +138,15 @@ export default function NoveLekcije() {
 
         dodaj({
             naziv: podaci.get("naziv"),
-            opis: podaci.get("opis"),
+            opis: opisVrijednost,
             trajanje: podaci.get("trajanje"),
             postignuca: postignucaIds,
             ucenici: uceniciIds,
         })
     }
+
+
+    const [opisVrijednost, setOpisVrijednost] = useState("")
 
     return (
 
@@ -153,12 +159,16 @@ export default function NoveLekcije() {
                     placeholder={"Unesite naziv"}
                     required={true}
                 />
-                <CustomInput
-                    id={"opis"}
-                    type={"text"}
-                    label={"Sadržaj lekcije"}
-                    placeholder={"Unesite sadržaj lekcije"}
-                />
+
+                <Form.Group controlId={"opis"}>
+                    <Form.Label column={"lg"}>Sadržaj lekcije</Form.Label>
+                    <WYSIWYGEditor
+                        value={opisVrijednost}
+                        onChange={(e) => setOpisVrijednost(e.target.value)}
+                        name={"opis"}
+                    />
+                </Form.Group>
+
                 <CustomInput
                     id={"trajanje"}
                     type={"number"}
@@ -182,8 +192,8 @@ export default function NoveLekcije() {
                                 className="custom-react-select"
                                 classNamePrefix="rs"
                                 menuPortalTarget={document.body}
-                                closeMenuOnSelect={false}
-                                blurInputOnSelect={false}
+                                closeMenuOnSelect={["xs", "sm", "md"].includes(sirina)}
+                                blurInputOnSelect={["xs", "sm", "md"].includes(sirina)}
                             />
                         </Form.Group>
                     </Col>
@@ -192,7 +202,11 @@ export default function NoveLekcije() {
                         {odabraniUcenici.length > 0 ? (
                             <ul className="retro-list">
                                 {odabraniUcenici.map((p) => (
-                                    <li key={p.value} className="retro-item">
+                                    <li
+                                        key={p.value}
+                                        className="retro-item"
+                                        onClick={() => ukloniUcenike(p.value)}
+                                    >
                                         <span className="retro-label">{p.label}</span>
 
                                         <Button
@@ -223,8 +237,8 @@ export default function NoveLekcije() {
                                 className="custom-react-select"
                                 classNamePrefix="rs"
                                 menuPortalTarget={document.body}
-                                closeMenuOnSelect={false}
-                                blurInputOnSelect={false}
+                                closeMenuOnSelect={["xs", "sm", "md"].includes(sirina)}
+                                blurInputOnSelect={["xs", "sm", "md"].includes(sirina)}
                             />
                         </Form.Group>
                     </Col>
@@ -233,7 +247,11 @@ export default function NoveLekcije() {
                         {odabranaPostignuca.length > 0 ? (
                             <ul className="retro-list">
                                 {odabranaPostignuca.map((p) => (
-                                    <li key={p.value} className="retro-item">
+                                    <li
+                                        key={p.value}
+                                        className="retro-item"
+                                        onClick={() => ukloniPostignuca(p.value)}
+                                    >
                                         <span className="retro-label">{p.label}</span>
 
                                         <Button
@@ -259,7 +277,7 @@ export default function NoveLekcije() {
                     </Col>
                     <Col className={"text-end"}>
                         <Button type="submit" className="btn btnAdd">
-                            Dodaj novu lekciju
+                            Spremi
                         </Button>
                     </Col>
                 </Row>

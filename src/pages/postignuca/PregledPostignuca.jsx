@@ -1,16 +1,17 @@
 import {useEffect, useState} from "react";
-import {Accordion, Button, ButtonGroup, Table} from "react-bootstrap";
-import {GrValidate} from "react-icons/gr";
 import {Link, useNavigate} from "react-router-dom";
 import {RouteNames} from "../../constants.js";
-import {Card} from "../../components/Card.jsx";
 import PostignucaService from "../../services/postignuca/PostignucaService.js";
 import {CustomAlert} from "../../components/CustomAlert.jsx";
 import KategorijeService from "../../services/kategorije/KategorijeService.js";
+import useBreakpoint from "../../hooks/useBreakpoint.js";
+import {PregledPostignucaTablica} from "./PregledPostignucaTablica.jsx";
+import { PregledPostignucaGrid } from "./PregledPostignucaGrid.jsx";
 
 export default function PregledPostignuca() {
 
     const navigate = useNavigate()
+    const sirina = useBreakpoint();
     const [postignuca, setPostignuca] = useState([])
     const [kategorije, setKategorije] = useState([])
     const [brojKategorija, setBrojKategorija] = useState(-1)
@@ -62,71 +63,22 @@ export default function PregledPostignuca() {
             )}
 
             {postignuca.length > 0 &&
-                <Card
-                    title={"Postignuća"}
-                    padding={0}
-                    textAlign={"left"}
-                >
-                    <Accordion className={"custom-accordion"} defaultActiveKey={0}>
-                        {kategorije?.map((kategorija, idx) => {
-                            const imaPostignuca = postignuca.some(pos => pos.kategorija === kategorija.sifra);
-                            return imaPostignuca && (
-                                <Accordion.Item
-                                    className={"custom-accordion-item"}
-                                    key={kategorija.sifra}
-                                    eventKey={idx}
-                                >
-                                    <Accordion.Header
-                                        className={"custom-accordion-header"}>{kategorija.naziv}</Accordion.Header>
-                                    <Accordion.Body className={"custom-accordion-body"}>
-                                        <Table striped hover responsive>
-                                            <thead>
-                                            <tr>
-                                                <th>Naziv postignuća</th>
-                                                <th>Opis</th>
-                                                <th>Procjena</th>
-                                                <th>Postignuto</th>
-                                                <th>Akcija</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            {postignuca.map((postignuce) => (
-                                                postignuce.kategorija === kategorija.sifra &&
-                                                <tr key={postignuce.sifra}>
-                                                    <td>{postignuce.naziv}</td>
-                                                    <td style={{minWidth: "250px"}}>{postignuce.opis}</td>
-                                                    <td>{postignuce.procjena} min</td>
-                                                    <td>
-                                                        <GrValidate
-                                                            size={25}
-                                                            color={postignuce.zavrseno ? "green" : "red"}
-                                                        />
-                                                    </td>
-                                                    <td>
-                                                        <ButtonGroup className={"d-flex gap-2"}>
-                                                            <Button className="btnEdit" onClick={() => {
-                                                                navigate(`/postignuca/${kategorija.sifra}/${postignuce.sifra}`)
-                                                            }}>
-                                                                Promijeni
-                                                            </Button>
-                                                            <Button className="btnCancel" onClick={() => {
-                                                                obrisi(postignuce.sifra)
-                                                            }}>
-                                                                Obriši
-                                                            </Button>
-                                                        </ButtonGroup>
-                                                    </td>
-                                                </tr>
-                                            ))}
-                                            </tbody>
-                                        </Table>
-                                    </Accordion.Body>
-                                </Accordion.Item>
-                            )
-                        })}
-                    </Accordion>
-                </Card>
-            }
+                (["xs", "sm", "md"].includes(sirina) ? (
+                        <PregledPostignucaGrid
+                            kategorije={kategorije}
+                            postignuca={postignuca}
+                            navigate={navigate}
+                            obrisi={obrisi}
+                        />
+                    ) : (
+                        <PregledPostignucaTablica
+                            kategorije={kategorije}
+                            postignuca={postignuca}
+                            navigate={navigate}
+                            obrisi={obrisi}
+                        />
+                    )
+                )}
         </>
 
     )

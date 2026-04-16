@@ -10,7 +10,7 @@ export function PregledUcenikaTablica(
     return (
 
         <Card
-            title={'Lista učenika'}
+            title={'Učenici'}
             padding={0}
             textAlign={'left'}
         >
@@ -20,7 +20,7 @@ export function PregledUcenikaTablica(
                         <th>Ime</th>
                         <th>Prezime</th>
                         <th>E-mail adresa</th>
-                        <th>Akcija</th>
+                        <th className={"text-center"}>Akcija</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -30,7 +30,7 @@ export function PregledUcenikaTablica(
                             <td>{ucenik.prezime}</td>
                             <td>{ucenik.email}</td>
                             <td>
-                                <ButtonGroup className={"d-flex gap-2"}>
+                                <ButtonGroup className={"d-flex justify-content-center gap-2"}>
                                     <Button className="btnEdit" onClick={() => {
                                         navigate(`${ucenik.sifra}`)
                                     }}>

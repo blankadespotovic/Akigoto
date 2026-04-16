@@ -8,6 +8,9 @@
     --blue-main: #BFD7F6;
     --blue-soft: #E6F0FF;
 
+    --red-main: #D88C8C;
+    --red-soft: #F4DCDC;
+
     --yellow-accent: #FFE58F;
     --green-accent: #CFF5D2;
 
@@ -26,19 +29,19 @@ body {
     color: var(--text-dark);
 
     background: linear-gradient(0deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.3) 1px, transparent 1px),
-    linear-gradient(rgba(255, 255, 255, 0.3) 1px, transparent 1px),
-    linear-gradient(135deg, #F6C1CC, #CDB7F6, #BFD7F6);
+        linear-gradient(90deg, rgba(255, 255, 255, 0.3) 1px, transparent 1px),
+        linear-gradient(rgba(255, 255, 255, 0.3) 1px, transparent 1px),
+        linear-gradient(135deg, #F6C1CC, #CDB7F6, #BFD7F6);
 
     background-size: 100% 100%,
-    40px 40px,
-    40px 40px,
-    100% 100%;
+        40px 40px,
+        40px 40px,
+        100% 100%;
 
     background-position: 0 0,
-    0 0,
-    0 0,
-    0 0;
+        0 0,
+        0 0,
+        0 0;
 }
 
 .navbar {
@@ -85,7 +88,7 @@ body {
     transition: background 0.2s ease;
 }
 
-.nav-pills > .nav-item > a {
+.nav-pills>.nav-item>a {
     border-radius: 0;
 }
 
@@ -112,7 +115,7 @@ body {
 
 
 .button,
-td > button,
+td>button,
 .btnAdd,
 .btnCancel {
     background: linear-gradient(135deg, #F6C1CC, #CDB7F6);
@@ -144,7 +147,7 @@ td > button,
 }
 
 .button,
-td > button,
+td>button,
 .btnAdd,
 .btnCancel,
 .btnEdit,
@@ -240,7 +243,7 @@ table {
 }
 
 
-.table-striped > tbody > tr:nth-of-type(odd) > * {
+.table-striped>tbody>tr:nth-of-type(odd)>* {
     background-color: #f1eefc;
 }
 
@@ -376,7 +379,6 @@ table {
     font-weight: 700;
     border: groove white;
     box-shadow: none;
-    /*padding: 0.75rem 1rem;*/
     border-radius: 0;
     color: #7f6aa5;
     font-size: 1.2rem;
@@ -526,7 +528,7 @@ ul.custom-list li.ucenik::before {
     background: linear-gradient(135deg, var(--blue-soft), var(--purple-soft));
     border: 1px solid var(--border);
 
-    border-radius: 0; /* your system */
+    border-radius: 0;
     box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.05);
 
     font-size: 0.85rem;
@@ -555,8 +557,14 @@ ul.custom-list li.ucenik::before {
     transform: translateY(-1px);
     transition: all 0.15s ease;
     box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.08);
+    background: linear-gradient(135deg, var(--red-soft), var(--pink-soft));
+    cursor: pointer;
 }
 
 .retro-remove:hover {
     background: var(--pink-main) !important;
+}
+
+.cursor-pointer {
+    cursor: pointer;
 }
