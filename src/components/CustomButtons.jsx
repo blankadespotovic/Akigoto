@@ -3,7 +3,7 @@ import {useNavigate} from "react-router-dom"
 
 export function CustomButtons(
     {
-        sifra, customClass, editLink, editLabel = "Promijeni", deleteFunc, deleteLabel = "Obriši",
+        sifra, customClass, editLink, editLabel = "Promijeni", deleteFunc, deleteLabel = "ObriÅ¡i",
         detailsFunc, detailsLabel = "Detalji", isDetails = false, pdfFunc, pdfLabel = "PFD",
         needsPdf = false
     }
