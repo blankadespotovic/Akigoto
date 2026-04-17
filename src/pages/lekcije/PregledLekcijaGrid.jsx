@@ -1,17 +1,23 @@
-import {Button, Col, Container, Row} from "react-bootstrap";
+import {Col, Container, Row} from "react-bootstrap";
 import {Card} from "../../components/Card.jsx";
-import {FaMedal, FaRegClock} from "react-icons/fa";
+import {FaEdit, FaFilePdf, FaInfoCircle, FaMedal, FaRegClock, FaTrash} from "react-icons/fa";
 import {FaPeopleGroup} from "react-icons/fa6";
+import {CustomButtons} from "../../components/CustomButtons.jsx";
 
 export function PregledLekcijaGrid(
-    {lekcije, setPodaci, setModalShow, navigate, obrisi}
+    {lekcije, setPodaci, setModalShow, obrisi, generirajPDFZaLekciju}
 ) {
+    const truncate = (text, max) =>
+        text.length > max ? text.slice(0, max) + "..." : text;
+
+    const isMobile = window.innerWidth <= 576;
+
     return (
         <Container className="pt-0 py-3 px-0">
             {lekcije.map((lekcija) => (
                 <Card
                     key={lekcija.sifra}
-                    title={lekcija.naziv}
+                    title={isMobile ? truncate(lekcija.naziv, 20) : lekcija.naziv}
                     textAlign={"start"}
                 >
                     <Row>
@@ -40,26 +46,48 @@ export function PregledLekcijaGrid(
                             </Col>
                         </Row>
                     </Row>
-                    <Row>
-                        <Col xs={12} className={"mt-4 mb-2 d-flex align-items-center justify-content-between gap-1"}>
-                            <Button className="btnInfo" onClick={() => {
-                                setPodaci(lekcija)
-                                setModalShow(true)
-                            }}>
-                                Detalji
-                            </Button>
-                            <Button className="btnEdit" onClick={() => {
-                                navigate(`${lekcija.sifra}`)
-                            }}>
-                                Promijeni
-                            </Button>
-                            <Button className="btnCancel" onClick={() => {
-                                obrisi(lekcija.sifra)
-                            }}>
-                                Obriši
-                            </Button>
-                        </Col>
-                    </Row>
+                    <CustomButtons
+                        key={lekcija.sifra}
+                        sifra={lekcija.sifra}
+                        customClass={"mt-3"}
+
+                        detailsFunc={() => {
+                            setPodaci(lekcija)
+                            setModalShow(true)
+                        }}
+                        detailsLabel={<FaInfoCircle/>}
+                        isDetails={true}
+
+                        editLink={`${lekcija.sifra}`}
+                        editLabel={<FaEdit/>}
+
+                        deleteFunc={() => obrisi(lekcija.sifra)}
+                        deleteLabel={<FaTrash/>}
+
+                        pdfFunc={() => generirajPDFZaLekciju(lekcija)}
+                        pdfLabel={<FaFilePdf/>}
+                        needsPdf={true}
+                    />
+                    {/*<Row>*/}
+                    {/*    <Col xs={12} className={"mt-4 mb-2 d-flex align-items-center justify-content-between gap-1"}>*/}
+                    {/*        <Button className="btnInfo" onClick={() => {*/}
+                    {/*            setPodaci(lekcija)*/}
+                    {/*            setModalShow(true)*/}
+                    {/*        }}>*/}
+                    {/*            Detalji*/}
+                    {/*        </Button>*/}
+                    {/*        <Button className="btnEdit" onClick={() => {*/}
+                    {/*            navigate(`${lekcija.sifra}`)*/}
+                    {/*        }}>*/}
+                    {/*            Promijeni*/}
+                    {/*        </Button>*/}
+                    {/*        <Button className="btnCancel" onClick={() => {*/}
+                    {/*            obrisi(lekcija.sifra)*/}
+                    {/*        }}>*/}
+                    {/*            Obriši*/}
+                    {/*        </Button>*/}
+                    {/*    </Col>*/}
+                    {/*</Row>*/}
                 </Card>
             ))}
         </Container>

@@ -1,6 +1,7 @@
 import {Form, InputGroup} from "react-bootstrap";
 import "../../styles/customComponents.css"
 import {useEffect, useState} from "react";
+import { formatirajVrijeme } from "../../util/dateTimeFormatter";
 
 export function CustomInput(
     {
@@ -12,17 +13,6 @@ export function CustomInput(
 ) {
     const [vrijednost, setVrijednost] = useState(0)
 
-    const formatirajVrijeme = (ukupnoMinuta) => {
-        if (!ukupnoMinuta && ukupnoMinuta !== 0) return ""
-
-        const sati = Math.floor(ukupnoMinuta / 60);
-        const minute = ukupnoMinuta % 60;
-
-        if (sati === 0) return `${minute} min`;
-        if (minute === 0) return `${sati} h`;
-
-        return `${sati} h ${minute} min`;
-    }
 
     const handleChange = (e) => {
         if (onChange) onChange(e);

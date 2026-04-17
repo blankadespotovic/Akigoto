@@ -1,15 +1,15 @@
-import {Button, Col, Form, Row} from "react-bootstrap";
-import {Link, useNavigate} from "react-router-dom";
-import {RouteNames} from "../../constants";
-import {Card} from "../../components/Card";
+import { Button, Col, Form, Row } from "react-bootstrap";
+import { Link, useNavigate } from "react-router-dom";
+import { RouteNames } from "../../constants";
+import { Card } from "../../components/Card";
 import LekcijeService from "../../services/lekcije/LekcijeService";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import UceniciService from "../../services/ucenici/UceniciService";
-import {CustomInput} from "../../components/customInputs/CustomInput.jsx";
+import { CustomInput } from "../../components/customInputs/CustomInput.jsx";
 import Select from "react-select";
 import PostignucaService from "../../services/postignuca/PostignucaService.js";
 import useBreakpoint from "../../hooks/useBreakpoint.js";
-import {WYSIWYGEditor} from "../../components/customInputs/WYSIWYGEditor.jsx";
+import { WYSIWYGEditor } from "../../components/customInputs/WYSIWYGEditor.jsx";
 
 export default function NoveLekcije() {
 
@@ -37,7 +37,7 @@ export default function NoveLekcije() {
                 return
             }
             const filtriraniUcenici = odgovor.data.map(
-                uc => ({value: parseInt(uc.sifra), label: `${uc.ime} ${uc.prezime}`})
+                uc => ({ value: parseInt(uc.sifra), label: `${uc.ime} ${uc.prezime}` })
             )
             setUcenici(filtriraniUcenici)
         })
@@ -54,7 +54,7 @@ export default function NoveLekcije() {
                 return
             }
             const filtriranaPostignuca = odgovor.data.map(
-                p => ({value: parseInt(p.sifra), label: p.naziv})
+                p => ({ value: parseInt(p.sifra), label: p.naziv })
             )
             setPostignuca(filtriranaPostignuca)
         })
@@ -152,13 +152,29 @@ export default function NoveLekcije() {
 
         <Card title={"Unos nove lekcije"} textAlign={"left"}>
             <Form onSubmit={odradiSubmit}>
-                <CustomInput
-                    id={"naziv"}
-                    type={"text"}
-                    label={"Naziv"}
-                    placeholder={"Unesite naziv"}
-                    required={true}
-                />
+               
+                <Row>
+                    <Col xs={12} md={6}>
+                        <CustomInput
+                            id={"naziv"}
+                            type={"text"}
+                            label={"Naziv"}
+                            placeholder={"Unesite naziv"}
+                            required={true}
+                        />
+                        </Col>
+                        <Col xs={12} md={6}>
+                        <CustomInput
+                            id={"trajanje"}
+                            type={"number"}
+                            label={"Trajanje lekcije"}
+                            placeholder={5}
+                            trebaFormatiratuVrijeme={true}
+                            suffix={"min"}
+                        />
+                         </Col>
+                </Row>
+                  
 
                 <Form.Group controlId={"opis"}>
                     <Form.Label column={"lg"}>Sadržaj lekcije</Form.Label>
@@ -169,16 +185,8 @@ export default function NoveLekcije() {
                     />
                 </Form.Group>
 
-                <CustomInput
-                    id={"trajanje"}
-                    type={"number"}
-                    label={"Trajanje lekcije"}
-                    placeholder={5}
-                    trebaFormatiratuVrijeme={true}
-                    suffix={"min"}
-                />
 
-                <hr/>
+                <hr />
                 <Row gutter={16}>
                     <Col xs={12} md={6}>
                         <Form.Group controlId={"ucenici"}>
@@ -220,10 +228,10 @@ export default function NoveLekcije() {
                                     </li>
                                 ))}
                             </ul>
-                        ) : <><br/><small>Odaberite učenike za prikaz.</small></>}
+                        ) : <><br /><small>Odaberite učenike za prikaz.</small></>}
                     </Col>
                 </Row>
-                <hr/>
+                <hr />
                 <Row gutter={16}>
                     <Col xs={12} md={6}>
                         <Form.Group controlId={"postignuca"}>
@@ -265,7 +273,7 @@ export default function NoveLekcije() {
                                     </li>
                                 ))}
                             </ul>
-                        ) : <><br/><small>Odaberite postignuća za prikaz.</small></>}
+                        ) : <><br /><small>Odaberite postignuća za prikaz.</small></>}
                     </Col>
                 </Row>
 

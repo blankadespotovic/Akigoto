@@ -1,5 +1,7 @@
 import {Card} from "../../components/Card.jsx";
 import {Button, ButtonGroup, Table} from "react-bootstrap";
+import { CustomButtons } from "../../components/CustomButtons.jsx";
+import { FaEdit, FaTrash } from "react-icons/fa";
 
 export function PregledKategorijaTablica(
     {kategorije, postignuca, navigate, obrisi}
@@ -27,20 +29,16 @@ export function PregledKategorijaTablica(
                             <td>{kategorija.naziv}</td>
                             <td className={"text-end"}>{brojPostignucaUKategoriji}</td>
                             <td>
-                                <ButtonGroup className={"d-flex justify-content-center gap-2"}>
-                                    <Button
-                                        className={"btnEdit"}
-                                        onClick={() => navigate(`/kategorije/${kategorija.sifra}`)}
-                                    >
-                                        Promijeni
-                                    </Button>
-                                    <Button
-                                        className={"btnCancel"}
-                                        onClick={() => obrisi(kategorija.sifra)}
-                                    >
-                                        Obriši
-                                    </Button>
-                                </ButtonGroup>
+                            
+                                <CustomButtons 
+                                    key={kategorija.sifra}
+                                    sifra={kategorija.sifra}
+                                    editLink={`/kategorije/${kategorija.sifra}`}
+                                    editLabel={<FaEdit />}
+                                    deleteFunc={() => obrisi(kategorija.sifra)}
+                                    deleteLabel={<FaTrash />}
+                                />
+                                    
                             </td>
                         </tr>
                     )

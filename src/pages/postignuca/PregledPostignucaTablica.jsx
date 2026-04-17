@@ -1,6 +1,8 @@
 import { Card } from "../../components/Card.jsx";
 import { Accordion, Button, ButtonGroup, Table } from "react-bootstrap";
-import { FaRegCheckSquare, FaRegWindowClose } from "react-icons/fa";
+import { FaEdit, FaRegCheckSquare, FaRegWindowClose, FaTrash } from "react-icons/fa";
+import { CustomButtons } from "../../components/CustomButtons.jsx";
+import { formatirajVrijeme } from "../../util/dateTimeFormatter.js";
 
 export function PregledPostignucaTablica(
     { kategorije, postignuca, navigate, obrisi }
@@ -39,26 +41,21 @@ export function PregledPostignucaTablica(
                                             <tr key={postignuce.sifra}>
                                                 <td>{postignuce.naziv}</td>
                                                 <td style={{ minWidth: "250px" }}>{postignuce.opis}</td>
-                                                <td className={"text-end"}>{postignuce.procjena} min</td>
+                                                <td className={"text-end"}>{formatirajVrijeme(postignuce.procjena)}</td>
                                                 <td className={"text-center"}>
                                                     {postignuce.zavrseno ?
                                                         <FaRegCheckSquare size={24} color={"green"} /> :
                                                         <FaRegWindowClose size={24} color={"red"} />}
                                                 </td>
                                                 <td>
-                                                    <ButtonGroup className={"d-flex justify-content-center gap-2"}>
-                                                        <Button className="btnEdit" onClick={() => {
-                                                            navigate(`/postignuca/${kategorija.sifra}/${postignuce.sifra}`)
-                                                        }}>
-                                                            Promijeni
-                                                        </Button>
-                                                        <Button
-                                                            className="btnCancel"
-                                                            onClick={() => obrisi(postignuce.sifra)}
-                                                        >
-                                                            Obriši
-                                                        </Button>
-                                                    </ButtonGroup>
+
+                                                    <CustomButtons 
+                                                        editLink={`/postignuca/${kategorija.sifra}/${postignuce.sifra}`}
+                                                        editLabel={<FaEdit />}
+                                                        deleteFunc={() => obrisi(postignuce.sifra)}
+                                                        deleteLabel={<FaTrash />}
+                                                    />
+
                                                 </td>
                                             </tr>
                                         ))}

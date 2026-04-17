@@ -53,7 +53,7 @@ export function DetaljiLekcije(props) {
                 onClickModal={props.onHide}
             >
                 <h4>Sadržaj</h4>
-                <div dangerouslySetInnerHTML={{ __html: safeOpis }} />
+               <div className={"sadrzaj-container"} dangerouslySetInnerHTML={{__html: safeOpis}}/>
                 <hr />
                 <Row>
                     <Col xs={12} md={6} className={"px-4"} style={{ maxHeight: "250px !important" }}>

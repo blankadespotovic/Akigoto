@@ -200,23 +200,31 @@ export default function PromjenaLekcije() {
 
         <Card title={"Promjena lekcije"} textAlign={"left"}>
             <Form onSubmit={odradiSubmit}>
-                <CustomInput
-                    id={"naziv"}
-                    type={"text"}
-                    label={"Naziv"}
-                    placeholder={"Unesite naziv"}
-                    required={true}
-                    defaultValue={lekcija.naziv}
-                />
-                {/*<CustomInput*/}
-                {/*    id={"opis"}*/}
-                {/*    type={"text"}*/}
-                {/*    label={"Sadržaj lekcije"}*/}
-                {/*    placeholder={"Unesite sadržaj lekcije"}*/}
-                {/*    defaultValue={lekcija.opis}*/}
-                {/*/>*/}
-
-
+               
+               <Row>
+                    <Col xs={12} md={6}>
+                        <CustomInput
+                            id={"naziv"}
+                            type={"text"}
+                            label={"Naziv"}
+                            placeholder={"Unesite naziv"}
+                            required={true}
+                            defaultValue={lekcija.naziv}
+                        />
+                    </Col>
+                    <Col xs={12} md={6}>
+                        <CustomInput
+                            id={"trajanje"}
+                            type={"number"}
+                            label={"Trajanje lekcije"}
+                            placeholder={5}
+                            trebaFormatiratuVrijeme={true}
+                            suffix={"min"}
+                            defaultValue={lekcija.trajanje}
+                        />
+                    </Col>
+                </Row>
+          
                 <Form.Group controlId={"opis"}>
                     <Form.Label column={"lg"}>Sadržaj lekcije</Form.Label>
                     <WYSIWYGEditor
@@ -225,16 +233,7 @@ export default function PromjenaLekcije() {
                         name={"opis"}
                     />
                 </Form.Group>
-                <CustomInput
-                    id={"trajanje"}
-                    type={"number"}
-                    label={"Trajanje lekcije"}
-                    placeholder={5}
-                    trebaFormatiratuVrijeme={true}
-                    suffix={"min"}
-                    defaultValue={lekcija.trajanje}
-                />
-
+          
                 <hr/>
                 <Row gutter={16}>
                     <Col xs={12} md={6}>
@@ -251,6 +250,7 @@ export default function PromjenaLekcije() {
                                 menuPortalTarget={document.body}
                                 closeMenuOnSelect={["xs", "sm", "md"].includes(sirina)}
                                 blurInputOnSelect={["xs", "sm", "md"].includes(sirina)}
+                                noOptionsMessage={() => 'Nema učenika'}
                             />
                         </Form.Group>
                     </Col>
@@ -296,6 +296,7 @@ export default function PromjenaLekcije() {
                                 menuPortalTarget={document.body}
                                 closeMenuOnSelect={["xs", "sm", "md"].includes(sirina)}
                                 blurInputOnSelect={["xs", "sm", "md"].includes(sirina)}
+                                noOptionsMessage={() => 'Nema postignuća'}
                             />
                         </Form.Group>
                     </Col>

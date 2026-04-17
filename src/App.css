@@ -151,7 +151,8 @@ td>button,
 .btnAdd,
 .btnCancel,
 .btnEdit,
-.btnInfo {
+.btnInfo,
+.btnSuccess {
     background: linear-gradient(135deg, #F6C1CC, #CDB7F6);
     border: groove white;
     color: white;
@@ -165,6 +166,10 @@ td>button,
 
 .btnInfo {
     background: linear-gradient(135deg, #BFD7F6, #6FAFF0);
+}
+
+.btnSuccess {
+background: linear-gradient(135deg, #A8E6B5, #4CD97B);
 }
 
 .btnCancel {
@@ -567,4 +572,17 @@ ul.custom-list li.ucenik::before {
 
 .cursor-pointer {
     cursor: pointer;
+}
+
+.rsw-ce {
+    min-height: 100px;
+    max-height: 400px;
+    overflow-y: auto;
+    resize: vertical;
+}
+
+.sadrzaj-container {
+    max-height: 150px;
+    height: 100%;
+    overflow-y: auto;
 }

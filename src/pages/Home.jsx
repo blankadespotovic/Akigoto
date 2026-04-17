@@ -22,14 +22,14 @@ export default function Home() {
         const fetchData = async () => {
             try {
                 const kategorijeRezultat = await KategorijeService.get()
-                const postignucaReultat = await PostignucaService.get()
+                const postignucaRezultat = await PostignucaService.get()
                 const uceniciRezultat = await UceniciService.get()
-                const lekcijeRezultat = await LekcijeService.get()
-
+                const lekcijeRezultat = await LekcijeService.get()  
+                
                 setBrojLekcija(lekcijeRezultat.data.length)
                 setBrojUcenika(uceniciRezultat.data.length)
                 setBrojKategorija(kategorijeRezultat.data.length)
-                setBrojPostignuca(postignucaReultat.data.length)
+                setBrojPostignuca(postignucaRezultat.data.length)
             } catch (error) {
                 console.error('Greška pri dohvaćanju podataka:', error)
             }

@@ -1,5 +1,7 @@
 import { Button, ButtonGroup, Table } from "react-bootstrap";
 import { Card } from "../../components/Card.jsx";
+import { CustomButtons } from "../../components/CustomButtons.jsx";
+import { FaEdit, FaTrash } from "react-icons/fa";
 
 export function PregledUcenikaTablica(
     { ucenici, navigate, obrisi }
@@ -30,18 +32,14 @@ export function PregledUcenikaTablica(
                             <td>{ucenik.prezime}</td>
                             <td>{ucenik.email}</td>
                             <td>
-                                <ButtonGroup className={"d-flex justify-content-center gap-2"}>
-                                    <Button className="btnEdit" onClick={() => {
-                                        navigate(`${ucenik.sifra}`)
-                                    }}>
-                                        Promijeni
-                                    </Button>
-                                    <Button className="btnCancel" onClick={() => {
-                                        obrisi(ucenik.sifra)
-                                    }}>
-                                        Obriši
-                                    </Button>
-                                </ButtonGroup>
+                             
+
+                                <CustomButtons
+                                    editLink={`${ucenik.sifra}`}
+                                    editLabel={<FaEdit />}
+                                    deleteFunc={() => obrisi(ucenik.sifra)}
+                                    deleteLabel={<FaTrash />}
+                                />
                             </td>
                         </tr>
                     ))}

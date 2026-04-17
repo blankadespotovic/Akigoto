@@ -1,8 +1,11 @@
 import {Button, ButtonGroup, Table} from "react-bootstrap";
 import {Card} from "../../components/Card.jsx";
+import { formatirajVrijeme } from "../../util/dateTimeFormatter.js";
+import { FaEdit, FaFilePdf, FaInfoCircle, FaSearch, FaTrash } from "react-icons/fa";
+import { CustomButtons } from "../../components/CustomButtons.jsx";
 
 export function PregledLekcijaTablica(
-    {lekcije, setPodaci, setModalShow, navigate, obrisi}
+    {lekcije, setPodaci, setModalShow, obrisi, generirajPDFZaLekciju}
 ) {
     return (
         <Card
@@ -24,7 +27,7 @@ export function PregledLekcijaTablica(
                 {lekcije.map((lekcija) => (
                     <tr key={lekcija.sifra}>
                         <td>{lekcija.naziv}</td>
-                        <td className={"text-end"}>{lekcija.trajanje}</td>
+                        <td className={"text-end"}>{formatirajVrijeme(lekcija.trajanje)}</td>
                         <td className={"text-end"}>
                             {lekcija.postignuca ? lekcija.postignuca.length : 0}
                         </td>
@@ -32,29 +35,25 @@ export function PregledLekcijaTablica(
                             {lekcija.ucenici ? lekcija.ucenici.length : 0}
                         </td>
                         <td>
-                            <ButtonGroup className={"d-flex justify-content-center gap-2"}>
-                                <Button
-                                    className="btnInfo"
-                                    onClick={() => {
+                            <CustomButtons
+                                key={lekcija.sifra}
+                                sifra={lekcija.sifra}
+                                 detailsFunc={() => {
                                         setPodaci(lekcija)
-                                        setModalShow(true)
-                                    }}
-                                >
-                                    Detalji
-                                </Button>
-                                <Button
-                                    className="btnEdit"
-                                    onClick={() => navigate(`${lekcija.sifra}`)}
-                                >
-                                    Promijeni
-                                </Button>
-                                <Button
-                                    className="btnCancel"
-                                    onClick={() => obrisi(lekcija.sifra)}
-                                >
-                                    Obriši
-                                </Button>
-                            </ButtonGroup>
+                                        setModalShow(true)}}
+                                detailsLabel={<FaInfoCircle />}
+                                isDetails={true}
+
+                                editLink={`${lekcija.sifra}`}
+                                editLabel={<FaEdit />}
+
+                                deleteFunc={() => obrisi(lekcija.sifra)}
+                                deleteLabel={<FaTrash />}
+
+                                pdfFunc={() => generirajPDFZaLekciju(lekcija)}
+                                pdfLabel={<FaFilePdf />}
+                                needsPdf={true}
+                            />
                         </td>
                     </tr>
                 ))}

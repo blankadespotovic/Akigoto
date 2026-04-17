@@ -368,9 +368,19 @@ export default function GeneriranjePodataka() {
         try {
             const rezultat = await PostignucaService.get();
             const postignuca = rezultat.data;
+            const rezultatLekcije = await LekcijeService.get();
+            const lekcije = rezultatLekcije.data;
+            
 
             for (const postignuce of postignuca) {
                 await PostignucaService.obrisi(postignuce.sifra)
+            }
+
+            for(const lekcija of lekcije){
+                await LekcijeService.promjeni({
+                    ...lekcija,
+                    postignuca: []
+                })
             }
 
             setPoruka({
@@ -399,9 +409,18 @@ export default function GeneriranjePodataka() {
         try {
             const rezultat = await UceniciService.get();
             const ucenici = rezultat.data;
+            const rezultatLekcije = await LekcijeService.get();
+            const lekcije = rezultatLekcije.data;
 
             for (const ucenik of ucenici) {
                 await UceniciService.obrisi(ucenik.sifra);
+            }
+
+            for(const lekcija of lekcije){
+                await LekcijeService.promjeni({
+                    ...lekcija,
+                    ucenici: []
+                })
             }
 
             setPoruka({
