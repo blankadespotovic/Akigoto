@@ -1,11 +1,69 @@
-import {Card} from "../../components/Card.jsx";
-import {Button, ButtonGroup, Table} from "react-bootstrap";
+import { Card } from "../../components/Card.jsx";
+import { Button, ButtonGroup, Table } from "react-bootstrap";
 import { CustomButtons } from "../../components/CustomButtons.jsx";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { FaEdit, FaSort, FaSortDown, FaSortUp, FaTrash } from "react-icons/fa";
+import { useState } from "react";
 
 export function PregledKategorijaTablica(
-    {kategorije, postignuca, navigate, obrisi}
+    { kategorije, postignuca, navigate, obrisi }
 ) {
+
+    const [sortConfig, setSortingConfig] = useState({ key: null, direction: null })
+
+    const handleSort = (key) => {
+        let direction = 'asc'
+        if (sortConfig.key === key && sortConfig.direction === 'asc') {
+            direction = 'desc'
+        } else if (sortConfig.key === key && sortConfig.direction === 'desc') {
+            direction = null
+        }
+        setSortingConfig({key, direction})
+    }
+
+    const getSortIcon = (columnKey) => {
+        if (sortConfig.key !== columnKey || sortConfig.direction === null){
+            return <FaSort />
+        }
+        return sortConfig.direction === 'asc' ? <FaSortUp /> : <FaSortDown />
+    }
+
+    const sortedKategorije = () => {
+        if (!kategorije || sortConfig.direction === null) {
+            return kategorije
+        }
+
+
+        const sorted = [...kategorije].sort((a, b) => {
+            let aValue = a[sortConfig.key];
+            let bValue = b[sortConfig.key];
+
+            if (typeof aValue === 'string') {
+                // localeCompare s 'hr' parametrom rješava čšćđž ČŠĆĐŽ
+                const result = aValue.localeCompare(bValue, 'hr', {sensitivity: 'accent'});
+                return sortConfig.direction === 'asc' ? result : -result;
+            }
+
+            // TODO: sortiranje za brojeve
+            if (typeof aValue === 'number') {
+                const result = aValue - bValue;
+                return sortConfig.direction === 'asc' ? result : -result;
+            }
+
+
+            if (aValue < bValue) {
+                return sortConfig.direction === 'asc' ? -1 : 1;
+            }
+            if (aValue > bValue) {
+                return sortConfig.direction === 'asc' ? 1 : -1;
+            }
+            return 0;
+
+        });
+        return sorted;
+    }
+
+
+
     return (
         <Card
             key={"sve-kategorije"}
@@ -15,34 +73,34 @@ export function PregledKategorijaTablica(
         >
             <Table striped hover responsive>
                 <thead>
-                <tr>
-                    <th>Naziv</th>
-                    <th className={"text-end"}>Broj postignuća</th>
-                    <th className={"text-center"}>Akcija</th>
-                </tr>
+                    <tr>
+                        <th onClick={() => handleSort('naziv')} style={{ cursor: 'pointer' }}>
+                            Naziv {getSortIcon('naziv')}</th>
+                        <th onClick={() => handleSort('brojPostignuca')} style={{ cursor: 'pointer' }} className={"text-end"}>Broj postignuća {getSortIcon('brojPostignuca')}</th>
+                        <th className={"text-center"}>Akcija</th>
+                    </tr>
                 </thead>
                 <tbody>
-                {kategorije.map((kategorija) => {
-                    const brojPostignucaUKategoriji = postignuca.filter(pos => pos.kategorija === kategorija.sifra).length;
-                    return (
-                        <tr key={kategorija.sifra}>
-                            <td>{kategorija.naziv}</td>
-                            <td className={"text-end"}>{brojPostignucaUKategoriji}</td>
-                            <td>
-                            
-                                <CustomButtons 
-                                    key={kategorija.sifra}
-                                    sifra={kategorija.sifra}
-                                    editLink={`/kategorije/${kategorija.sifra}`}
-                                    editLabel={<FaEdit />}
-                                    deleteFunc={() => obrisi(kategorija.sifra)}
-                                    deleteLabel={<FaTrash />}
-                                />
-                                    
-                            </td>
-                        </tr>
-                    )
-                })}
+                    {sortedKategorije() && sortedKategorije().map((kategorija) => {
+                        return (
+                            <tr key={kategorija.sifra}>
+                                <td>{kategorija.naziv}</td>
+                                <td className={"text-end"}>{kategorija.brojPostignuca}</td>
+                                <td>
+
+                                    <CustomButtons
+                                        key={kategorija.sifra}
+                                        sifra={kategorija.sifra}
+                                        editLink={`/kategorije/${kategorija.sifra}`}
+                                        editLabel={<FaEdit />}
+                                        deleteFunc={() => obrisi(kategorija.sifra)}
+                                        deleteLabel={<FaTrash />}
+                                    />
+
+                                </td>
+                            </tr>
+                        )
+                    })}
                 </tbody>
             </Table>
         </Card>

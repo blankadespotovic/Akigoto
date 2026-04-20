@@ -13,6 +13,7 @@ export default function PregledKategorija() {
 
     const [kategorije, setKategorije] = useState([])
     const [postignuca, setPostignuca] = useState([])
+    const [kategorijeSPostignucima, setKategorijeSPostignucima] = useState([])
 
     async function ucitajKategorije() {
         await KategorijeService.get().then((odgovor) => {
@@ -34,6 +35,7 @@ export default function PregledKategorija() {
                 alert("Nije implementiran servis")
                 return
             }
+
             setPostignuca(odgovor.data)
         })
     }
@@ -41,6 +43,20 @@ export default function PregledKategorija() {
     useEffect(() => {
         ucitajPostignuca()
     }, [])
+
+    useEffect(() => {
+        const dohvatiKategorijeSPostignucima = () => {
+            const noveKategorije = [];
+            for (const kat of kategorije) {
+                noveKategorije.push({
+                    ...kat,
+                    brojPostignuca: postignuca.filter(pos => pos.kategorija === kat.sifra).length
+                })
+            }
+            setKategorijeSPostignucima(noveKategorije);
+        }
+        dohvatiKategorijeSPostignucima()
+    }, [kategorije, postignuca]);
 
     async function obrisi(sifra) {
         if (!confirm("Sigurno obrisati?\nOPREZ! Obrisat će se sva postignuća iz kategorije.")) {
@@ -66,8 +82,8 @@ export default function PregledKategorija() {
                             obrisi={obrisi}
                         />
                     ) : (
-                        <PregledKategorijaTablica
-                            kategorije={kategorije}
+                    kategorijeSPostignucima && <PregledKategorijaTablica
+                            kategorije={kategorijeSPostignucima}
                             postignuca={postignuca}
                             navigate={navigate}
                             obrisi={obrisi}
