@@ -264,6 +264,21 @@ export default function GeneriranjePodataka() {
         }
     };
 
+
+    const dodajNoveUcenikePostojecimLekcijama = async () =>{
+        const uceniciRes = await UceniciService.getLastFewIds(brojUcenika)
+        const zadnjeDodaniUceniciIds = uceniciRes.data
+        const lekcijeRes = await LekcijeService.get()
+        const sveLekcije = lekcijeRes.data
+
+        for (const lekcija of sveLekcije){
+            await LekcijeService.promjeni({
+                ...lekcija, 
+                ucenici: faker.helpers.arrayElements(zadnjeDodaniUceniciIds)
+            })
+        }
+    } 
+
     const handleGenerirajUcenike = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -272,6 +287,7 @@ export default function GeneriranjePodataka() {
         try {
 
             await generirajUcenike(brojUcenika);
+            await dodajNoveUcenikePostojecimLekcijama()
 
             setPoruka({
                 tip: "success",

@@ -25,4 +25,7 @@ export const RouteNames = {
 const L = 'localStorage';
 const M = 'memorija';
 
+export const DEFAULT_PAGE_SIZE = 10;
+export const PAGE_SIZES = [5, 10, 25, 50]
+
 export const DATA_SOURCE = L

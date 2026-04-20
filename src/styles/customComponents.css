@@ -65,3 +65,108 @@
     color: var(--text-light);
     margin-top: 0.25rem;
 }
+
+/* PAGINATION */
+.table-pagination-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 12px 16px;
+    margin-top: 12px;
+
+    border: groove white;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+
+    background: linear-gradient(90deg, var(--pink-main), var(--purple-main));
+}
+
+.pagination-info {
+    font-size: 13px;
+    color: var(--text-light);
+}
+
+.custom-pagination {
+    margin: 0;
+    gap: 4px;
+}
+
+.custom-pagination-border {
+    border: groove white;
+}
+
+.custom-pagination .page-item .page-link {
+    border-radius: 0;
+    border: groove white;
+    color: var(--text-dark);
+    background: rgba(255, 255, 255, 0.6);
+    padding: 6px 10px;
+    transition: all 0.2s ease;
+    box-shadow: none;
+}
+
+.custom-pagination .page-item .page-link:hover {
+    background: var(--pink-soft);
+    transform: translateY(-1px);
+    box-shadow: none;
+}
+
+.custom-pagination .page-item.active .page-link {
+    background: linear-gradient(135deg, #F6C1CC, #CDB7F6);
+    background: var(--purple-main);
+
+    color: white;
+    font-weight: 600;
+
+    border: 0;
+    border: groove white;
+
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.custom-pagination .page-item.disabled .page-link {
+    opacity: 0.4;
+}
+
+.custom-pagination .page-item .page-link:focus {
+    box-shadow: none;
+    outline: none;
+}
+
+.pagination-size {
+    min-width: 100px;
+}
+
+.pagination-size-padding {
+    padding-right: 24px;
+}
+
+.pagination-select {
+    border-radius: 0;
+    border: groove white;
+
+    background: rgba(255, 255, 255, 0.6);
+    color: var(--text-dark);
+
+    padding: .5rem;
+    text-align: center;
+    font-size: 13px;
+
+    box-shadow: none;
+    transition: all 0.2s ease;
+
+    appearance: none;
+    cursor: pointer;
+}
+
+.pagination-select:hover {
+    background: var(--pink-soft);
+    border: groove white;
+}
+
+.pagination-select:focus {
+    outline: none;
+    box-shadow: none;
+    border: groove white;
+}

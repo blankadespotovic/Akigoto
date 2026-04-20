@@ -1,3 +1,5 @@
+import { DEFAULT_PAGE_SIZE } from "../../constants";
+
 const STORAGE_KEY = "lekcije";
 
 
@@ -59,11 +61,30 @@ async function obrisi(sifra) {
     return { message: "Obrisano" };
 }
 
+async function getPage(page = 1, pageSize = DEFAULT_PAGE_SIZE) {
+    const lekcije = dohvatiSveIzStorage();
+    const startIndex = (page - 1) * pageSize; 
+    const endIndex = startIndex + pageSize; 
+    const paginatedData = lekcije.slice(startIndex, endIndex);
+    const totalItems = lekcije.length;
+    const totalPages = Math.ceil(totalItems / pageSize);
+
+    return {
+        success: true,
+        data: paginatedData,
+        currentPage: page,
+        pageSize: pageSize,
+        totalPages: totalPages,
+        totalItems: totalItems
+    };
+}
+
 export default {
     dohvatiSveIzStorage,
     get,
     dodaj,
     getBySifra,
     promjeni,
-    obrisi
+    obrisi,
+    getPage
 }

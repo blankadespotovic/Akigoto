@@ -21,6 +21,7 @@ const PrazanServis = {
     get: async () => ({success: false, data: []}),
     getAll: async () => ({success: false, data: []}),
     getBySifra: async (sifra) => ({success: false, data: {}}),
+    getLastFewIds: async (brojUcenika) => ({success: false, data: []}),
     dodaj: async (ucenik) => {
         console.error("Servis nije učitan");
     },
@@ -40,6 +41,7 @@ export default {
     get: () => AktivniServis.get(),
     getAll: () => AktivniServis.getAll(),
     getBySifra: (sifra) => AktivniServis.getBySifra(sifra),
+    getLastFewIds: (brojUcenika) => AktivniServis.getLastFewIds(brojUcenika),
     dodaj: (ucenik) => AktivniServis.dodaj(ucenik),
     promjeni: (ucenik) => AktivniServis.promjeni(ucenik),
     obrisi: (sifra) => AktivniServis.obrisi(sifra),

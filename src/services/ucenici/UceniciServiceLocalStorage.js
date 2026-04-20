@@ -1,3 +1,5 @@
+import { DEFAULT_PAGE_SIZE } from "../../constants";
+
 const STORAGE_KEY = "ucenici";
 
 
@@ -19,6 +21,13 @@ async function getBySifra(sifra) {
     const ucenici = dohvatiSveIzStorage();
     const ucenik = ucenici.find(p => p.sifra === parseInt(sifra));
     return { success: true, data: ucenik }
+}
+
+async function getLastFewIds(brojUcenika){
+    const ucenici = dohvatiSveIzStorage()
+    const zadnjiUcenici = ucenici.slice(-brojUcenika)
+    const zadnjiUceniciIds = zadnjiUcenici.map(u => Number.parseInt(u.sifra))
+    return {success: true, data: zadnjiUceniciIds}
 }
 
 async function dodaj(ucenik) {
@@ -59,7 +68,7 @@ async function obrisi(sifra) {
     return { message: "Obrisano" };
 }
 
-async function getPage(page = 1, pageSize = 8) {
+async function getPage(page = 1, pageSize = DEFAULT_PAGE_SIZE) {
     const ucenici = dohvatiSveIzStorage();
     const startIndex = (page - 1) * pageSize;
     const endIndex = startIndex + pageSize;
@@ -79,9 +88,10 @@ async function getPage(page = 1, pageSize = 8) {
 
 export default {
     dohvatiSveIzStorage,
-    get,
-    dodaj,
+    get, 
     getBySifra,
+    getLastFewIds,
+    dodaj,
     promjeni,
     obrisi,
     getPage

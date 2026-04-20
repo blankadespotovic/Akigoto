@@ -6,6 +6,8 @@ import { PregledUcenikaTablica } from "./PregledUcenikaTablica.jsx";
 import useBreakpoint from "../../hooks/useBreakpoint.js";
 import { PregledUcenikaGrid } from "./PregledUcenikaGrid.jsx";
 import { Pagination } from "react-bootstrap";
+import { CustomPagination } from "../../components/customInputs/pagination/CustomPagination.jsx";
+import { usePaginationSettings } from "../../hooks/usePaginationService.js";
 
 export default function PregledUcenika() {
 
@@ -16,10 +18,10 @@ export default function PregledUcenika() {
     const [currentPage, setCurrentPage] = useState(1)
     const [totalPages, setTotalPages] = useState(0)
     const [totalItems, setTotalItems] = useState(0)
-    const pageSize = 5
+    const {pageSize, setPageSize} = usePaginationSettings("ucenici")
 
-    async function ucitajUcenike(page) {
-        await UceniciService.getPage(page, pageSize).then((odgovor) => {
+    async function ucitajUcenike(selectedPage, selectedPageSize) {
+        await UceniciService.getPage(selectedPage, selectedPageSize).then((odgovor) => {
             if (!odgovor.success) {
                 alert("Nije implementiran servis")
                 return
@@ -35,8 +37,8 @@ export default function PregledUcenika() {
     }
 
     useEffect(() => {
-        ucitajUcenike(currentPage);
-    }, [currentPage]);
+        ucitajUcenike(currentPage, pageSize);
+    }, [currentPage, pageSize]);
 
 
     async function obrisi(sifra) {
@@ -50,8 +52,14 @@ export default function PregledUcenika() {
         if (currentPage > newTotalPages && newTotalPages > 0) {
             setCurrentPage(newTotalPages);
         } else {
-            ucitajUcenike(currentPage);
+           await ucitajUcenike(currentPage, pageSize);
         }
+    }
+
+    const handlePageSizeChange = (newSize) => {
+        const newTotalPages = Math.ceil(totalItems / newSize);
+        setPageSize(newSize);
+        setCurrentPage(prev => Math.min(prev, newTotalPages || 1));
     }
 
     return (
@@ -83,58 +91,15 @@ export default function PregledUcenika() {
 
             }
 
-             {/* Pagination komponenta */}
-            {totalPages > 1 && (
-
-                <div className="d-flex justify-content-center">
-                    <Pagination>
-                        <Pagination.First
-                            onClick={() => handlePageChange(1)}
-                            disabled={currentPage === 1}
-                        />
-                        <Pagination.Prev
-                            onClick={() => handlePageChange(currentPage - 1)}
-                            disabled={currentPage === 1}
-                        />
-
-                        {[...Array(totalPages)].map((_, index) => {
-                            const pageNumber = index + 1;
-                            // Prikaži samo stranice blizu trenutne stranice
-                            if (
-                                pageNumber === 1 ||
-                                pageNumber === totalPages ||
-                                (pageNumber >= currentPage - 2 && pageNumber <= currentPage + 2)
-                            ) {
-                                return (
-                                    <Pagination.Item
-                                        key={pageNumber}
-                                        active={pageNumber === currentPage}
-                                        onClick={() => handlePageChange(pageNumber)}
-                                    >
-                                        {pageNumber}
-                                    </Pagination.Item>
-                                );
-                            } else if (
-                                pageNumber === currentPage - 3 ||
-                                pageNumber === currentPage + 3
-                            ) {
-                                return <Pagination.Ellipsis key={pageNumber} disabled />;
-                            }
-                            return null;
-                        })}
-
-                        <Pagination.Next
-                            onClick={() => handlePageChange(currentPage + 1)}
-                            disabled={currentPage === totalPages}
-                        />
-                        <Pagination.Last
-                            onClick={() => handlePageChange(totalPages)}
-                            disabled={currentPage === totalPages}
-                        />
-                    </Pagination>
-                </div>
-
-            )}
+            <CustomPagination 
+                totalPages={totalPages}
+                currentPage={currentPage}
+                handlePageChange={handlePageChange}
+                pageSize={pageSize}
+                handlePageSizeChange={handlePageSizeChange}
+                totalItems={totalItems}
+                resultsLabel={"učenika"}
+            />
         </>
 
     )
