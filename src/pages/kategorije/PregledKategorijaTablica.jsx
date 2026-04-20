@@ -38,12 +38,10 @@ export function PregledKategorijaTablica(
             let bValue = b[sortConfig.key];
 
             if (typeof aValue === 'string') {
-                // localeCompare s 'hr' parametrom rješava čšćđž ČŠĆĐŽ
                 const result = aValue.localeCompare(bValue, 'hr', {sensitivity: 'accent'});
                 return sortConfig.direction === 'asc' ? result : -result;
             }
 
-            // TODO: sortiranje za brojeve
             if (typeof aValue === 'number') {
                 const result = aValue - bValue;
                 return sortConfig.direction === 'asc' ? result : -result;
