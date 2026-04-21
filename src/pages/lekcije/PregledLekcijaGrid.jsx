@@ -68,26 +68,6 @@ export function PregledLekcijaGrid(
                         pdfLabel={<FaFilePdf/>}
                         needsPdf={true}
                     />
-                    {/*<Row>*/}
-                    {/*    <Col xs={12} className={"mt-4 mb-2 d-flex align-items-center justify-content-between gap-1"}>*/}
-                    {/*        <Button className="btnInfo" onClick={() => {*/}
-                    {/*            setPodaci(lekcija)*/}
-                    {/*            setModalShow(true)*/}
-                    {/*        }}>*/}
-                    {/*            Detalji*/}
-                    {/*        </Button>*/}
-                    {/*        <Button className="btnEdit" onClick={() => {*/}
-                    {/*            navigate(`${lekcija.sifra}`)*/}
-                    {/*        }}>*/}
-                    {/*            Promijeni*/}
-                    {/*        </Button>*/}
-                    {/*        <Button className="btnCancel" onClick={() => {*/}
-                    {/*            obrisi(lekcija.sifra)*/}
-                    {/*        }}>*/}
-                    {/*            Obriši*/}
-                    {/*        </Button>*/}
-                    {/*    </Col>*/}
-                    {/*</Row>*/}
                 </Card>
             ))}
         </Container>

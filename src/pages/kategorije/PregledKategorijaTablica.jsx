@@ -1,5 +1,5 @@
 import { Card } from "../../components/Card.jsx";
-import { Button, ButtonGroup, Table } from "react-bootstrap";
+import { Button, ButtonGroup, OverlayTrigger, Table, Tooltip } from "react-bootstrap";
 import { CustomButtons } from "../../components/CustomButtons.jsx";
 import { FaEdit, FaSort, FaSortDown, FaSortUp, FaTrash } from "react-icons/fa";
 import { useState } from "react";
@@ -80,10 +80,30 @@ export function PregledKategorijaTablica(
                 </thead>
                 <tbody>
                     {sortedKategorije() && sortedKategorije().map((kategorija) => {
-                        return (
+                    const postignucaKategorije = postignuca.filter(p => p.kategorija === kategorija.sifra)
+                    return (
                             <tr key={kategorija.sifra}>
                                 <td>{kategorija.naziv}</td>
-                                <td className={"text-end"}>{kategorija.brojPostignuca}</td>
+                                <td className={"text-end"}>
+                                <OverlayTrigger
+                                    key={kategorija.sifra}
+                                    placement={"top"}
+                                    overlay={
+                                        <Tooltip id={`tooltip-${kategorija.sifra}`}>
+                                            <div className={"text-start"}>
+                                                <p>Postignuća u kategoriji:</p>
+                                                {postignucaKategorije.map((p, idx) =>
+                                                    <div key={p.sifra}>
+                                                        <span>{idx + 1}. {p.naziv}</span><br/>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </Tooltip>
+                                    }
+                                >
+                                    <span className={"cursor-pointer"}>{kategorija.brojPostignuca}</span>
+                                </OverlayTrigger>
+                            </td>
                                 <td>
 
                                     <CustomButtons
