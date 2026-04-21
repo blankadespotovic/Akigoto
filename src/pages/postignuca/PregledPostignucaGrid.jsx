@@ -32,7 +32,7 @@ export function PregledPostignucaGrid(
             {postignuca
                 .filter(p => p.kategorija === aktivnaKategorija)
                 .map(pos => (
-                    <CCard
+                    <Card
                         key={pos.sifra}
                         title={pos.naziv}
                     >
@@ -76,7 +76,7 @@ export function PregledPostignucaGrid(
                                 </Button>
                             </Col>
                         </Row>
-                    </CCard>
+                    </Card>
                 ))}
         </>
     )
