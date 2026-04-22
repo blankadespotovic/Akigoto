@@ -1,23 +1,25 @@
-import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { RouteNames } from "../../constants.js";
+import {useEffect, useState} from "react";
+import {Link, useNavigate} from "react-router-dom";
+import {RouteNames} from "../../constants.js";
 import UceniciService from "../../services/ucenici/UceniciService.js";
-import { PregledUcenikaTablica } from "./PregledUcenikaTablica.jsx";
+import {PregledUcenikaTablica} from "./PregledUcenikaTablica.jsx";
 import useBreakpoint from "../../hooks/useBreakpoint.js";
-import { PregledUcenikaGrid } from "./PregledUcenikaGrid.jsx";
-import { Pagination } from "react-bootstrap";
-import { CustomPagination } from "../../components/customInputs/pagination/CustomPagination.jsx";
-import { usePaginationSettings } from "../../hooks/usePaginationService.js";
+import {PregledUcenikaGrid} from "./PregledUcenikaGrid.jsx";
+import {CustomPagination} from "../../components/customInputs/pagination/CustomPagination.jsx";
+import {usePaginationSettings} from "../../hooks/usePaginationService.js";
+import LekcijeService from "../../services/lekcije/LekcijeService.js";
+import PostignucaService from "../../services/postignuca/PostignucaService.js";
 
 export default function PregledUcenika() {
 
-   const navigate = useNavigate()
+    const navigate = useNavigate()
     const sirina = useBreakpoint();
 
     const [ucenici, setUcenici] = useState([]);
     const [currentPage, setCurrentPage] = useState(1)
     const [totalPages, setTotalPages] = useState(0)
     const [totalItems, setTotalItems] = useState(0)
+    const [svaPostignucaSvihUcenika, setSvaPostignucaSvihUcenika] = useState([]);
     const {pageSize, setPageSize} = usePaginationSettings("ucenici")
 
     async function ucitajUcenike(selectedPage, selectedPageSize) {
@@ -31,6 +33,44 @@ export default function PregledUcenika() {
             setTotalItems(odgovor.totalItems)
         })
     }
+
+    useEffect(() => {
+        const dohvatiSveLekcije = async () => {
+            const sveLekcije = await LekcijeService.get()
+                .then(lekcijeOdgovor => {
+                    if (!lekcijeOdgovor.success) {
+                        alert("Nije implementiran servis")
+                        return
+                    }
+                    return lekcijeOdgovor.data;
+                });
+            const svaPostignuca = await PostignucaService.get()
+                .then(postignucaOdgovor => {
+                    if (!postignucaOdgovor.success) {
+                        alert("Nije implementiran servis")
+                        return
+                    }
+                    return postignucaOdgovor.data;
+                });
+
+            const sve = [];
+            for (const ucenik of ucenici) {
+                const postignucaUcenikaIds = sveLekcije
+                    .filter(l => l.ucenici.includes(ucenik.sifra))
+                    .flatMap(l => l.postignuca);
+                const sortiraniIds = [... new Set(postignucaUcenikaIds)].sort()
+                const postignucaUcenika = svaPostignuca.filter(p => sortiraniIds.includes(p.sifra));
+                sve.push({
+                    sifra: ucenik.sifra,
+                    postignuca: postignucaUcenika
+                });
+            }
+            setSvaPostignucaSvihUcenika(sve)
+        }
+
+        dohvatiSveLekcije();
+    }, [ucenici]);
+
 
     function handlePageChange(page) {
         setCurrentPage(page)
@@ -52,7 +92,7 @@ export default function PregledUcenika() {
         if (currentPage > newTotalPages && newTotalPages > 0) {
             setCurrentPage(newTotalPages);
         } else {
-           await ucitajUcenike(currentPage, pageSize);
+            await ucitajUcenike(currentPage, pageSize);
         }
     }
 
@@ -67,31 +107,31 @@ export default function PregledUcenika() {
         <>
 
             <Link to={RouteNames.UCENICI_NOVI} id="btnAdd"
-                className="btn btnAdd w-100 my-3">
+                  className="btn btnAdd w-100 my-3">
                 Dodavanje novog učenika
             </Link>
 
 
             {ucenici.length > 0 &&
                 (["xs", "sm", "md"].includes(sirina) ? (
-                    <PregledUcenikaGrid
-                        ucenici={ucenici}
-                        navigate={navigate}
-                        obrisi={obrisi}
-                    />
-                ) : (
-                    <PregledUcenikaTablica
-                        ucenici={ucenici}
-                        navigate={navigate}
-                        obrisi={obrisi}
-                    />
-                )
+                        <PregledUcenikaGrid
+                            ucenici={ucenici}
+                            navigate={navigate}
+                            obrisi={obrisi}
+                        />
+                    ) : (
+                        <PregledUcenikaTablica
+                            ucenici={ucenici}
+                            svaPostignucaSvihUcenika={svaPostignucaSvihUcenika}
+                            obrisi={obrisi}
+                        />
+                    )
 
                 )
 
             }
 
-            <CustomPagination 
+            <CustomPagination
                 totalPages={totalPages}
                 currentPage={currentPage}
                 handlePageChange={handlePageChange}
