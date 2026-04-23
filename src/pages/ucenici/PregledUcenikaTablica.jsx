@@ -42,7 +42,7 @@ export function PregledUcenikaTablica(
                                                 <p>Postignuća učenika:</p>
                                                 {svaPostignucaUcenika?.map((p, idx) =>
                                                     <div key={p.sifra}>
-                                                        <span>{idx + 1}. {p.naziv}</span><br/>
+                                                        <span style={{color: p.zavrseno? 'green' : 'red'}}>{idx + 1}. {p.naziv}</span><br/>
                                                     </div>
                                                 )}
                                             </div>
