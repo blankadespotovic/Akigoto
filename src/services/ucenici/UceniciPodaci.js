@@ -3,7 +3,17 @@ export const ucenici = [
         sifra: 1,
         ime: 'Ivan',
         prezime: 'Horvat',
-        email: 'ivan.horvat@gmail.com'
+        email: 'ivan.horvat@gmail.com',
+        uplate:[
+            {
+                datum: '2026-04-15T00:00:00',
+                iznos: 100
+            },
+            {
+                datum: '2026-04-22T00:00:00',
+                iznos: 100
+            }
+        ]
     },
     {
         sifra: 2,
