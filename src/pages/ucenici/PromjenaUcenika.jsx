@@ -31,8 +31,8 @@ export default function PromjenaUcenika() {
     }, [])
 
 
-    async function promjeni(ucenik) {
-        await UceniciService.promjeni(ucenik).then(() => {
+    async function promjeni(ucenik, datum, iznos) {
+        await UceniciService.promjeni(ucenik, datum, iznos).then(() => {
             navigate(RouteNames.UCENICI)
         })
     }
@@ -67,11 +67,15 @@ export default function PromjenaUcenika() {
         // }
 
         promjeni({
-            sifra: ucenik.sifra,
-            ime: podaci.get("ime"),
-            prezime: podaci.get("prezime"),
-            email: podaci.get("email"),
-        })
+                sifra: ucenik.sifra,
+                ime: podaci.get("ime"),
+                prezime: podaci.get("prezime"),
+                email: podaci.get("email"),
+                uplate: ucenik.uplate,
+            },
+            podaci.get("datum") ? new Date(podaci.get("datum")).toISOString() : null,
+            podaci.get("iznos")
+        )
     }
 
 
@@ -79,28 +83,58 @@ export default function PromjenaUcenika() {
 
         <Card title={"Promjena učenika"} textAlign={"left"}>
             <Form onSubmit={odradiSubmit}>
-                <CustomInput
-                    id={"ime"}
-                    type={"text"}
-                    label={"Ime"}
-                    placeholder={"Unesite ime"}
-                    required={true}
-                    defaultValue={ucenik.ime}
-                />
-                <CustomInput
-                    id={"prezime"}
-                    type={"text"}
-                    label={"Prezime"}
-                    placeholder={"Unesite prezime"}
-                    defaultValue={ucenik.prezime}
-                />
-                <CustomInput
-                    id={"email"}
-                    type={"email"}
-                    label={"E-mail adresa učenika"}
-                    placeholder={"Unesite e-mail"}
-                    defaultValue={ucenik.email}
-                />
+                <Row>
+                    <Col xs={12} md={6}>
+                        <CustomInput
+                            id={"ime"}
+                            type={"text"}
+                            label={"Ime"}
+                            placeholder={"Unesite ime"}
+                            required={true}
+                            defaultValue={ucenik.ime}
+                        />
+                    </Col>
+                    <Col xs={12} md={6}>
+                        <CustomInput
+                            id={"iznos"}
+                            type={"number"}
+                            label={"Iznos uplate"}
+                            placeholder={"Unesite iznos uplate"}
+                            suffix={"€"}
+                        />
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <CustomInput
+                            id={"prezime"}
+                            type={"text"}
+                            label={"Prezime"}
+                            placeholder={"Unesite prezime"}
+                            defaultValue={ucenik.prezime}
+                        />
+                    </Col>
+                    <Col>
+                        <CustomInput
+                            id={"datum"}
+                            type={"date"}
+                            label={"Datum uplate"}
+                        />
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <CustomInput
+                            id={"email"}
+                            type={"email"}
+                            label={"E-mail adresa učenika"}
+                            placeholder={"Unesite e-mail"}
+                            defaultValue={ucenik.email}
+                        />
+                    </Col>
+
+                </Row>
+
 
                 <Row className="mt-4 justi">
                     <Col xs={12} md={6} className={"order-2 order-md-1"}>

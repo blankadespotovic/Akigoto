@@ -1,13 +1,13 @@
-import {useEffect, useState} from "react";
-import {Button, Col, Form, Row} from "react-bootstrap";
-import {Faker, hr} from "@faker-js/faker";
+import { useEffect, useState } from "react";
+import { Button, Col, Form, Row } from "react-bootstrap";
+import { Faker, hr } from "@faker-js/faker";
 import KategorijeService from "../services/kategorije/KategorijeService";
 import PostignucaService from "../services/postignuca/PostignucaService";
-import {CustomAlert} from "../components/CustomAlert";
-import {Card} from "../components/Card";
+import { CustomAlert } from "../components/CustomAlert";
+import { Card } from "../components/Card";
 import UceniciService from "../services/ucenici/UceniciService.js";
 import LekcijeService from "../services/lekcije/LekcijeService.js";
-import {CustomInput} from "../components/customInputs/CustomInput.jsx";
+import { CustomInput } from "../components/customInputs/CustomInput.jsx";
 import useBreakpoint from "../hooks/useBreakpoint.js";
 
 
@@ -123,7 +123,7 @@ export default function GeneriranjePodataka() {
                 naziv: naziv,
                 opis: opis,
                 kategorija: kat,
-                procjena: faker.number.int({min: 1, max: 500}),
+                procjena: faker.number.int({ min: 1, max: 500 }),
                 zavrseno: faker.datatype.boolean(),
             };
             await PostignucaService.dodaj(postignuce);
@@ -173,11 +173,20 @@ export default function GeneriranjePodataka() {
             const lastNameEmail = normalizirajZaEMail(prezimeRaw);
 
             const email = `${firstNameEmail}.${lastNameEmail}@${faker.helpers.arrayElement(domene)}.${faker.helpers.arrayElement(topLevelDomena)}`;
-            const ucenik = {
-                ime: imeRaw,
-                prezime: prezimePrikaz,
-                email: email,
-            };
+            const brojUplata = faker.number.int({ min: 1, max: 5 })
+            const uplate = []
+            for (let i = 1; i <= brojUplata; i++){
+                uplate.push({
+                    datum: faker.date.between({from: '2024-01-01', to: Date.now()}),
+                    iznos: faker.number.int({min: 45, max: 150})
+                })
+            }
+                const ucenik = {
+                    ime: imeRaw,
+                    prezime: prezimePrikaz,
+                    email: email,
+                    uplate: uplate
+                };
             await UceniciService.dodaj(ucenik);
         }
         dohvatiBrojUcenika()
@@ -187,7 +196,7 @@ export default function GeneriranjePodataka() {
         const svaPostignucaIds = svaPostignuca?.map(p => parseInt(p.sifra))
         const sviUceniciIds = sviUcenici?.map(u => parseInt(u.sifra))
         for (let i = 0; i < broj; i++) {
-           const naziv = faker.helpers.arrayElement([
+            const naziv = faker.helpers.arrayElement([
                 "Prvi koraci",
                 "Hiragana: temelj pisma",
                 "Katakana i strane riječi",
@@ -210,7 +219,7 @@ export default function GeneriranjePodataka() {
             const lekcija = {
                 naziv: naziv,
                 opis: opis,
-                trajanje: faker.number.int({min: 1, max: 500}),
+                trajanje: faker.number.int({ min: 1, max: 500 }),
                 postignuca: faker.helpers.arrayElements(svaPostignucaIds),
                 ucenici: faker.helpers.arrayElements(sviUceniciIds),
             };
@@ -265,19 +274,19 @@ export default function GeneriranjePodataka() {
     };
 
 
-    const dodajNoveUcenikePostojecimLekcijama = async () =>{
+    const dodajNoveUcenikePostojecimLekcijama = async () => {
         const uceniciRes = await UceniciService.getLastFewIds(brojUcenika)
         const zadnjeDodaniUceniciIds = uceniciRes.data
         const lekcijeRes = await LekcijeService.get()
         const sveLekcije = lekcijeRes.data
 
-        for (const lekcija of sveLekcije){
+        for (const lekcija of sveLekcije) {
             await LekcijeService.promjeni({
-                ...lekcija, 
+                ...lekcija,
                 ucenici: faker.helpers.arrayElements(zadnjeDodaniUceniciIds)
             })
         }
-    } 
+    }
 
     const handleGenerirajUcenike = async (e) => {
         e.preventDefault();
@@ -386,13 +395,13 @@ export default function GeneriranjePodataka() {
             const postignuca = rezultat.data;
             const rezultatLekcije = await LekcijeService.get();
             const lekcije = rezultatLekcije.data;
-            
+
 
             for (const postignuce of postignuca) {
                 await PostignucaService.obrisi(postignuce.sifra)
             }
 
-            for(const lekcija of lekcije){
+            for (const lekcija of lekcije) {
                 await LekcijeService.promjeni({
                     ...lekcija,
                     postignuca: []
@@ -432,7 +441,7 @@ export default function GeneriranjePodataka() {
                 await UceniciService.obrisi(ucenik.sifra);
             }
 
-            for(const lekcija of lekcije){
+            for (const lekcija of lekcije) {
                 await LekcijeService.promjeni({
                     ...lekcija,
                     ucenici: []
@@ -495,7 +504,7 @@ export default function GeneriranjePodataka() {
                 </CustomAlert>
                 {poruka && (
                     <CustomAlert variant={poruka.tip} className={"mt-2 mb-0"} dismissible
-                                 onClose={() => setPoruka(null)}>
+                        onClose={() => setPoruka(null)}>
                         {poruka.tekst}
                     </CustomAlert>
                 )}
@@ -528,7 +537,7 @@ export default function GeneriranjePodataka() {
                         >
                             {loading ? "Generiranje..." : "Generiraj kategorije"}
                         </Button>
-                        <CustomAlert variant="warning" className="mt-2" style={{fontSize: ".9rem"}}>
+                        <CustomAlert variant="warning" className="mt-2" style={{ fontSize: ".9rem" }}>
                             <strong>Upozorenje:</strong> Ove akcije će dodati nove podatke u postojeće.
                             Ako želite početi ispočetka, prvo obrišite postojeće podatke.
                         </CustomAlert>
@@ -574,7 +583,7 @@ export default function GeneriranjePodataka() {
                         >
                             {loading ? "Generiranje..." : "Generiraj postignuća"}
                         </Button>
-                        <CustomAlert variant="warning" className="mt-2" style={{fontSize: ".9rem"}}>
+                        <CustomAlert variant="warning" className="mt-2" style={{ fontSize: ".9rem" }}>
                             <strong>Upozorenje:</strong> Ove akcije će dodati nove podatke u postojeće.
                             Ako želite početi ispočetka, prvo obrišite postojeće podatke.
                         </CustomAlert>
@@ -653,7 +662,7 @@ export default function GeneriranjePodataka() {
                                 </Col>
                             </Row>
                         </Form.Group>
-                        <CustomAlert variant="warning" className="mt-2" style={{fontSize: ".9rem"}}>
+                        <CustomAlert variant="warning" className="mt-2" style={{ fontSize: ".9rem" }}>
                             <strong>Upozorenje:</strong> Ove akcije će dodati nove podatke u postojeće.
                             Ako želite početi ispočetka, prvo obrišite postojeće podatke.
                         </CustomAlert>
@@ -699,7 +708,7 @@ export default function GeneriranjePodataka() {
                         >
                             {loading ? "Generiranje..." : "Generiraj lekcije"}
                         </Button>
-                        <CustomAlert variant="warning" className="mt-2" style={{fontSize: ".9rem"}}>
+                        <CustomAlert variant="warning" className="mt-2" style={{ fontSize: ".9rem" }}>
                             <strong>Upozorenje:</strong> Ove akcije će dodati nove podatke u postojeće.
                             Ako želite početi ispočetka, prvo obrišite postojeće podatke.
                         </CustomAlert>

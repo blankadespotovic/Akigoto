@@ -1,4 +1,4 @@
-import { DEFAULT_PAGE_SIZE } from "../../constants";
+import {DEFAULT_PAGE_SIZE} from "../../constants";
 
 const STORAGE_KEY = "ucenici";
 
@@ -14,16 +14,16 @@ function spremiUStorage(podaci) {
 
 async function get() {
     const ucenici = dohvatiSveIzStorage();
-    return { success: true, data: [...ucenici] };
+    return {success: true, data: [...ucenici]};
 }
 
 async function getBySifra(sifra) {
     const ucenici = dohvatiSveIzStorage();
     const ucenik = ucenici.find(p => p.sifra === parseInt(sifra));
-    return { success: true, data: ucenik }
+    return {success: true, data: ucenik}
 }
 
-async function getLastFewIds(brojUcenika){
+async function getLastFewIds(brojUcenika) {
     const ucenici = dohvatiSveIzStorage()
     const zadnjiUcenici = ucenici.slice(-brojUcenika)
     const zadnjiUceniciIds = zadnjiUcenici.map(u => Number.parseInt(u.sifra))
@@ -41,23 +41,28 @@ async function dodaj(ucenik) {
 
     ucenici.push(ucenik)
     spremiUStorage(ucenici);
-    return { data: ucenik };
+    return {data: ucenik};
 
 }
 
-async function promjeni(ucenik) {
+async function promjeni(ucenik, datum, iznos) {
 
     const ucenici = dohvatiSveIzStorage()
     const index = ucenici.findIndex(u => u.sifra === parseInt(ucenik.sifra))
 
 
     if (index !== -1) {
-    
-    ucenici[index] = ucenik
-        
+        const uplate = ucenik.uplate
+        console.log(uplate, iznos, datum)
+        if (iznos && datum) {
+            uplate.push({datum, iznos: Number.parseFloat(iznos)})
+        }
+        ucenik.uplate = uplate
+        ucenici[index] = ucenik
+
         spremiUStorage(ucenici)
     }
-    return { data: ucenik }
+    return {data: ucenik}
 }
 
 
@@ -65,7 +70,7 @@ async function obrisi(sifra) {
     let ucenici = dohvatiSveIzStorage();
     ucenici = ucenici.filter(u => u.sifra !== parseInt(sifra))
     spremiUStorage(ucenici);
-    return { message: "Obrisano" };
+    return {message: "Obrisano"};
 }
 
 async function getPage(page = 1, pageSize = DEFAULT_PAGE_SIZE) {
@@ -88,7 +93,7 @@ async function getPage(page = 1, pageSize = DEFAULT_PAGE_SIZE) {
 
 export default {
     dohvatiSveIzStorage,
-    get, 
+    get,
     getBySifra,
     getLastFewIds,
     dodaj,

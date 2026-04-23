@@ -2,10 +2,14 @@ import {OverlayTrigger, Table, Tooltip} from "react-bootstrap";
 import {Card} from "../../components/Card.jsx";
 import {CustomButtons} from "../../components/CustomButtons.jsx";
 import {FaEdit, FaTrash} from "react-icons/fa";
+import { useState } from "react";
 
 export function PregledUcenikaTablica(
     {ucenici, svaPostignucaSvihUcenika, obrisi}
 ) {
+
+    let ukupnoNaplaceno = 0
+
     return (
 
         <Card
@@ -20,6 +24,7 @@ export function PregledUcenikaTablica(
                     <th>Prezime</th>
                     <th>E-mail adresa</th>
                     <th>Broj postignuća</th>
+                    <th>Plaćeno</th>
                     <th className={"text-center"}>Akcija</th>
                 </tr>
                 </thead>
@@ -27,6 +32,9 @@ export function PregledUcenikaTablica(
                 {ucenici.map((ucenik) => {
                     const svaPostignucaUcenika = svaPostignucaSvihUcenika?.find(item => item.sifra === ucenik.sifra)?.postignuca;
                     const brojPostignuca = svaPostignucaUcenika?.length
+                    let ukupnoNaplacenoPoUceniku = 0
+                    ucenik.uplate.map(u => ukupnoNaplacenoPoUceniku += u.iznos )
+                    ukupnoNaplaceno += ukupnoNaplacenoPoUceniku
                     return (
                         <tr key={ucenik.sifra}>
                             <td>{ucenik.ime}</td>
@@ -52,6 +60,26 @@ export function PregledUcenikaTablica(
                                     <span>{brojPostignuca}</span>
                                 </OverlayTrigger>
                             </td>
+                            <td><OverlayTrigger
+                                    key={ucenik.sifra}
+                                    placement={"top"}
+                                    overlay={
+                                        <Tooltip id={`tooltip-naplate-${ucenik.sifra}`}>
+                                            <div className={"text-start"}>
+                                                <p>Uplate učenika:</p>
+                                                {ucenik.uplate
+                                                .sort((a, b)=> new Date(a.datum) - new Date(b.datum))
+                                                .map((u, idx) =>
+                                                    <div key={`naplata-${u.datum}`}>
+                                                        <span>{idx + 1}. {new Date(u.datum).toLocaleDateString('hr-HR')} - ${u.iznos}€</span><br/>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </Tooltip>
+                                    }
+                                >
+                                    <span>{ukupnoNaplacenoPoUceniku} €</span>
+                                </OverlayTrigger></td>
                             <td>
                                 <CustomButtons
                                     editLink={`${ucenik.sifra}`}
@@ -64,6 +92,16 @@ export function PregledUcenikaTablica(
                     )
                 })}
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <td colSpan={4}>
+                            Ukupno naplaćeno
+                        </td>
+                        <td>
+                        {ukupnoNaplaceno} €
+                        </td>
+                    </tr>
+                </tfoot>
             </Table>
         </Card>
     )
