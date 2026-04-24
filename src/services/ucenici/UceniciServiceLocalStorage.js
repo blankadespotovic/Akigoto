@@ -1,4 +1,4 @@
-import {DEFAULT_PAGE_SIZE} from "../../constants";
+import { DEFAULT_PAGE_SIZE } from "../../constants";
 
 const STORAGE_KEY = "ucenici";
 
@@ -14,20 +14,20 @@ function spremiUStorage(podaci) {
 
 async function get() {
     const ucenici = dohvatiSveIzStorage();
-    return {success: true, data: [...ucenici]};
+    return { success: true, data: [...ucenici] };
 }
 
 async function getBySifra(sifra) {
     const ucenici = dohvatiSveIzStorage();
     const ucenik = ucenici.find(p => p.sifra === parseInt(sifra));
-    return {success: true, data: ucenik}
+    return { success: true, data: ucenik }
 }
 
 async function getLastFewIds(brojUcenika) {
     const ucenici = dohvatiSveIzStorage()
     const zadnjiUcenici = ucenici.slice(-brojUcenika)
     const zadnjiUceniciIds = zadnjiUcenici.map(u => Number.parseInt(u.sifra))
-    return {success: true, data: zadnjiUceniciIds}
+    return { success: true, data: zadnjiUceniciIds }
 }
 
 async function dodaj(ucenik) {
@@ -41,7 +41,7 @@ async function dodaj(ucenik) {
 
     ucenici.push(ucenik)
     spremiUStorage(ucenici);
-    return {data: ucenik};
+    return { data: ucenik };
 
 }
 
@@ -55,14 +55,14 @@ async function promjeni(ucenik, datum, iznos) {
         const uplate = ucenik.uplate
         console.log(uplate, iznos, datum)
         if (iznos && datum) {
-            uplate.push({datum, iznos: Number.parseFloat(iznos)})
+            uplate.push({ datum, iznos: Number.parseFloat(iznos) })
         }
         ucenik.uplate = uplate
         ucenici[index] = ucenik
 
         spremiUStorage(ucenici)
     }
-    return {data: ucenik}
+    return { data: ucenik }
 }
 
 
@@ -70,7 +70,20 @@ async function obrisi(sifra) {
     let ucenici = dohvatiSveIzStorage();
     ucenici = ucenici.filter(u => u.sifra !== parseInt(sifra))
     spremiUStorage(ucenici);
-    return {message: "Obrisano"};
+    return { message: "Obrisano" };
+}
+
+async function obrisiUplatu(ucenikSifra, sifra) {
+    let ucenici = dohvatiSveIzStorage();
+    const ucenik = ucenici.find(u => u.sifra === parseInt(ucenikSifra))
+
+    if (ucenik && Array.isArray(ucenik.uplate)) {
+        ucenik.uplate = ucenik.uplate.filter(
+            t => t.sifra !== parseInt(sifra)
+        );
+    }
+    spremiUStorage(ucenici);
+    return { message: "Obrisano" };
 }
 
 async function getPage(page = 1, pageSize = DEFAULT_PAGE_SIZE) {
@@ -99,5 +112,6 @@ export default {
     dodaj,
     promjeni,
     obrisi,
+    obrisiUplatu,
     getPage
 }

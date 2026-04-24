@@ -177,6 +177,7 @@ export default function GeneriranjePodataka() {
             const uplate = []
             for (let i = 1; i <= brojUplata; i++){
                 uplate.push({
+                    sifra: i, 
                     datum: faker.date.between({from: '2024-01-01', to: Date.now()}),
                     iznos: faker.number.int({min: 45, max: 150})
                 })

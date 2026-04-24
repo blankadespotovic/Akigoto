@@ -1,11 +1,12 @@
-import {Link, useNavigate, useParams} from "react-router-dom";
-import {RouteNames} from "../../constants";
-import {Button, Col, Form, Row} from "react-bootstrap";
-import {useEffect, useState} from "react";
-import {Card} from "../../components/Card";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { RouteNames } from "../../constants";
+import { Button, Col, Form, Row, Table } from "react-bootstrap";
+import { useEffect, useState } from "react";
+import { Card } from "../../components/Card";
 import UceniciService from "../../services/ucenici/UceniciService";
-import {CustomInput} from "../../components/customInputs/CustomInput.jsx";
+import { CustomInput } from "../../components/customInputs/CustomInput.jsx";
 import useBreakpoint from "../../hooks/useBreakpoint.js";
+import { FaTrash } from "react-icons/fa";
 
 export default function PromjenaUcenika() {
 
@@ -15,7 +16,7 @@ export default function PromjenaUcenika() {
     const mobilnaSirina = ["xs", "sm", "md"].includes(sirina)
     const [ucenik, setUcenik] = useState({})
 
-    async function ucitajUcenike() {
+    async function ucitajUcenika() {
         await UceniciService.getBySifra(params.sifra).then((odgovor) => {
             if (!odgovor.success) {
                 alert("Nije implementiran servis")
@@ -27,7 +28,7 @@ export default function PromjenaUcenika() {
     }
 
     useEffect(() => {
-        ucitajUcenike()
+        ucitajUcenika()
     }, [])
 
 
@@ -35,6 +36,17 @@ export default function PromjenaUcenika() {
         await UceniciService.promjeni(ucenik, datum, iznos).then(() => {
             navigate(RouteNames.UCENICI)
         })
+    }
+
+    async function obrisiUplatu(sifraUplate){
+        await UceniciService.obrisiUplatu(ucenik.sifra, sifraUplate).then(() =>{
+            ucitajUcenika()
+        })
+    }
+
+    function handleDelete(e, sifraUplate){
+        e.preventDefault()
+        obrisiUplatu(sifraUplate)
     }
 
     function odradiSubmit(e) {
@@ -67,12 +79,12 @@ export default function PromjenaUcenika() {
         // }
 
         promjeni({
-                sifra: ucenik.sifra,
-                ime: podaci.get("ime"),
-                prezime: podaci.get("prezime"),
-                email: podaci.get("email"),
-                uplate: ucenik.uplate,
-            },
+            sifra: ucenik.sifra,
+            ime: podaci.get("ime"),
+            prezime: podaci.get("prezime"),
+            email: podaci.get("email"),
+            uplate: ucenik.uplate,
+        },
             podaci.get("datum") ? new Date(podaci.get("datum")).toISOString() : null,
             podaci.get("iznos")
         )
@@ -123,7 +135,7 @@ export default function PromjenaUcenika() {
                     </Col>
                 </Row>
                 <Row>
-                    <Col>
+                    <Col xs={12} md={6}>
                         <CustomInput
                             id={"email"}
                             type={"email"}
@@ -132,6 +144,33 @@ export default function PromjenaUcenika() {
                             defaultValue={ucenik.email}
                         />
                     </Col>
+                    <Col xs={12} md={6}>
+                        <h4 className="mt-3">Trenutne uplate</h4>
+                        {ucenik?.uplate?.length > 0?
+                        <Table striped hover responsive>
+                            <thead>
+                                <tr>
+                                    <td>Datum</td>
+                                    <td className="text-end">Iznos</td>
+                                    <td className="text-center">Akcija</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {ucenik?.uplate?.sort((a, b) => new Date(a.datum) - new Date(b.datum))
+                                    .map((u, idx) =>
+                                        <tr key={`naplata-${u.datum}`}>
+                                        <td>{new Date(u.datum).toLocaleDateString('hr-HR')}</td>
+                                        <td className="text-end">{u.iznos} €</td>
+                                        <td className="text-center">
+                                            <Button className="btn btnCancel btn-sm" onClick={(e)=>handleDelete(e, u.sifra)}><FaTrash color="white" /></Button>
+                                        </td>
+                                        </tr>
+                                    )}
+                            </tbody>
+
+                        </Table> : <p>Nema podataka o uplati</p>
+                        }
+                    </Col>
 
                 </Row>
 
@@ -139,7 +178,7 @@ export default function PromjenaUcenika() {
                 <Row className="mt-4 justi">
                     <Col xs={12} md={6} className={"order-2 order-md-1"}>
                         <Link to={RouteNames.UCENICI}
-                              className={`btn btnCancel${mobilnaSirina ? " w-100 my-1" : ""}`}>
+                            className={`btn btnCancel${mobilnaSirina ? " w-100 my-1" : ""}`}>
                             Odustani
                         </Link>
                     </Col>

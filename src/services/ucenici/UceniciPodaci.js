@@ -6,10 +6,12 @@ export const ucenici = [
         email: 'ivan.horvat@gmail.com',
         uplate: [
             {
+                sifra: 1,
                 datum: '2026-04-15T00:00:00',
                 iznos: 100
             },
             {
+                sifra: 2,
                 datum: '2026-04-22T00:00:00',
                 iznos: 100
             }
@@ -22,10 +24,12 @@ export const ucenici = [
         email: 'ana.kovacic@gmail.com',
         uplate: [
             {
+                sifra: 1,
                 datum: '2026-01-14T00:00:00',
                 iznos: 24
             },
             {
+                sifra: 2,
                 datum: '2026-02-03T00:00:00',
                 iznos: 65
             }
@@ -38,13 +42,15 @@ export const ucenici = [
         email: 'marko.babic@gmail.com',
         uplate: [
             {
-        datum: '2026-05-18T00:00:00',
-        iznos: 76
-    },
-    {
-        datum: '2026-06-01T00:00:00',
-        iznos: 51
-    }
+                sifra: 1,
+                datum: '2026-05-18T00:00:00',
+                iznos: 76
+            },
+            {
+                sifra: 2,
+                datum: '2026-06-01T00:00:00',
+                iznos: 51
+            }
         ]
     },
     {
@@ -54,15 +60,17 @@ export const ucenici = [
         email: 'petra.novak@gmail.com',
         uplate: [
             {
-        datum: '2026-05-18T00:00:00',
-        iznos: 76
-    },
-    {
-        datum: '2026-06-01T00:00:00',
-        iznos: 63
-    }
+                sifra: 1,
+                datum: '2026-05-18T00:00:00',
+                iznos: 76
+            },
+            {
+                sifra: 2,
+                datum: '2026-06-01T00:00:00',
+                iznos: 63
+            }
         ]
-        
+
     },
     {
         sifra: 5,
@@ -71,13 +79,15 @@ export const ucenici = [
         email: 'luka.maric@gmail.com',
         uplate: [
             {
-        datum: '2026-05-18T00:00:00',
-        iznos: 76
-    },
-    {
-        datum: '2026-06-01T00:00:00',
-        iznos: 75
-    }
+                sifra: 1,
+                datum: '2026-05-18T00:00:00',
+                iznos: 76
+            },
+            {
+                sifra: 2,
+                datum: '2026-06-01T00:00:00',
+                iznos: 75
+            }
         ]
     },
     {
@@ -87,13 +97,15 @@ export const ucenici = [
         email: 'maja.juric@gmail.com',
         uplate: [
             {
-        datum: '2026-05-18T00:00:00',
-        iznos: 45
-    },
-    {
-        datum: '2026-06-01T00:00:00',
-        iznos: 95
-    }
+                sifra: 1,
+                datum: '2026-05-18T00:00:00',
+                iznos: 45
+            },
+            {
+                sifra: 2,
+                datum: '2026-06-01T00:00:00',
+                iznos: 95
+            }
         ]
     },
     {
@@ -103,13 +115,15 @@ export const ucenici = [
         email: 'filip.kralj@gmail.com',
         uplate: [
             {
-        datum: '2026-05-18T00:00:00',
-        iznos: 76
-    },
-    {
-        datum: '2026-06-01T00:00:00',
-        iznos: 56
-    }
+                sifra: 1,
+                datum: '2026-05-18T00:00:00',
+                iznos: 76
+            },
+            {
+                sifra: 2,
+                datum: '2026-06-01T00:00:00',
+                iznos: 56
+            }
         ]
     },
     {
@@ -119,13 +133,15 @@ export const ucenici = [
         email: 'ivana.vukovic@gmail.com',
         uplate: [
             {
-        datum: '2026-05-18T00:00:00',
-        iznos: 76
-    },
-    {
-        datum: '2026-06-01T00:00:00',
-        iznos: 78
-    }
+                sifra: 1,
+                datum: '2026-05-18T00:00:00',
+                iznos: 76
+            },
+            {
+                sifra: 2,
+                datum: '2026-06-01T00:00:00',
+                iznos: 78
+            }
         ]
     },
     {
@@ -135,13 +151,15 @@ export const ucenici = [
         email: 'josip.peric@gmail.com',
         uplate: [
             {
-        datum: '2026-05-18T00:00:00',
-        iznos: 76
-    },
-    {
-        datum: '2026-06-01T00:00:00',
-        iznos: 65
-    }
+                sifra: 1,
+                datum: '2026-05-18T00:00:00',
+                iznos: 76
+            },
+            {
+                sifra: 2,
+                datum: '2026-06-01T00:00:00',
+                iznos: 65
+            }
         ]
     },
     {
@@ -151,13 +169,15 @@ export const ucenici = [
         email: 'katarina.radic@gmail.com',
         uplate: [
             {
-        datum: '2026-05-18T00:00:00',
-        iznos: 76
-    },
-    {
-        datum: '2026-06-01T00:00:00',
-        iznos: 45
-    }
+                sifra: 1,
+                datum: '2026-05-18T00:00:00',
+                iznos: 76
+            },
+            {
+                sifra: 2,
+                datum: '2026-06-01T00:00:00',
+                iznos: 45
+            }
         ]
     }
 ]

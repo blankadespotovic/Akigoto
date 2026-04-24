@@ -29,6 +29,16 @@ async function obrisi(sifra){
     ucenici.splice(index,1)
 }
 
+async function obrisiUplatu(ucenikSifra, sifra) {
+    const ucenik = ucenici.find(u => u.sifra === parseInt(ucenikSifra))
+    if (ucenik && Array.isArray(ucenik.uplate)) {
+        ucenik.uplate = ucenik.uplate.filter(
+            t => t.sifra !== parseInt(sifra)
+        );
+    }
+    ucenici[parseInt(ucenikSifra)] = ucenik;
+}
+
 async function getPage(page = 1, pageSize = 8){
     const startIndex = (page - 1) * pageSize;
     const endIndex = startIndex + pageSize;
@@ -54,5 +64,6 @@ export default {
     getBySifra,
     promjeni,
     obrisi,
+    obrisiUplatu,
     getPage
 }
