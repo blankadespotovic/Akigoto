@@ -1,6 +1,6 @@
 import {useState} from "react";
 import {CustomSelect} from "../../components/customInputs/CustomSelect.jsx";
-import {Card, Card as CCard} from "../../components/Card.jsx";
+import {Card} from "../../components/Card.jsx";
 import {FaMedal, FaRegCheckSquare, FaRegClock, FaRegWindowClose} from "react-icons/fa";
 import {Button, Col, Row} from "react-bootstrap";
 
