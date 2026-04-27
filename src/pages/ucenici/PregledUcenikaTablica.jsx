@@ -1,13 +1,25 @@
-import {OverlayTrigger, Table, Tooltip} from "react-bootstrap";
+import {Container, Form, InputGroup, OverlayTrigger, Table, Tooltip} from "react-bootstrap";
 import {Card} from "../../components/Card.jsx";
 import {CustomButtons} from "../../components/CustomButtons.jsx";
-import {FaEdit, FaTrash} from "react-icons/fa";
+import {FaEdit, FaTimes, FaTrash} from "react-icons/fa";
 import { useEffect, useState } from "react";
 import UceniciService from "../../services/ucenici/UceniciService.js";
+import { FaMagnifyingGlass } from "react-icons/fa6";
 
 export function PregledUcenikaTablica(
     {ucenici, svaPostignucaSvihUcenika, obrisi}
 ) {
+
+    const [vrijednostPretrage, setVrijednostPretrage] = useState("")
+
+    const filtriraniUcenici = ucenici.filter((ucenik) => {
+        const upit = vrijednostPretrage.toLowerCase()
+        return (
+            ucenik.ime.toLowerCase().includes(upit) ||
+            ucenik.prezime.toLowerCase().includes(upit) ||
+            ucenik.email.toLowerCase().includes(upit)
+        )
+    })
 
     const [ukupnoNaplaceno, setUkupnoNaplaceno] = useState(0)
 
@@ -33,6 +45,25 @@ export function PregledUcenikaTablica(
 
     return (
 
+        <Container className={"pt-0 py-3 px-0"}>
+            <InputGroup>
+                <Form.Control
+                    type={"text"}
+                    value={vrijednostPretrage}
+                    className={"custom-input"}
+                    placeholder={"Pretraži učenike..."}
+                    onChange={(e) => {
+                        setVrijednostPretrage(e.target.value)
+                    }}
+                />
+                <InputGroup.Text className={"custom-addon"}>
+                    {vrijednostPretrage !== "" ? (
+                        <FaTimes onClick={() => setVrijednostPretrage("")}/>
+                    ) : (
+                        <FaMagnifyingGlass/>
+                    )}
+                </InputGroup.Text>
+            </InputGroup>
         <Card
             title={"Učenici"}
             padding={0}
@@ -50,7 +81,7 @@ export function PregledUcenikaTablica(
                 </tr>
                 </thead>
                 <tbody>
-                {ucenici.map((ucenik) => {
+                {filtriraniUcenici.map((ucenik) => {
                     const svaPostignucaUcenika = svaPostignucaSvihUcenika?.find(item => item.sifra === ucenik.sifra)?.postignuca;
                     const brojPostignuca = svaPostignucaUcenika?.length
                     let ukupnoNaplacenoPoUceniku = 0
@@ -124,5 +155,6 @@ export function PregledUcenikaTablica(
                 </tfoot>
             </Table>
         </Card>
+        </Container>
     )
 }
