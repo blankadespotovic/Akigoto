@@ -2,13 +2,34 @@ import {OverlayTrigger, Table, Tooltip} from "react-bootstrap";
 import {Card} from "../../components/Card.jsx";
 import {CustomButtons} from "../../components/CustomButtons.jsx";
 import {FaEdit, FaTrash} from "react-icons/fa";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import UceniciService from "../../services/ucenici/UceniciService.js";
 
 export function PregledUcenikaTablica(
     {ucenici, svaPostignucaSvihUcenika, obrisi}
 ) {
 
-    let ukupnoNaplaceno = 0
+    const [ukupnoNaplaceno, setUkupnoNaplaceno] = useState(0)
+
+    useEffect(()=>{
+        izracunaUkupnoNaplaceno()
+    },[])
+
+    async function izracunaUkupnoNaplaceno(){
+        await UceniciService.get().then((odgovor) => {
+                    if (!odgovor.success) {
+                        alert("Nije implementiran servis")
+                        return
+                    }
+                    let ukupnoSvi=0
+                    odgovor.data.map(ucenik=>{
+                        let ukupnoNaplacenoPoUceniku = 0
+                        ucenik.uplate.map(u => ukupnoNaplacenoPoUceniku += u.iznos )
+                        ukupnoSvi += ukupnoNaplacenoPoUceniku
+                    })
+                    setUkupnoNaplaceno(ukupnoSvi)
+                })
+    }
 
     return (
 
@@ -34,7 +55,6 @@ export function PregledUcenikaTablica(
                     const brojPostignuca = svaPostignucaUcenika?.length
                     let ukupnoNaplacenoPoUceniku = 0
                     ucenik.uplate.map(u => ukupnoNaplacenoPoUceniku += u.iznos )
-                    ukupnoNaplaceno += ukupnoNaplacenoPoUceniku
                     return (
                         <tr key={ucenik.sifra}>
                             <td>{ucenik.ime}</td>
