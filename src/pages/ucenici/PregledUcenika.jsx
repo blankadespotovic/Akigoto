@@ -1,14 +1,17 @@
-import {useEffect, useState} from "react";
-import {Link, useNavigate} from "react-router-dom";
-import {RouteNames} from "../../constants.js";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { RouteNames } from "../../constants.js";
 import UceniciService from "../../services/ucenici/UceniciService.js";
-import {PregledUcenikaTablica} from "./PregledUcenikaTablica.jsx";
+import { PregledUcenikaTablica } from "./PregledUcenikaTablica.jsx";
 import useBreakpoint from "../../hooks/useBreakpoint.js";
-import {PregledUcenikaGrid} from "./PregledUcenikaGrid.jsx";
-import {CustomPagination} from "../../components/customInputs/pagination/CustomPagination.jsx";
-import {usePaginationSettings} from "../../hooks/usePaginationService.js";
+import { PregledUcenikaGrid } from "./PregledUcenikaGrid.jsx";
+import { CustomPagination } from "../../components/customInputs/pagination/CustomPagination.jsx";
+import { usePaginationSettings } from "../../hooks/usePaginationService.js";
 import LekcijeService from "../../services/lekcije/LekcijeService.js";
 import PostignucaService from "../../services/postignuca/PostignucaService.js";
+import { Container, Form, InputGroup } from "react-bootstrap";
+import { FaTimes } from "react-icons/fa";
+import { FaMagnifyingGlass } from "react-icons/fa6";
 
 export default function PregledUcenika() {
 
@@ -20,10 +23,11 @@ export default function PregledUcenika() {
     const [totalPages, setTotalPages] = useState(0)
     const [totalItems, setTotalItems] = useState(0)
     const [svaPostignucaSvihUcenika, setSvaPostignucaSvihUcenika] = useState([]);
-    const {pageSize, setPageSize} = usePaginationSettings("ucenici")
+    const { pageSize, setPageSize } = usePaginationSettings("ucenici")
+    const [vrijednostPretrage, setVrijednostPretrage] = useState("")
 
-    async function ucitajUcenike(selectedPage, selectedPageSize) {
-        await UceniciService.getPage(selectedPage, selectedPageSize).then((odgovor) => {
+    async function ucitajUcenike(selectedPage, selectedPageSize, vrijednostPretrage) {
+        await UceniciService.getPage(selectedPage, selectedPageSize, vrijednostPretrage).then((odgovor) => {
             if (!odgovor.success) {
                 alert("Nije implementiran servis")
                 return
@@ -77,8 +81,8 @@ export default function PregledUcenika() {
     }
 
     useEffect(() => {
-        ucitajUcenike(currentPage, pageSize);
-    }, [currentPage, pageSize]);
+        ucitajUcenike(currentPage, pageSize, vrijednostPretrage);
+    }, [currentPage, pageSize, vrijednostPretrage]);
 
 
     async function obrisi(sifra) {
@@ -102,30 +106,56 @@ export default function PregledUcenika() {
         setCurrentPage(prev => Math.min(prev, newTotalPages || 1));
     }
 
+    function handleSearchChange(e) {
+        setVrijednostPretrage(e.target.value)
+        setCurrentPage(1)
+    }
+
+    function handleClear() {
+        setVrijednostPretrage("")
+        setCurrentPage(1)
+    }
+
     return (
 
         <>
 
             <Link to={RouteNames.UCENICI_NOVI} id="btnAdd"
-                  className="btn btnAdd w-100 my-3">
+                className="btn btnAdd w-100 my-3">
                 Dodavanje novog učenika
             </Link>
 
+            <InputGroup>
+                <Form.Control
+                    type={"text"}
+                    value={vrijednostPretrage}
+                    className={"custom-input"}
+                    placeholder={"Pretraži učenike..."}
+                    onChange={handleSearchChange}
+                />
+                <InputGroup.Text className={"custom-addon"}>
+                    {vrijednostPretrage !== "" ? (
+                        <FaTimes onClick={handleClear} />
+                    ) : (
+                        <FaMagnifyingGlass />
+                    )}
+                </InputGroup.Text>
+            </InputGroup>
 
             {ucenici.length > 0 &&
                 (["xs", "sm", "md"].includes(sirina) ? (
-                        <PregledUcenikaGrid
-                            ucenici={ucenici}
-                            navigate={navigate}
-                            obrisi={obrisi}
-                        />
-                    ) : (
-                        <PregledUcenikaTablica
-                            ucenici={ucenici}
-                            svaPostignucaSvihUcenika={svaPostignucaSvihUcenika}
-                            obrisi={obrisi}
-                        />
-                    )
+                    <PregledUcenikaGrid
+                        ucenici={ucenici}
+                        navigate={navigate}
+                        obrisi={obrisi}
+                    />
+                ) : (
+                    <PregledUcenikaTablica
+                        ucenici={ucenici}
+                        svaPostignucaSvihUcenika={svaPostignucaSvihUcenika}
+                        obrisi={obrisi}
+                    />
+                )
 
                 )
 

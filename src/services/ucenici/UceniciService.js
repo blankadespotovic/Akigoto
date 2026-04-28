@@ -34,7 +34,7 @@ const PrazanServis = {
     obrisiUplatu: async (ucenikSifra, sifra) => {
         console.error("Servis nije učitan");
     },
-    getPage: async (page, pageSize) => ({ success: false, data: [], totalPages: 0, totalItems: 0 })
+    getPage: async (page, pageSize, vrijednostPretrage) => ({ success: false, data: [], totalPages: 0, totalItems: 0 })
 };
 
 
@@ -49,5 +49,5 @@ export default {
     promjeni: (ucenik, datum, iznos) => AktivniServis.promjeni(ucenik, datum, iznos),
     obrisi: (sifra) => AktivniServis.obrisi(sifra),
     obrisiUplatu: (ucenikSifra, sifra) => AktivniServis.obrisiUplatu(ucenikSifra, sifra),
-    getPage: (page, pageSize) => AktivniServis.getPage(page, pageSize)
+    getPage: (page, pageSize, vrijednostPretrage) => AktivniServis.getPage(page, pageSize, vrijednostPretrage)
 };

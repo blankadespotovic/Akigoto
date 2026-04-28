@@ -86,8 +86,23 @@ async function obrisiUplatu(ucenikSifra, sifra) {
     return { message: "Obrisano" };
 }
 
-async function getPage(page = 1, pageSize = DEFAULT_PAGE_SIZE) {
-    const ucenici = dohvatiSveIzStorage();
+async function getPage(page = 1, pageSize = DEFAULT_PAGE_SIZE, vrijednostPretrage = "") {
+    let ucenici = dohvatiSveIzStorage();
+
+ if (vrijednostPretrage && vrijednostPretrage.trim() !== '') {
+        const lowerVrijednostPretrage = vrijednostPretrage.toLowerCase().trim();
+        ucenici = ucenici.filter(ucenik => {
+            const ime = (ucenik.ime || '').toLowerCase();
+            const prezime = (ucenik.prezime || '').toLowerCase();
+            const email = (ucenik.email || '').toLowerCase();
+            
+            return ime.includes(lowerVrijednostPretrage) ||
+                   prezime.includes(lowerVrijednostPretrage) ||
+                   email.includes(lowerVrijednostPretrage);
+        });
+    }
+
+
     const startIndex = (page - 1) * pageSize;
     const endIndex = startIndex + pageSize;
     const paginatedData = ucenici.slice(startIndex, endIndex);

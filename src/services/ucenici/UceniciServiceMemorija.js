@@ -1,3 +1,4 @@
+import { DEFAULT_PAGE_SIZE } from "../../constants"
 import { ucenici } from "./UceniciPodaci"
 
 
@@ -39,11 +40,27 @@ async function obrisiUplatu(ucenikSifra, sifra) {
     ucenici[parseInt(ucenikSifra)] = ucenik;
 }
 
-async function getPage(page = 1, pageSize = 8){
+async function getPage(page = 1, pageSize = DEFAULT_PAGE_SIZE, vrijednostPretrage){
+
+     let filteredUcenici = [...ucenici];
+
+    if (vrijednostPretrage && vrijednostPretrage.trim() !== '') {
+        const lowerVrijednostPretrage = vrijednostPretrage.toLowerCase().trim();
+        filteredUcenici = filteredUcenici.filter(ucenik => {
+            const ime = (ucenik.ime || '').toLowerCase();
+            const prezime = (ucenik.prezime || '').toLowerCase();
+            const email = (ucenik.email || '').toLowerCase();
+            
+            return ime.includes(lowerVrijednostPretrage) ||
+                   prezime.includes(lowerVrijednostPretrage) ||
+                   email.includes(lowerVrijednostPretrage);
+        });
+    }
+
     const startIndex = (page - 1) * pageSize;
     const endIndex = startIndex + pageSize;
-    const paginatedData = ucenici.slice(startIndex, endIndex);
-    const totalItems = ucenici.length;
+    const paginatedData = filteredUcenici.slice(startIndex, endIndex);
+    const totalItems = filteredUcenici.length;
     const totalPages = Math.ceil(totalItems / pageSize);
 
 
