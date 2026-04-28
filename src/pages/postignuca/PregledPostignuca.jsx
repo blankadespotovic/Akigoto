@@ -7,6 +7,7 @@ import KategorijeService from "../../services/kategorije/KategorijeService.js";
 import useBreakpoint from "../../hooks/useBreakpoint.js";
 import {PregledPostignucaTablica} from "./PregledPostignucaTablica.jsx";
 import { PregledPostignucaGrid } from "./PregledPostignucaGrid.jsx";
+import useLoading from "../../hooks/useLoading.js";
 
 export default function PregledPostignuca() {
 
@@ -15,6 +16,8 @@ export default function PregledPostignuca() {
     const [postignuca, setPostignuca] = useState([])
     const [kategorije, setKategorije] = useState([])
     const [brojKategorija, setBrojKategorija] = useState(-1)
+    const { showLoading, hideLoading } = useLoading()
+    
 
     const dohvatiSveKategorije = async () => {
         const sveKategorije = await KategorijeService.get()
@@ -28,12 +31,14 @@ export default function PregledPostignuca() {
     }, [])
 
     async function ucitajPostignuca() {
+        showLoading();
         await PostignucaService.get().then((odgovor) => {
             if (!odgovor.success) {
                 alert("Nije implementiran servis")
                 return
             }
             setPostignuca(odgovor.data)
+            hideLoading()
         })
     }
 
@@ -41,14 +46,20 @@ export default function PregledPostignuca() {
         ucitajPostignuca();
     }, []);
 
+       
+        
 
     async function obrisi(sifra) {
         if (!confirm("Sigurno obrisati?")) {
-            return
+            return showLoading()
+         // samo za potrebe testa prikaza rada loading
+        await new Promise(resolve => setTimeout(resolve, 2000));
         }
         await PostignucaService.obrisi(sifra)
         await ucitajPostignuca()
+        hideLoading()
     }
+    
 
     return (
         <>

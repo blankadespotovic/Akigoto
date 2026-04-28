@@ -12,6 +12,7 @@ import PostignucaService from "../../services/postignuca/PostignucaService.js";
 import { Container, Form, InputGroup } from "react-bootstrap";
 import { FaTimes } from "react-icons/fa";
 import { FaMagnifyingGlass } from "react-icons/fa6";
+import useLoading from "../../hooks/useLoading.js";
 
 export default function PregledUcenika() {
 
@@ -25,8 +26,12 @@ export default function PregledUcenika() {
     const [svaPostignucaSvihUcenika, setSvaPostignucaSvihUcenika] = useState([]);
     const { pageSize, setPageSize } = usePaginationSettings("ucenici")
     const [vrijednostPretrage, setVrijednostPretrage] = useState("")
+    
+    const { showLoading, hideLoading } = useLoading()
+
 
     async function ucitajUcenike(selectedPage, selectedPageSize, vrijednostPretrage) {
+         showLoading();
         await UceniciService.getPage(selectedPage, selectedPageSize, vrijednostPretrage).then((odgovor) => {
             if (!odgovor.success) {
                 alert("Nije implementiran servis")
@@ -35,6 +40,7 @@ export default function PregledUcenika() {
             setUcenici(odgovor.data)
             setTotalPages(odgovor.totalPages)
             setTotalItems(odgovor.totalItems)
+            hideLoading()
         })
     }
 
@@ -87,7 +93,9 @@ export default function PregledUcenika() {
 
     async function obrisi(sifra) {
         if (!confirm("Sigurno obrisati?")) {
-            return
+            return  showLoading()
+         // samo za potrebe testa prikaza rada loading
+        await new Promise(resolve => setTimeout(resolve, 2000));
         }
         await UceniciService.obrisi(sifra)
 
@@ -98,6 +106,7 @@ export default function PregledUcenika() {
         } else {
             await ucitajUcenike(currentPage, pageSize);
         }
+        hideLoading()
     }
 
     const handlePageSizeChange = (newSize) => {

@@ -12,6 +12,7 @@ import LekcijPDFGenerator from "../../components/LekcijaPDFGenerator.jsx";
 import UceniciService from "../../services/ucenici/UceniciService.js";
 import { usePaginationSettings } from "../../hooks/usePaginationService.js";
 import { CustomPagination } from "../../components/customInputs/pagination/CustomPagination.jsx";
+import useLoading from "../../hooks/useLoading.js";
 
 export default function PregledLekcija() {
 
@@ -25,7 +26,10 @@ export default function PregledLekcija() {
     const { pageSize, setPageSize } = usePaginationSettings("lekcije")
     const sirina = useBreakpoint()
 
+    const { showLoading, hideLoading } = useLoading()
+
     async function ucitajLekcije(selectedPage, selectedPageSize) {
+        showLoading();
         await LekcijeService.getPage(selectedPage, selectedPageSize).then((odgovor) => {
             if (!odgovor.success) {
                 alert("Nije implementiran servis")
@@ -34,6 +38,7 @@ export default function PregledLekcija() {
             setLekcije(odgovor.data)
             setTotalPages(odgovor.totalPages)
             setTotalItems(odgovor.totalItems)
+            hideLoading()
         })
     }
 
@@ -47,7 +52,9 @@ export default function PregledLekcija() {
 
     async function obrisi(sifra) {
         if (!confirm("Sigurno obrisati?")) {
-            return
+            return showLoading()
+         // samo za potrebe testa prikaza rada loading
+        await new Promise(resolve => setTimeout(resolve, 2000));
         }
         await LekcijeService.obrisi(sifra)
         const newTotalItems = totalItems - 1;
@@ -57,6 +64,7 @@ export default function PregledLekcija() {
         } else {
             await ucitajLekcije(currentPage, pageSize)
         }
+         hideLoading()
     }
 
     async function generirajPDFZaLekciju(lekcija) {

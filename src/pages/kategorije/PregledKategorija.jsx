@@ -6,6 +6,7 @@ import KategorijeService from "../../services/kategorije/KategorijeService.js";
 import PostignucaService from "../../services/postignuca/PostignucaService.js";
 import {PregledKategorijaTablica} from "./PregledKategorijaTablica.jsx";
 import {PregledKategorijaGrid} from "./PregledKategorijaGrid.jsx";
+import useLoading from "../../hooks/useLoading.js";
 
 export default function PregledKategorija() {
     const navigate = useNavigate()
@@ -15,13 +16,17 @@ export default function PregledKategorija() {
     const [postignuca, setPostignuca] = useState([])
     const [kategorijeSPostignucima, setKategorijeSPostignucima] = useState([])
 
+    const { showLoading, hideLoading } = useLoading()
+
     async function ucitajKategorije() {
+        showLoading();
         await KategorijeService.get().then((odgovor) => {
             if (!odgovor.success) {
                 alert("Nije implementiran servis")
                 return
             }
             setKategorije(odgovor.data)
+            hideLoading()
         })
     }
 
@@ -60,10 +65,13 @@ export default function PregledKategorija() {
 
     async function obrisi(sifra) {
         if (!confirm("Sigurno obrisati?\nOPREZ! Obrisat će se sva postignuća iz kategorije.")) {
-            return
+            return showLoading()
+         // samo za potrebe testa prikaza rada loading
+        await new Promise(resolve => setTimeout(resolve, 2000));
         }
         await KategorijeService.obrisi(sifra)
         ucitajKategorije()
+        hideLoading()
     }
 
     return (

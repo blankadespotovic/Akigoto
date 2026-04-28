@@ -20,11 +20,14 @@ import PromjenaUcenika from './pages/ucenici/PromjenaUcenika'
 import PregledLekcija from './pages/lekcije/PregledLekcija'
 import NoveLekcije from './pages/lekcije/NoveLekcije'
 import PromjenaLekcija from './pages/lekcije/PromjenaLekcije'
+import LoadingSpinner from './components/LoadingSpinner'
 
 function App() {
 
 
   return (
+    <>
+    <LoadingSpinner />
     <Container className='d-flex flex-column min-vh-100'>
       <Izbornik />
 
@@ -51,7 +54,7 @@ function App() {
       </Routes>
        <Footer />
     </Container>
-     
+     </>
   )
 }
 
