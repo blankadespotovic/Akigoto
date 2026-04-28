@@ -39,6 +39,8 @@ async function dodaj(ucenik) {
         ucenik.sifra = ucenici.at(-1).sifra + 1
     }
 
+    ucenik.uplate = [];
+
     ucenici.push(ucenik)
     spremiUStorage(ucenici);
     return { data: ucenik };
