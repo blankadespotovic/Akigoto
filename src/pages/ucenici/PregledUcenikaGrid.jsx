@@ -15,6 +15,27 @@ export function PregledUcenikaGrid({ ucenici, navigate, obrisi }) {
                     key={ucenik.sifra}
                     title={`${ucenik.ime} ${ucenik.prezime}`}
                 >
+                     <div
+                        style={{
+                            height: "200px",
+                            width: "70%",
+                            margin: "0 auto",
+                            overflow: "hidden",                          
+                            backgroundColor: "#f5f5f5"
+                        }}
+                    >
+                        <img
+                            src={ucenik.slika || "/placeholder-user.jpg"}
+                            alt={`${ucenik.ime} ${ucenik.prezime}`}
+                            style={{
+                                width: "100%",
+                                height: "100%",
+                                objectFit: "cover"
+                            }}
+                        />
+
+
+                    </div>
                     <Row className={"text-start text-break"}>
                         <Col xs={12}>
                             <FaAt color={"lightblue"} className={"mb-1"} />&nbsp;<b>E-mail</b>
