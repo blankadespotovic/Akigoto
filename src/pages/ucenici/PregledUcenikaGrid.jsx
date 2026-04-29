@@ -1,8 +1,9 @@
-import { Button, Col, Container, Form, InputGroup, Row } from "react-bootstrap";
+import { Button, CardImg, Col, Container, Form, InputGroup, Row } from "react-bootstrap";
 import { Card } from "../../components/Card.jsx";
 import { useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import { FaAt, FaMagnifyingGlass } from "react-icons/fa6";
+import nophoto from "../../../public/nophoto.png"
 
 export function PregledUcenikaGrid({ ucenici, navigate, obrisi }) {
 
@@ -25,7 +26,7 @@ export function PregledUcenikaGrid({ ucenici, navigate, obrisi }) {
                         }}
                     >
                         <img
-                            src={ucenik.slika || "/placeholder-user.jpg"}
+                            src={ucenik.slika || nophoto}
                             alt={`${ucenik.ime} ${ucenik.prezime}`}
                             style={{
                                 width: "100%",
