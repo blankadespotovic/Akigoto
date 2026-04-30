@@ -7,6 +7,7 @@ import UceniciService from "../../services/ucenici/UceniciService";
 import { CustomInput } from "../../components/customInputs/CustomInput.jsx";
 import useBreakpoint from "../../hooks/useBreakpoint.js";
 import { FaTrash } from "react-icons/fa";
+import { ShemaUcenici } from "../../schemes/ShemaUcenici.js";
 
 export default function PromjenaUcenika() {
 
@@ -15,6 +16,7 @@ export default function PromjenaUcenika() {
     const sirina = useBreakpoint()
     const mobilnaSirina = ["xs", "sm", "md"].includes(sirina)
     const [ucenik, setUcenik] = useState({})
+    const [errors, setErrors] = useState({})
 
     async function ucitajUcenika() {
         await UceniciService.getBySifra(params.sifra).then((odgovor) => {
@@ -38,13 +40,13 @@ export default function PromjenaUcenika() {
         })
     }
 
-    async function obrisiUplatu(sifraUplate){
-        await UceniciService.obrisiUplatu(ucenik.sifra, sifraUplate).then(() =>{
+    async function obrisiUplatu(sifraUplate) {
+        await UceniciService.obrisiUplatu(ucenik.sifra, sifraUplate).then(() => {
             ucitajUcenika()
         })
     }
 
-    function handleDelete(e, sifraUplate){
+    function handleDelete(e, sifraUplate) {
         e.preventDefault()
         obrisiUplatu(sifraUplate)
     }
@@ -53,30 +55,26 @@ export default function PromjenaUcenika() {
         e.preventDefault()
         const podaci = new FormData(e.target)
 
-        // if (!podaci.get('Ime') || podaci.get('Ime').trim().length === 0) {
-        //     alert("Ime učenika je obvezan i ne smije sadržavati samo razmake!")
-        //     return
-        // }
+        setErrors({});
+        const objektPodataka = Object.fromEntries(podaci);
 
-        // if (podaci.get('Ime').trim().length < 3) {
-        //     alert("Ime učenika mora imati najmanje 3 znaka!")
-        //     return
-        // }
+        // Provjera pomoću Zod sheme
+        const rezultat = ShemaUcenici.safeParse(objektPodataka);
 
-        // if (!podaci.get('Prezime') || podaci.get('Prezime').trim() === "") {
-        //     alert("Prezime učenika je obvezan i ne smije sadržavati samo razmake!")
-        //     return
-        // }
+        if (!rezultat.success) {
+            const noveGreske = {};
 
-        // if (!podaci.get('email') || podaci.get('email').trim() === "") {
-        //     alert("E-mail adresa učenika je obvezna i ne smije sadržavati samo razmake!")
-        //     return
-        // }
+            // Prolazimo kroz sve issues (probleme) koje je Zod pronašao
+            rezultat.error.issues.forEach((issue) => {
+                const kljuc = issue.path[0];
+                if (!noveGreske[kljuc]) {
+                    noveGreske[kljuc] = issue.message;
+                }
+            });
 
-        // if (podaci.get('procjena') < 0) {
-        //     alert("Vremenska procjena dolaska do postignuća ne može biti negativan broj!")
-        //     return
-        // }
+            setErrors(noveGreske);
+            return;
+        }
 
         promjeni({
             sifra: ucenik.sifra,
@@ -90,6 +88,14 @@ export default function PromjenaUcenika() {
         )
     }
 
+    const ocistiGresku = (nazivPolja) => {
+        if (errors[nazivPolja]) {
+            const noveGreske = { ...errors };
+            delete noveGreske[nazivPolja];
+            setErrors(noveGreske);
+        }
+    };
+
 
     return (
 
@@ -102,9 +108,12 @@ export default function PromjenaUcenika() {
                             type={"text"}
                             label={"Ime"}
                             placeholder={"Unesite ime"}
-                            required={true}
                             defaultValue={ucenik.ime}
+                            isInvalid={!!errors.ime}
+                            errors={errors.ime}
+                            onFocus={() => ocistiGresku('ime')}
                         />
+                        
                     </Col>
                     <Col xs={12} md={6}>
                         <CustomInput
@@ -113,6 +122,9 @@ export default function PromjenaUcenika() {
                             label={"Iznos uplate"}
                             placeholder={"Unesite iznos uplate"}
                             suffix={"€"}
+                            isInvalid={!!errors.iznos}
+                            errors={errors.iznos}
+                            onFocus={() => ocistiGresku('iznos')}
                         />
                     </Col>
                 </Row>
@@ -124,13 +136,20 @@ export default function PromjenaUcenika() {
                             label={"Prezime"}
                             placeholder={"Unesite prezime"}
                             defaultValue={ucenik.prezime}
+                            isInvalid={!!errors.prezime}
+                            errors={errors.prezime}
+                            onFocus={() => ocistiGresku('prezime')}
                         />
+                     
                     </Col>
                     <Col>
                         <CustomInput
                             id={"datum"}
                             type={"date"}
                             label={"Datum uplate"}
+                            isInvalid={!!errors.datum}
+                            errors={errors.datum}
+                            onFocus={() => ocistiGresku('datum')}
                         />
                     </Col>
                 </Row>
@@ -142,33 +161,37 @@ export default function PromjenaUcenika() {
                             label={"E-mail adresa učenika"}
                             placeholder={"Unesite e-mail"}
                             defaultValue={ucenik.email}
+                            isInvalid={!!errors.email}
+                            errors={errors.email}
+                            onFocus={() => ocistiGresku('email')}
                         />
+                       
                     </Col>
                     <Col xs={12} md={6}>
                         <h4 className="mt-3">Trenutne uplate</h4>
-                        {ucenik?.uplate?.length > 0?
-                        <Table striped hover responsive>
-                            <thead>
-                                <tr>
-                                    <td>Datum</td>
-                                    <td className="text-end">Iznos</td>
-                                    <td className="text-center">Akcija</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {ucenik?.uplate?.sort((a, b) => new Date(a.datum) - new Date(b.datum))
-                                    .map((u, idx) =>
-                                        <tr key={`naplata-${u.datum}`}>
-                                        <td>{new Date(u.datum).toLocaleDateString('hr-HR')}</td>
-                                        <td className="text-end">{u.iznos} €</td>
-                                        <td className="text-center">
-                                            <Button className="btn btnCancel btn-sm" onClick={(e)=>handleDelete(e, u.sifra)}><FaTrash color="white" /></Button>
-                                        </td>
-                                        </tr>
-                                    )}
-                            </tbody>
+                        {ucenik?.uplate?.length > 0 ?
+                            <Table striped hover responsive>
+                                <thead>
+                                    <tr>
+                                        <td>Datum</td>
+                                        <td className="text-end">Iznos</td>
+                                        <td className="text-center">Akcija</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {ucenik?.uplate?.sort((a, b) => new Date(a.datum) - new Date(b.datum))
+                                        .map((u, idx) =>
+                                            <tr key={`naplata-${u.datum}`}>
+                                                <td>{new Date(u.datum).toLocaleDateString('hr-HR')}</td>
+                                                <td className="text-end">{u.iznos} €</td>
+                                                <td className="text-center">
+                                                    <Button className="btn btnCancel btn-sm" onClick={(e) => handleDelete(e, u.sifra)}><FaTrash color="white" /></Button>
+                                                </td>
+                                            </tr>
+                                        )}
+                                </tbody>
 
-                        </Table> : <p>Nema podataka o uplati</p>
+                            </Table> : <p>Nema podataka o uplati</p>
                         }
                     </Col>
 

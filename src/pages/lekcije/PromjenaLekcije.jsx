@@ -1,15 +1,16 @@
-import {Link, useNavigate, useParams} from "react-router-dom";
-import {RouteNames} from "../../constants";
-import {Button, Col, Form, Row} from "react-bootstrap";
-import {useEffect, useState} from "react";
-import {Card} from "../../components/Card";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { RouteNames } from "../../constants";
+import { Button, Col, Form, Row } from "react-bootstrap";
+import { useEffect, useState } from "react";
+import { Card } from "../../components/Card";
 import LekcijeService from "../../services/lekcije/LekcijeService";
 import UceniciService from "../../services/ucenici/UceniciService";
-import {CustomInput} from "../../components/customInputs/CustomInput.jsx";
+import { CustomInput } from "../../components/customInputs/CustomInput.jsx";
 import Select from "react-select";
 import PostignucaService from "../../services/postignuca/PostignucaService.js";
 import useBreakpoint from "../../hooks/useBreakpoint.js";
-import {WYSIWYGEditor} from "../../components/customInputs/WYSIWYGEditor.jsx";
+import { WYSIWYGEditor } from "../../components/customInputs/WYSIWYGEditor.jsx";
+import { ShemaLekcije } from "../../schemes/ShemaLekcije.js";
 
 export default function PromjenaLekcije() {
 
@@ -26,6 +27,8 @@ export default function PromjenaLekcije() {
     const [odabranaPostignuca, setOdabranaPostignuca] = useState([])
     const [odabranoPostignuce, setOdabranoPostignuce] = useState()
     const [postignuca, setPostignuca] = useState([])
+
+    const [errors, setErrors] = useState({})
 
     async function ucitajLekciju() {
         await LekcijeService.getBySifra(params.sifra).then((odgovor) => {
@@ -46,7 +49,7 @@ export default function PromjenaLekcije() {
                 return
             }
             const filtriraniUcenici = odgovor.data.map(
-                uc => ({value: parseInt(uc.sifra), label: `${uc.ime} ${uc.prezime}`})
+                uc => ({ value: parseInt(uc.sifra), label: `${uc.ime} ${uc.prezime}` })
             )
             setUcenici(filtriraniUcenici)
         })
@@ -59,7 +62,7 @@ export default function PromjenaLekcije() {
                 return
             }
             const filtriranaPostignuca = odgovor.data.map(
-                p => ({value: parseInt(p.sifra), label: p.naziv})
+                p => ({ value: parseInt(p.sifra), label: p.naziv })
             )
             setPostignuca(filtriranaPostignuca)
         })
@@ -157,30 +160,26 @@ export default function PromjenaLekcije() {
         e.preventDefault()
         const podaci = new FormData(e.target)
 
-        // if (!podaci.get('Ime') || podaci.get('Ime').trim().length === 0) {
-        //     alert("Ime učenika je obvezan i ne smije sadržavati samo razmake!")
-        //     return
-        // }
+        setErrors({});
+        const objektPodataka = Object.fromEntries(podaci);
 
-        // if (podaci.get('Ime').trim().length < 3) {
-        //     alert("Ime učenika mora imati najmanje 3 znaka!")
-        //     return
-        // }
+        // Provjera pomoću Zod sheme
+        const rezultat = ShemaLekcije.safeParse(objektPodataka);
 
-        // if (!podaci.get('Prezime') || podaci.get('Prezime').trim() === "") {
-        //     alert("Prezime učenika je obvezan i ne smije sadržavati samo razmake!")
-        //     return
-        // }
+        if (!rezultat.success) {
+            const noveGreske = {};
 
-        // if (!podaci.get('email') || podaci.get('email').trim() === "") {
-        //     alert("E-mail adresa učenika je obvezna i ne smije sadržavati samo razmake!")
-        //     return
-        // }
+            // Prolazimo kroz sve issues (probleme) koje je Zod pronašao
+            rezultat.error.issues.forEach((issue) => {
+                const kljuc = issue.path[0];
+                if (!noveGreske[kljuc]) {
+                    noveGreske[kljuc] = issue.message;
+                }
+            });
 
-        // if (podaci.get('procjena') < 0) {
-        //     alert("Vremenska procjena dolaska do postignuća ne može biti negativan broj!")
-        //     return
-        // }
+            setErrors(noveGreske);
+            return;
+        }
 
 
         const postignucaIds = odabranaPostignuca.map(p => p.value)
@@ -200,16 +199,18 @@ export default function PromjenaLekcije() {
 
         <Card title={"Promjena lekcije"} textAlign={"left"}>
             <Form onSubmit={odradiSubmit}>
-               
-               <Row>
+
+                <Row>
                     <Col xs={12} md={6}>
                         <CustomInput
                             id={"naziv"}
                             type={"text"}
                             label={"Naziv"}
                             placeholder={"Unesite naziv"}
-                            required={true}
                             defaultValue={lekcija.naziv}
+                            isInvalid={!!errors.naziv}
+                            errors={errors.naziv}
+                            onFocus={() => ocistiGresku('naziv')}
                         />
                     </Col>
                     <Col xs={12} md={6}>
@@ -221,20 +222,26 @@ export default function PromjenaLekcije() {
                             trebaFormatiratuVrijeme={true}
                             suffix={"min"}
                             defaultValue={lekcija.trajanje}
+                            isInvalid={!!errors.trajanje}
+                            errors={errors.trajanje}
+                            onFocus={() => ocistiGresku('trajanje')}
                         />
                     </Col>
                 </Row>
-          
+
                 <Form.Group controlId={"opis"}>
                     <Form.Label column={"lg"}>Sadržaj lekcije</Form.Label>
                     <WYSIWYGEditor
                         value={opisVrijednost}
                         onChange={(e) => setOpisVrijednost(e.target.value)}
                         name={"opis"}
+                        isInvalid={!!errors.opis}
+                        errors={errors.opis}
+                        onFocus={() => ocistiGresku('opis')}
                     />
                 </Form.Group>
-          
-                <hr/>
+
+                <hr />
                 <Row gutter={16}>
                     <Col xs={12} md={6}>
                         <Form.Group controlId={"ucenici"}>
@@ -277,10 +284,10 @@ export default function PromjenaLekcije() {
                                     </li>
                                 ))}
                             </ul>
-                        ) : <><br/><small>Odaberite učenike za prikaz.</small></>}
+                        ) : <><br /><small>Odaberite učenike za prikaz.</small></>}
                     </Col>
                 </Row>
-                <hr/>
+                <hr />
                 <Row gutter={16}>
                     <Col xs={12} md={6}>
                         <Form.Group controlId={"postignuca"}>
@@ -322,7 +329,7 @@ export default function PromjenaLekcije() {
                                     </li>
                                 ))}
                             </ul>
-                        ) : <><br/><small>Odaberite postignuća za prikaz.</small></>}
+                        ) : <><br /><small>Odaberite postignuća za prikaz.</small></>}
                     </Col>
                 </Row>
 

@@ -10,6 +10,7 @@ import Select from "react-select";
 import PostignucaService from "../../services/postignuca/PostignucaService.js";
 import useBreakpoint from "../../hooks/useBreakpoint.js";
 import { WYSIWYGEditor } from "../../components/customInputs/WYSIWYGEditor.jsx";
+import { ShemaLekcije } from "../../schemes/ShemaLekcije.js";
 
 export default function NoveLekcije() {
 
@@ -23,6 +24,8 @@ export default function NoveLekcije() {
     const [odabranaPostignuca, setOdabranaPostignuca] = useState([])
     const [odabranoPostignuce, setOdabranoPostignuce] = useState()
     const [postignuca, setPostignuca] = useState([])
+
+    const [errors, setErrors] = useState({})
 
     async function dodaj(lekcija) {
         await LekcijeService.dodaj(lekcija).then(() => {
@@ -98,40 +101,26 @@ export default function NoveLekcije() {
         e.preventDefault()
         const podaci = new FormData(e.target)
 
-        //     if(!podaci.get('naziv') || podaci.get('naziv').trim().length === 0){
-        //         alert ("Naziv je obvezan i ne smije sadržavati samo razmake!")
-        //         return
-        //     }
+        setErrors({});
+        const objektPodataka = Object.fromEntries(podaci);
 
-        //     if(podaci.get('naziv').trim().length < 3){
-        //         alert ("Naziv postignuca mora imati najmanje 3 znaka!")
-        //         return
-        //     }
+        // Provjera pomoću Zod sheme
+        const rezultat = ShemaLekcije.safeParse(objektPodataka);
 
-        //     if(!podaci.get('opis') || podaci.get('opis').trim() === ""){
-        //         alert ("Opis postignuća je obvezan i ne smije sadržavati samo razmake!")
-        //         return
-        //     }
+        if (!rezultat.success) {
+            const noveGreske = {};
 
-        //      if(podaci.get('opis').trim().length < 5){
-        //         alert ("Opis postignuća mora imati najmanje 5 znakova!")
-        //         return
-        //     }
+            // Prolazimo kroz sve issues (probleme) koje je Zod pronašao
+            rezultat.error.issues.forEach((issue) => {
+                const kljuc = issue.path[0];
+                if (!noveGreske[kljuc]) {
+                    noveGreske[kljuc] = issue.message;
+                }
+            });
 
-        //     if(!podaci.get('procjena') || podaci.get('procjena').trim() === ""){
-        //         alert ("Vremenska procjena dolaska do postignuća je obvezna i ne smije sadržavati samo razmake!")
-        //         return
-        //     }
-
-        //     if(podaci.get('procjena') < 0){
-        //         alert ("Vremenska procjena dolaska do postignuća ne može biti negativan broj!")
-        //         return
-        //     }
-
-        //       if(podaci.get('procjena') <1 || podaci.get('procjena') > 500){
-        //         alert ("Vremenska procjena dolaska do postignuća mora biti između 1 i 500 sati!")
-        //         return
-        //     }
+            setErrors(noveGreske);
+            return;
+        }
 
         const postignucaIds = odabranaPostignuca.map(p => p.value)
         const uceniciIds = odabraniUcenici.map(uc => uc.value)
@@ -145,6 +134,14 @@ export default function NoveLekcije() {
         })
     }
 
+    const ocistiGresku = (nazivPolja) => {
+        if (errors[nazivPolja]) {
+            const noveGreske = { ...errors };
+            delete noveGreske[nazivPolja];
+            setErrors(noveGreske);
+        }
+    };
+
 
     const [opisVrijednost, setOpisVrijednost] = useState("")
 
@@ -152,7 +149,7 @@ export default function NoveLekcije() {
 
         <Card title={"Unos nove lekcije"} textAlign={"left"}>
             <Form onSubmit={odradiSubmit}>
-               
+
                 <Row>
                     <Col xs={12} md={6}>
                         <CustomInput
@@ -160,10 +157,13 @@ export default function NoveLekcije() {
                             type={"text"}
                             label={"Naziv"}
                             placeholder={"Unesite naziv"}
-                            required={true}
+                            isInvalid={!!errors.naziv}
+                            errors={errors.naziv}
+                            onFocus={() => ocistiGresku('naziv')}
                         />
-                        </Col>
-                        <Col xs={12} md={6}>
+                      
+                    </Col>
+                    <Col xs={12} md={6}>
                         <CustomInput
                             id={"trajanje"}
                             type={"number"}
@@ -171,10 +171,14 @@ export default function NoveLekcije() {
                             placeholder={5}
                             trebaFormatiratuVrijeme={true}
                             suffix={"min"}
+                            isInvalid={!!errors.trajanje}
+                            errors={errors.trajanje}
+                            onFocus={() => ocistiGresku('trajanje')}
                         />
-                         </Col>
+                    
+                    </Col>
                 </Row>
-                  
+
 
                 <Form.Group controlId={"opis"}>
                     <Form.Label column={"lg"}>Sadržaj lekcije</Form.Label>
@@ -182,7 +186,11 @@ export default function NoveLekcije() {
                         value={opisVrijednost}
                         onChange={(e) => setOpisVrijednost(e.target.value)}
                         name={"opis"}
+                        isInvalid={!!errors.opis}
+                        errors={errors.opis}
+                        onFocus={() => ocistiGresku('opis')}
                     />
+                  
                 </Form.Group>
 
 

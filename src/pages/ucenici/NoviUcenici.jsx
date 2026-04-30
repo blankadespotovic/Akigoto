@@ -1,17 +1,19 @@
-import {useEffect, useState} from 'react'
+import { useEffect, useState } from 'react'
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { RouteNames } from "../../constants";
 import { Card } from "../../components/Card";
 import UceniciService from "../../services/ucenici/UceniciService";
-import {CustomInput} from "../../components/customInputs/CustomInput.jsx";
+import { CustomInput } from "../../components/customInputs/CustomInput.jsx";
 import useBreakpoint from "../../hooks/useBreakpoint.js";
+import { ShemaUcenici } from '../../schemes/ShemaUcenici.js';
 
 export default function NoviUcenici() {
 
     const navigate = useNavigate()
     const sirina = useBreakpoint()
     const mobilnaSirina = ["xs", "sm", "md"].includes(sirina);
+    const [errors, setErrors] = useState({})
 
 
     async function dodaj(ucenik) {
@@ -25,47 +27,41 @@ export default function NoviUcenici() {
         e.preventDefault()
         const podaci = new FormData(e.target)
 
-        // if(!podaci.get('naziv') || podaci.get('naziv').trim().length === 0){
-        //     alert ("Naziv je obvezan i ne smije sadržavati samo razmake!")
-        //     return
-        // }
+        setErrors({});
+        const objektPodataka = Object.fromEntries(podaci);
 
-        // if(podaci.get('naziv').trim().length < 3){
-        //     alert ("Naziv postignuca mora imati najmanje 3 znaka!")
-        //     return
-        // }
+        // Provjera pomoću Zod sheme
+        const rezultat = ShemaUcenici.safeParse(objektPodataka);
 
-        // if(!podaci.get('opis') || podaci.get('opis').trim() === ""){
-        //     alert ("Opis postignuća je obvezan i ne smije sadržavati samo razmake!")
-        //     return
-        // }
+        if (!rezultat.success) {
+            const noveGreske = {};
 
-        //  if(podaci.get('opis').trim().length < 5){
-        //     alert ("Opis postignuća mora imati najmanje 5 znakova!")
-        //     return
-        // }
+            // Prolazimo kroz sve issues (probleme) koje je Zod pronašao
+            rezultat.error.issues.forEach((issue) => {
+                const kljuc = issue.path[0];
+                if (!noveGreske[kljuc]) {
+                    noveGreske[kljuc] = issue.message;
+                }
+            });
 
-        // if(!podaci.get('procjena') || podaci.get('procjena').trim() === ""){
-        //     alert ("Vremenska procjena dolaska do postignuća je obvezna i ne smije sadržavati samo razmake!")
-        //     return
-        // }
-
-        // if(podaci.get('procjena') < 0){
-        //     alert ("Vremenska procjena dolaska do postignuća ne može biti negativan broj!")
-        //     return
-        // }
-
-        //   if(podaci.get('procjena') <1 || podaci.get('procjena') > 500){
-        //     alert ("Vremenska procjena dolaska do postignuća mora biti između 1 i 500 sati!")
-        //     return
-        // }
-
+            setErrors(noveGreske);
+            return;
+        }
         dodaj({
             ime: podaci.get('ime'),
             prezime: podaci.get('prezime'),
             email: podaci.get('email'),
         })
     }
+
+    const ocistiGresku = (nazivPolja) => {
+        if (errors[nazivPolja]) {
+            const noveGreske = { ...errors };
+            delete noveGreske[nazivPolja];
+            setErrors(noveGreske);
+        }
+    };
+
 
 
     return (
@@ -77,26 +73,36 @@ export default function NoviUcenici() {
                     type={"text"}
                     label={"Ime"}
                     placeholder={"Unesite ime"}
-                    required={true}
+                    isInvalid={!!errors.ime}
+                    errors={errors.ime}
+                    onFocus={() => ocistiGresku('ime')}
                 />
+                
                 <CustomInput
                     id={"prezime"}
                     type={"text"}
                     label={"Prezime"}
                     placeholder={"Unesite prezime"}
+                    isInvalid={!!errors.prezime}
+                    errors={errors.prezime}
+                    onFocus={() => ocistiGresku('prezime')}
                 />
+                 
                 <CustomInput
                     id={"email"}
                     type={"email"}
                     label={"E-mail adresa učenika"}
                     placeholder={"Unesite e-mail"}
-                    required={true}
+                    isInvalid={!!errors.email}
+                    errors={errors.email}
+                    onFocus={() => ocistiGresku('email')}
                 />
+                 
 
                 <Row className="mt-4 justi">
                     <Col xs={12} md={6} className={"order-2 order-md-1"}>
                         <Link to={RouteNames.UCENICI}
-                              className={`btn btnCancel${mobilnaSirina ? " w-100 my-1" : ""}`}>
+                            className={`btn btnCancel${mobilnaSirina ? " w-100 my-1" : ""}`}>
                             Odustani
                         </Link>
                     </Col>

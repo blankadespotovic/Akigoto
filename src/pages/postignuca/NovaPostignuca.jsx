@@ -1,14 +1,15 @@
-import {useEffect, useState} from "react"
-import {Button, Col, Form, Row} from "react-bootstrap";
-import {Link, useNavigate} from "react-router-dom";
-import {RouteNames} from "../../constants";
-import {Card} from "../../components/Card";
+import { useEffect, useState } from "react"
+import { Button, Col, Form, Row } from "react-bootstrap";
+import { Link, useNavigate } from "react-router-dom";
+import { RouteNames } from "../../constants";
+import { Card } from "../../components/Card";
 import PostignucaService from "../../services/postignuca/PostignucaService";
 import KategorijeService from "../../services/kategorije/KategorijeService";
-import {CustomSelect} from "../../components/customInputs/CustomSelect.jsx";
-import {CustomInput} from "../../components/customInputs/CustomInput.jsx";
-import {CustomCheckbox} from "../../components/customInputs/CustomCheckbox.jsx";
+import { CustomSelect } from "../../components/customInputs/CustomSelect.jsx";
+import { CustomInput } from "../../components/customInputs/CustomInput.jsx";
+import { CustomCheckbox } from "../../components/customInputs/CustomCheckbox.jsx";
 import useBreakpoint from "../../hooks/useBreakpoint.js";
+import { ShemaPostignuca } from "../../schemes/ShemaPostignuca.js";
 
 export default function NovaPostignuca() {
 
@@ -16,16 +17,18 @@ export default function NovaPostignuca() {
     const sirina = useBreakpoint()
     const mobilnaSirina = ["xs", "sm", "md"].includes(sirina)
     const [kategorije, setKategorije] = useState();
+    const [errors, setErrors] = useState({})
 
     async function dohvatiKategorije() {
         const dohvaceneKategorije = await KategorijeService.get()
-            .then(res => res.data.map(kat => ({value: kat.sifra, label: kat.naziv,})));
+            .then(res => res.data.map(kat => ({ value: kat.sifra, label: kat.naziv, })));
         setKategorije(dohvaceneKategorije);
     }
 
     useEffect(() => {
         dohvatiKategorije()
     }, [])
+
 
 
     async function dodaj(postignuce) {
@@ -40,39 +43,25 @@ export default function NovaPostignuca() {
         e.preventDefault()
         const podaci = new FormData(e.target)
 
-        if (!podaci.get("naziv") || podaci.get("naziv").trim().length === 0) {
-            alert("Naziv je obvezan i ne smije sadržavati samo razmake!")
-            return
-        }
+        setErrors({});
+        const objektPodataka = Object.fromEntries(podaci);
 
-        if (podaci.get("naziv").trim().length < 3) {
-            alert("Naziv postignuca mora imati najmanje 3 znaka!")
-            return
-        }
+        // Provjera pomoću Zod sheme
+        const rezultat = ShemaPostignuca.safeParse(objektPodataka);
 
-        if (!podaci.get("opis") || podaci.get("opis").trim() === "") {
-            alert("Opis postignuća je obvezan i ne smije sadržavati samo razmake!")
-            return
-        }
+        if (!rezultat.success) {
+            const noveGreske = {};
 
-        if (podaci.get("opis").trim().length < 5) {
-            alert("Opis postignuća mora imati najmanje 5 znakova!")
-            return
-        }
+            // Prolazimo kroz sve issues (probleme) koje je Zod pronašao
+            rezultat.error.issues.forEach((issue) => {
+                const kljuc = issue.path[0];
+                if (!noveGreske[kljuc]) {
+                    noveGreske[kljuc] = issue.message;
+                }
+            });
 
-        if (!podaci.get("procjena") || podaci.get("procjena").trim() === "") {
-            alert("Vremenska procjena dolaska do postignuća je obvezna i ne smije sadržavati samo razmake!")
-            return
-        }
-
-        if (podaci.get("procjena") < 0) {
-            alert("Vremenska procjena dolaska do postignuća ne može biti negativan broj!")
-            return
-        }
-
-        if (podaci.get("procjena") < 1 || podaci.get("procjena") > 500) {
-            alert("Vremenska procjena dolaska do postignuća mora biti između 1 i 500 sati!")
-            return
+            setErrors(noveGreske);
+            return;
         }
 
         dodaj({
@@ -83,6 +72,14 @@ export default function NovaPostignuca() {
             zavrseno: podaci.get("zavrseno") === "on"
         })
     }
+
+    const ocistiGresku = (nazivPolja) => {
+        if (errors[nazivPolja]) {
+            const noveGreske = { ...errors };
+            delete noveGreske[nazivPolja];
+            setErrors(noveGreske);
+        }
+    };
 
 
     return (
@@ -101,25 +98,36 @@ export default function NovaPostignuca() {
                     type={"text"}
                     label={"Naziv"}
                     placeholder={'Unesite naziv'}
-                    required={true}
+                    isInvalid={!!errors.naziv}
+                    errors={errors.naziv}
+                    onFocus={() => ocistiGresku('naziv')}
                 />
+                
 
                 <CustomInput
                     id={"opis"}
                     type={"text"}
                     label={"Opis postignuća"}
                     placeholder={'Unesite opis'}
-                    required={true}
+                    isInvalid={!!errors.opis}
+                    errors={errors.opis}
+                    onFocus={() => ocistiGresku('opis')}
                 />
+                
 
                 <CustomInput
                     id={"procjena"}
                     type={"number"}
                     label={"Vremenska procjena dolaska do postignuća"}
                     placeholder={'5'}
+                    isInvalid={!!errors.procjena}
                     suffix={"min"}
                     trebaFormatiratuVrijeme={true}
+                    isInvalid={!!errors.procjena}
+                    errors={errors.procjena}
+                    onFocus={() => ocistiGresku('procjena')}
                 />
+                
 
                 <CustomCheckbox
                     id={"zavrseno"}
@@ -129,7 +137,7 @@ export default function NovaPostignuca() {
                 <Row className="mt-4 justi">
                     <Col xs={12} md={6} className={"order-2 order-md-1"}>
                         <Link to={RouteNames.POSTIGNUCA}
-                              className={`btn btnCancel${mobilnaSirina ? " w-100 my-1" : ""}`}>
+                            className={`btn btnCancel${mobilnaSirina ? " w-100 my-1" : ""}`}>
                             Odustani
                         </Link>
                     </Col>
