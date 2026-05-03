@@ -16,10 +16,11 @@ export default function LekcijPDFGenerator({lekcija, postignuca, ucenici}) {
         });
     };
 
-    const generirajPDF = async () => {
-        const [regBase64, boldBase64] = await Promise.all([
+    return async () => {
+        const [regBase64, boldBase64, italicBase64] = await Promise.all([
             fetchFontAsBase64("/fonts/Roboto-Regular.ttf"),
-            fetchFontAsBase64("/fonts/Roboto-Bold.ttf")
+            fetchFontAsBase64("/fonts/Roboto-Bold.ttf"),
+            fetchFontAsBase64("/fonts/Roboto-Italic.ttf"),
         ]);
 
         const doc = new jsPDF();
@@ -32,6 +33,9 @@ export default function LekcijPDFGenerator({lekcija, postignuca, ucenici}) {
         // Ključno: isto ime 'Roboto', ali stil 'bold'
         doc.addFileToVFS("Roboto-Bold.ttf", boldBase64);
         doc.addFont("Roboto-Bold.ttf", "Roboto", "bold");
+
+        doc.addFileToVFS("Roboto-Italic.ttf", italicBase64);
+        doc.addFont("Roboto-Italic.ttf", "Roboto", "italic");
 
         // 4. Postavi defaultni font
         doc.setFont("Roboto", "normal");
@@ -121,8 +125,8 @@ export default function LekcijPDFGenerator({lekcija, postignuca, ucenici}) {
                 styles: {
                     font: "Roboto",
                     fontStyle: "normal",
-                    fontSize: 10, 
-                    overflow: "linebreak" 
+                    fontSize: 10,
+                    overflow: "linebreak"
                 },
                 headStyles: {
                     font: "Roboto",
@@ -137,15 +141,16 @@ export default function LekcijPDFGenerator({lekcija, postignuca, ucenici}) {
                     4: {cellWidth: 20, halign: "center"},
                 }
             });
+            yPosition = doc.lastAutoTable.finalY + 15;
         } else {
             doc.setFontSize(11);
             doc.setFont(undefined, "italic");
             doc.text("Nema postignuća u ovoj grupi.", 25, yPosition);
+            yPosition += 15;
         }
 
-        yPosition = doc.lastAutoTable.finalY + 15;
         doc.setFontSize(14);
-        doc.setFont(undefined, "bold");
+        doc.setFont("Roboto", "bold");
         doc.text("Popis učenika:", 20, yPosition);
         yPosition += 10;
 
@@ -164,8 +169,8 @@ export default function LekcijPDFGenerator({lekcija, postignuca, ucenici}) {
                 styles: {
                     font: "Roboto",
                     fontStyle: "normal",
-                    fontSize: 10, 
-                    overflow: "linebreak" 
+                    fontSize: 10,
+                    overflow: "linebreak"
                 },
                 headStyles: {
                     font: "Roboto",
@@ -207,6 +212,4 @@ export default function LekcijPDFGenerator({lekcija, postignuca, ucenici}) {
         const pdfUrl = URL.createObjectURL(pdfBlob);
         window.open(pdfUrl, "_blank");
     };
-
-    return generirajPDF;
 }

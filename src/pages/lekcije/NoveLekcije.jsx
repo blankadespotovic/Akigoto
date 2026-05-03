@@ -99,7 +99,8 @@ export default function NoveLekcije() {
 
     function odradiSubmit(e) {
         e.preventDefault()
-        const podaci = new FormData(e.target)
+        const podaci = new FormData(e.target);
+        podaci.append("opis", opisVrijednost);
 
         setErrors({});
         const objektPodataka = Object.fromEntries(podaci);

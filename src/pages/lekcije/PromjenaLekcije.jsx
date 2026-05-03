@@ -159,7 +159,7 @@ export default function PromjenaLekcije() {
     function odradiSubmit(e) {
         e.preventDefault()
         const podaci = new FormData(e.target)
-
+        podaci.append("opis", opisVrijednost)
         setErrors({});
         const objektPodataka = Object.fromEntries(podaci);
 
@@ -194,6 +194,14 @@ export default function PromjenaLekcije() {
             ucenici: uceniciIds,
         })
     }
+
+     const ocistiGresku = (nazivPolja) => {
+        if (errors[nazivPolja]) {
+            const noveGreske = { ...errors };
+            delete noveGreske[nazivPolja];
+            setErrors(noveGreske);
+        }
+    };
 
     return (
 

@@ -10,8 +10,7 @@ export const ShemaLekcije = z.object({
     opis: z.string()
     .trim()
     .min(1, "Opis je obavezan i ne smije sadržavati samo razmake!")
-    .min(3, "Opis lekcije mora imati najmanje 10 znaka!")
-    .max(50, "Opis lekcije može imati najviše 50 znakova!"),
+    .min(3, "Opis lekcije mora imati najmanje 10 znaka!"),
 
   trajanje: z.coerce.number({
     invalid_type_error: "Trajanje lekcije mora biti broj!",

@@ -7,7 +7,7 @@ import UceniciService from "../../services/ucenici/UceniciService";
 import { CustomInput } from "../../components/customInputs/CustomInput.jsx";
 import useBreakpoint from "../../hooks/useBreakpoint.js";
 import { FaTrash } from "react-icons/fa";
-import { ShemaUcenici } from "../../schemes/ShemaUcenici.js";
+import { ShemaUceniciP } from "../../schemes/ShemaUceniciP.js";
 
 export default function PromjenaUcenika() {
 
@@ -59,7 +59,7 @@ export default function PromjenaUcenika() {
         const objektPodataka = Object.fromEntries(podaci);
 
         // Provjera pomoću Zod sheme
-        const rezultat = ShemaUcenici.safeParse(objektPodataka);
+        const rezultat = ShemaUceniciP.safeParse(objektPodataka);
 
         if (!rezultat.success) {
             const noveGreske = {};
