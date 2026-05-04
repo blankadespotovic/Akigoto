@@ -181,7 +181,7 @@ export default function GeneriranjePodataka() {
                     datum: faker.date.between({from: '2024-01-01', to: Date.now()}),
                     iznos: faker.number.int({min: 45, max: 150})
                 })
-            }
+            }console.log(brojUplata, uplate)
                 const ucenik = {
                     ime: imeRaw,
                     prezime: prezimePrikaz,

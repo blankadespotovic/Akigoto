@@ -39,7 +39,7 @@ async function dodaj(ucenik) {
         ucenik.sifra = ucenici.at(-1).sifra + 1
     }
 
-    ucenik.uplate = [];
+    ucenik.uplate = ucenik?.uplate?.length > 0? ucenik.uplate: [];
 
     ucenici.push(ucenik)
     spremiUStorage(ucenici);
@@ -55,7 +55,6 @@ async function promjeni(ucenik, datum, iznos) {
 
     if (index !== -1) {
         const uplate = ucenik.uplate
-        console.log(uplate, iznos, datum)
         if (iznos && datum) {
             uplate.push({ datum, iznos: Number.parseFloat(iznos) })
         }

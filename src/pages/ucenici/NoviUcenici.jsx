@@ -26,8 +26,6 @@ export default function NoviUcenici() {
     function odradiSubmit(e) {
         e.preventDefault()
         const podaci = new FormData(e.target)
-        console.log(e.target)
-
         setErrors({});
         const objektPodataka = Object.fromEntries(podaci);
 
@@ -47,7 +45,7 @@ export default function NoviUcenici() {
 
             setErrors(noveGreske);
             return;
-        } console.log(podaci, objektPodataka)
+        } 
         dodaj({
             ime: podaci.get('ime'),
             prezime: podaci.get('prezime'),

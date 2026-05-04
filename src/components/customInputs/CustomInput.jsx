@@ -49,13 +49,13 @@ export function CustomInput(
                     disabled={disabled}
                     onFocus={onFocus}
                 />
-
+                {suffix && <InputGroup.Text className={"custom-addon"}>{suffix}</InputGroup.Text>}
                 {errors && (
                 <Form.Control.Feedback type="invalid">
                     {errors}
                 </Form.Control.Feedback>
                 )}
-                {suffix && <InputGroup.Text className={"custom-addon"}>{suffix}</InputGroup.Text>}
+                
             </InputGroup>
             {trebaFormatiratuVrijeme && <div className="input-hint">
                 {formatirajVrijeme(Number(vrijednost))}
