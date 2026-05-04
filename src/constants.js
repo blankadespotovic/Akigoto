@@ -16,10 +16,20 @@ export const RouteNames = {
     UCENICI: '/ucenici',
     UCENICI_NOVI: '/ucenici/novi',
     PROMJENA_UCENIKA: '/ucenici/:sifra',
+
+    OPERATERI: '/operateri',
+    OPERATERI_NOVI: '/operateri/novi',
+    OPERATERI_PROMJENA: '/operateri/:sifra',
+    OPERATERI_PROMJENA_LOZINKE: '/operateri/:sifra/lozinka',
     
     LEKCIJE: '/lekcije',
     LEKCIJE_NOVE: '/lekcije/nova',
-    PROMJENA_LEKCIJA: '/lekcije/:sifra'
+    PROMJENA_LEKCIJA: '/lekcije/:sifra',
+
+    LOGIN: '/login',
+    REGISTRACIJA: '/registracija',
+
+    NADZORNA_PLOCA: '/nadzorna-ploca',
 }
 
 const L = 'localStorage';
@@ -29,3 +39,11 @@ export const DEFAULT_PAGE_SIZE = 10;
 export const PAGE_SIZES = [5, 10, 25, 50]
 
 export const DATA_SOURCE = L
+
+export const PrefixStorage = {
+    POSTIGNUCA: 'postignuca',
+    KATEGORIJE: 'kategorije',
+    UCENICI: 'ucenici',
+    LEKCIJE: 'lekcije',
+    OPERATERI: 'operateri'
+}

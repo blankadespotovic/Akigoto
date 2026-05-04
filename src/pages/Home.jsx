@@ -6,6 +6,7 @@ import KategorijeService from "../services/kategorije/KategorijeService";
 import UceniciService from "../services/ucenici/UceniciService";
 import LekcijeService from "../services/lekcije/LekcijeService";
 import PostignucaService from "../services/postignuca/PostignucaService.js";
+import OperaterService from "../services/operateri/OperaterService.js";
 
 export default function Home() {
 
@@ -13,10 +14,14 @@ export default function Home() {
     const [brojKategorija, setBrojKategorija] = useState(0)
     const [brojUcenika, setBrojUcenika] = useState(0)
     const [brojLekcija, setBrojLekcija] = useState(0)
+    const [brojOperatera, setBrojOperatera] = useState(0);
+    const [brojAdmina, setBrojAdmina] = useState(0);
+    const [brojKorisnika, setBrojKorisnika] = useState(0);
     const [animatedPostignuca, setAnimatedPostignuca] = useState(0)
     const [animatedKategorija, setAnimatedKategorija] = useState(0)
     const [animatedUcenici, setAnimatedUcenici] = useState(0)
     const [animatedLekcije, setAnimatedLekcije] = useState(0)
+    const [animatedOperateri, setAnimatedOperateri] = useState(0);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -24,12 +29,20 @@ export default function Home() {
                 const kategorijeRezultat = await KategorijeService.get()
                 const postignucaRezultat = await PostignucaService.get()
                 const uceniciRezultat = await UceniciService.get()
-                const lekcijeRezultat = await LekcijeService.get()  
-                
+                const lekcijeRezultat = await LekcijeService.get()
+                const operateri = await OperaterService.get();
+
                 setBrojLekcija(lekcijeRezultat.data.length)
                 setBrojUcenika(uceniciRezultat.data.length)
                 setBrojKategorija(kategorijeRezultat.data.length)
                 setBrojPostignuca(postignucaRezultat.data.length)
+                setBrojOperatera(operateri.data.length);
+
+                // Izračunaj broj admina i korisnika
+                const admini = operateri.data.filter(op => op.uloga === 'admin').length;
+                const korisnici = operateri.data.filter(op => op.uloga === 'korisnik').length;
+                setBrojAdmina(admini);
+                setBrojKorisnika(korisnici);
             } catch (error) {
                 console.error('Greška pri dohvaćanju podataka:', error)
             }
@@ -74,7 +87,14 @@ export default function Home() {
         }
     }, [animatedLekcije, brojLekcija])
 
-
+    useEffect(() => {
+        if (animatedOperateri < brojOperatera) {
+            const timer = setTimeout(() => {
+                setAnimatedOperateri(prev => Math.min(prev + 1, brojOperatera));
+            }, 150);
+            return () => clearTimeout(timer);
+        }
+    }, [animatedOperateri, brojOperatera]);
 
 
 
@@ -92,27 +112,36 @@ export default function Home() {
     );
 
     const statsCardChildren = (
-            <div className="d-flex flex-row gap-3 align-items-center justify-content-center flex-wrap">
-                <div className="statKartica">
-                    <span className="statLabel">Postignuća</span>
-                    <span className="statValue">{animatedPostignuca}</span>
-                </div>
-
-                <div className="statKartica">
-                    <span className="statLabel">Kategorije</span>
-                    <span className="statValue">{animatedKategorija}</span>
-                </div>
-
-                <div className="statKartica">
-                    <span className="statLabel">Učenici</span>
-                    <span className="statValue">{animatedUcenici}</span>
-                </div>
-
-                <div className="statKartica">
-                    <span className="statLabel">Lekcije</span>
-                    <span className="statValue">{animatedLekcije}</span>
-                </div>
+        <div className="d-flex flex-row gap-3 align-items-center justify-content-center flex-wrap">
+            <div className="statKartica">
+                <span className="statLabel">Postignuća</span>
+                <span className="statValue">{animatedPostignuca}</span>
             </div>
+
+            <div className="statKartica">
+                <span className="statLabel">Kategorije</span>
+                <span className="statValue">{animatedKategorija}</span>
+            </div>
+
+            <div className="statKartica">
+                <span className="statLabel">Učenici</span>
+                <span className="statValue">{animatedUcenici}</span>
+            </div>
+
+            <div className="statKartica">
+                <span className="statLabel">Lekcije</span>
+                <span className="statValue">{animatedLekcije}</span>
+            </div>
+
+            <div className="statKartica">
+                <span className="statLabel">Operateri</span>
+                <span className="statValue">{animatedOperateri}</span>
+            </div>
+            <div style={{ fontSize: '0.9rem', marginTop: '10px' }}>
+                <span className="badge bg-danger me-2">Admin: {brojAdmina}</span>
+                <span className="badge bg-primary">Korisnik: {brojKorisnika}</span>
+            </div>
+        </div>
     )
 
 

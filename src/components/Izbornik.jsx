@@ -1,6 +1,7 @@
-import { Container, Nav, Navbar } from "react-bootstrap"
+import { Button, Container, Nav, Navbar } from "react-bootstrap"
 import { useNavigate } from "react-router-dom"
 import { IME_APLIKACIJE, RouteNames } from "../constants"
+import useAuth from "../hooks/useAuth"
 
 
 
@@ -10,6 +11,7 @@ export default function Izbornik() {
 
 
     const navigate = useNavigate()
+    const { isLoggedIn, logout, authUser } = useAuth()
 
     return (
         <Navbar expand="lg" className="bg-body-tertiary">
@@ -21,29 +23,58 @@ export default function Izbornik() {
                         <Nav.Link className="home-nav"
                             onClick={() => navigate(RouteNames.HOME)}
                         >Početna</Nav.Link>
-                        <Nav.Link className="home-nav"
-                            onClick={() => navigate(RouteNames.PROFIL)}
-                        >Profil</Nav.Link>
-                        <Nav.Link className="home-nav"
-                            onClick={() => navigate(RouteNames.POSTIGNUCA)}
-                        >Postignuća</Nav.Link>
-                        <Nav.Link className="home-nav"
-                            onClick={() => navigate(RouteNames.KATEGORIJE)}
-                        >Kategorije</Nav.Link>
-                        <Nav.Link className="home-nav"
-                            onClick={() => navigate(RouteNames.UCENICI)}
-                        >Učenici</Nav.Link>
-                        <Nav.Link className="home-nav"
-                            onClick={() => navigate(RouteNames.LEKCIJE)}
-                        >Lekcije</Nav.Link>
-                        <Nav.Link className="home-nav d-block d-lg-none"
-                                  onClick={() => navigate(RouteNames.GENERIRANJE_PODATAKA)}
-                        >Generiraj podatke</Nav.Link>
+
+                        {isLoggedIn && (
+                            <>
+                                <Nav.Link
+                                    onClick={() => navigate(RouteNames.NADZORNA_PLOCA)}
+                                >Nadzorna ploča</Nav.Link>
+                                <Nav.Link className="home-nav"
+                                    onClick={() => navigate(RouteNames.PROFIL)}
+                                >Profil</Nav.Link>
+                                <Nav.Link className="home-nav"
+                                    onClick={() => navigate(RouteNames.POSTIGNUCA)}
+                                >Postignuća</Nav.Link>
+                                <Nav.Link className="home-nav"
+                                    onClick={() => navigate(RouteNames.KATEGORIJE)}
+                                >Kategorije</Nav.Link>
+                                <Nav.Link className="home-nav"
+                                    onClick={() => navigate(RouteNames.UCENICI)}
+                                >Učenici</Nav.Link>
+                                <Nav.Link className="home-nav"
+                                    onClick={() => navigate(RouteNames.LEKCIJE)}
+                                >Lekcije</Nav.Link>
+
+                                {authUser.uloga === 'admin' && (
+                                    <>
+                                        <Nav.Link className="home-nav d-block d-lg-none"
+                                            onClick={() => navigate(RouteNames.OPERATERI)}
+                                        >Operateri</Nav.Link>
+                                        <Nav.Link className="home-nav d-block d-lg-none"
+                                            onClick={() => navigate(RouteNames.GENERIRANJE_PODATAKA)}
+                                        >Generiraj podatke</Nav.Link>
+                                    </>
+                                )}
+                            </>
+                        )}
                     </Nav>
-                    <Nav className="d-none d-lg-block">
-                        <Nav.Link className="home-nav"
-                            onClick={() => navigate(RouteNames.GENERIRANJE_PODATAKA)}
-                        >Generiraj podatke</Nav.Link>
+
+                    <Nav className="ms-auto">
+                        {isLoggedIn ? (
+                            <Button
+                                className="me-2"
+                                onClick={() => logout()}
+                            >Logout {authUser.email}</Button>
+                        ) : (
+                            <>
+                                <Button
+                                    className=""
+                                    onClick={() => navigate(RouteNames.REGISTRACIJA)}
+                                >Registracija</Button>
+                                <Button
+                                    onClick={() => navigate(RouteNames.LOGIN)}
+                                >Login</Button>
+                            </>)}
                     </Nav>
                 </Navbar.Collapse>
             </Container>
