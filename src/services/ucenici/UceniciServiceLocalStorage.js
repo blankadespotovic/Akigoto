@@ -55,8 +55,9 @@ async function promjeni(ucenik, datum, iznos) {
 
     if (index !== -1) {
         const uplate = ucenik.uplate
+        const sljedecaSifra = Math.max(...uplate.map(uplata => parseInt(uplata.sifra))) + 1;
         if (iznos && datum) {
-            uplate.push({ datum, iznos: Number.parseFloat(iznos) })
+            uplate.push({ sifra: sljedecaSifra, datum, iznos: Number.parseFloat(iznos) })
         }
         ucenik.uplate = uplate
         ucenici[index] = ucenik
