@@ -1,14 +1,12 @@
-import {kategorije} from "./KategorijePodaci.js";
-import {POS_STORAGE_KEY} from "../postignuca/PostignucaServiceLocalStorage.js";
+import { PrefixStorage } from "../../constants.js";
 
-const STORAGE_KEY = "kategorije";
 
 function nadiIndexKategorije(sifra) {
     return kategorije.findIndex(kat => kat.sifra === Number(sifra))
 }
 
 function dohvatiSveIzStorage() {
-    const podaci = localStorage.getItem(STORAGE_KEY);
+    const podaci = localStorage.getItem(PrefixStorage.KATEGORIJE);
     return podaci ? JSON.parse(podaci) : [];
 }
 
@@ -36,7 +34,7 @@ async function dodaj(kategorija) {
         kategorija.sifra = kategorije.at(-1).sifra + 1
     }
     kategorije.push(kategorija)
-    spremiUStorage(kategorije, STORAGE_KEY);
+    spremiUStorage(kategorije, PrefixStorage.KATEGORIJE);
     return {data: kategorija};
 }
 
@@ -47,18 +45,18 @@ async function promjeni(kategorija) {
 
     if (kategorijaIndex !== -1) {
         kategorije[kategorijaIndex] = kategorija;
-        spremiUStorage(kategorije, STORAGE_KEY);
+        spremiUStorage(kategorije, PrefixStorage.KATEGORIJE);
     }
     return {data: kategorije[kategorijaIndex]};
 }
 
 function obrisiPostignucaKategorije(sifraKategorije) {
-    let postignuca = JSON.parse(localStorage.getItem(POS_STORAGE_KEY));
+    let postignuca = JSON.parse(localStorage.getItem(PrefixStorage.POSTIGNUCA));
     if (postignuca && postignuca.length > 0) {
         postignuca.filter(pos => pos.kategorija !== parseInt(sifraKategorije))
-        spremiUStorage(postignuca, POS_STORAGE_KEY)
+        spremiUStorage(postignuca, PrefixStorage.POSTIGNUCA)
         if (postignuca.length <= 0) {
-            localStorage.removeItem(POS_STORAGE_KEY)
+            localStorage.removeItem(PrefixStorage.POSTIGNUCA)
         }
     }
 }
@@ -66,10 +64,10 @@ function obrisiPostignucaKategorije(sifraKategorije) {
 async function obrisi(sifra) {
     let kategorije = dohvatiSveIzStorage();
     kategorije = kategorije.filter(s => s.sifra !== parseInt(sifra));
-    spremiUStorage(kategorije, STORAGE_KEY);
+    spremiUStorage(kategorije, PrefixStorage.KATEGORIJE);
     obrisiPostignucaKategorije(sifra)
     if (kategorije.length <= 0) {
-        localStorage.removeItem(STORAGE_KEY)
+        localStorage.removeItem(PrefixStorage.KATEGORIJE)
     }
     return {message: "Obrisano"};
 }

@@ -8,3 +8,7 @@ export const kategorije = [
         naziv: "Učenje i znanje",
     }
 ]
+
+export default {
+    kategorije
+}

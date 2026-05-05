@@ -59,7 +59,6 @@ export default function Login() {
     const [copyIconPassword, setCopyIconPassword] = useState(<FaClipboard size={20} />);
 
     const handleCopyEmail = async (e) => {
-        console.log(e);
         const text = e.target.innerText.trim();
         const initialIcon = <FaClipboard size={20} />;
         setCopyIconPassword(initialIcon);

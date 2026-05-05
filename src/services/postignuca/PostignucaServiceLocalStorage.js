@@ -1,4 +1,4 @@
-export const POS_STORAGE_KEY = "postignuca";
+import { PrefixStorage } from "../../constants";
 
 function nadiIndexPostignuca(sifra) {
     const postignuca =  dohvatiSveIzStorage()
@@ -6,12 +6,12 @@ function nadiIndexPostignuca(sifra) {
 }
 
 function dohvatiSveIzStorage() {
-    const podaci = localStorage.getItem(POS_STORAGE_KEY);
+    const podaci = localStorage.getItem(PrefixStorage.POSTIGNUCA);
     return podaci ? JSON.parse(podaci) : [];
 }
 
 function spremiUStorage(podaci) {
-    localStorage.setItem(POS_STORAGE_KEY, JSON.stringify(podaci));
+    localStorage.setItem(PrefixStorage.POSTIGNUCA, JSON.stringify(podaci));
 }
 
 async function get() {
@@ -55,7 +55,7 @@ async function obrisi(sifra) {
     postignuca = postignuca.filter(s => s.sifra !== parseInt(sifra));
     spremiUStorage(postignuca)
     if (postignuca.length <= 0) {
-        localStorage.removeItem(POS_STORAGE_KEY)
+        localStorage.removeItem(PrefixStorage.POSTIGNUCA)
     }
     return { message: "Obrisano" };
 }

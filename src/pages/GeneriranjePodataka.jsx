@@ -1,14 +1,19 @@
-import { useEffect, useState } from "react";
-import { Button, Col, Form, Row } from "react-bootstrap";
-import { Faker, hr } from "@faker-js/faker";
+import {useEffect, useState} from "react";
+import {Button, Col, Form, Row} from "react-bootstrap";
+import {Faker, hr} from "@faker-js/faker";
 import KategorijeService from "../services/kategorije/KategorijeService";
 import PostignucaService from "../services/postignuca/PostignucaService";
-import { CustomAlert } from "../components/CustomAlert";
-import { Card } from "../components/Card";
+import {CustomAlert} from "../components/CustomAlert";
+import {Card} from "../components/Card";
 import UceniciService from "../services/ucenici/UceniciService.js";
 import LekcijeService from "../services/lekcije/LekcijeService.js";
-import { CustomInput } from "../components/customInputs/CustomInput.jsx";
+import {CustomInput} from "../components/customInputs/CustomInput.jsx";
 import useBreakpoint from "../hooks/useBreakpoint.js";
+import {DATA_SOURCE, DATA_SOURCES, PrefixStorage} from "../constants.js";
+import kategorijeMemorija from "../services/kategorije/KategorijePodaci.js"
+import postignucaMemorija from "../services/postignuca/PostignucaPodaci.js"
+import uceniciMemorija from "../services/ucenici/UceniciPodaci.js"
+import lekcijeMemorija from "../services/lekcije/LekcijePodaci.js"
 
 
 export default function GeneriranjePodataka() {
@@ -123,7 +128,7 @@ export default function GeneriranjePodataka() {
                 naziv: naziv,
                 opis: opis,
                 kategorija: kat,
-                procjena: faker.number.int({ min: 1, max: 500 }),
+                procjena: faker.number.int({min: 1, max: 500}),
                 zavrseno: faker.datatype.boolean(),
             };
             await PostignucaService.dodaj(postignuce);
@@ -173,21 +178,21 @@ export default function GeneriranjePodataka() {
             const lastNameEmail = normalizirajZaEMail(prezimeRaw);
 
             const email = `${firstNameEmail}.${lastNameEmail}@${faker.helpers.arrayElement(domene)}.${faker.helpers.arrayElement(topLevelDomena)}`;
-            const brojUplata = faker.number.int({ min: 1, max: 5 })
+            const brojUplata = faker.number.int({min: 1, max: 5})
             const uplate = []
-            for (let i = 1; i <= brojUplata; i++){
+            for (let i = 1; i <= brojUplata; i++) {
                 uplate.push({
-                    sifra: i, 
-                    datum: faker.date.between({from: '2024-01-01', to: Date.now()}),
+                    sifra: i,
+                    datum: faker.date.between({from: "2024-01-01", to: Date.now()}),
                     iznos: faker.number.int({min: 45, max: 150})
                 })
-            }console.log(brojUplata, uplate)
-                const ucenik = {
-                    ime: imeRaw,
-                    prezime: prezimePrikaz,
-                    email: email,
-                    uplate: uplate
-                };
+            }
+            const ucenik = {
+                ime: imeRaw,
+                prezime: prezimePrikaz,
+                email: email,
+                uplate: uplate
+            };
             await UceniciService.dodaj(ucenik);
         }
         dohvatiBrojUcenika()
@@ -220,7 +225,7 @@ export default function GeneriranjePodataka() {
             const lekcija = {
                 naziv: naziv,
                 opis: opis,
-                trajanje: faker.number.int({ min: 1, max: 500 }),
+                trajanje: faker.number.int({min: 1, max: 500}),
                 postignuca: faker.helpers.arrayElements(svaPostignucaIds),
                 ucenici: faker.helpers.arrayElements(sviUceniciIds),
             };
@@ -495,6 +500,39 @@ export default function GeneriranjePodataka() {
         }
     }
 
+    const handleMemorijaULocalStorage = async () => {
+        if (!window.confirm("Jeste li sigurni da želite pretočiti iz memorije u localStorage?")) {
+            return;
+        }
+        setLoading(true);
+        setPoruka(null);
+        try {
+            localStorage.setItem(PrefixStorage.KATEGORIJE, JSON.stringify(kategorijeMemorija.kategorije));
+            localStorage.setItem(PrefixStorage.POSTIGNUCA, JSON.stringify(postignucaMemorija.postignuca));
+            localStorage.setItem(PrefixStorage.UCENICI, JSON.stringify(uceniciMemorija.ucenici));
+            localStorage.setItem(PrefixStorage.LEKCIJE, JSON.stringify(lekcijeMemorija.lekcije));
+            setPoruka({
+                tip: "success",
+                tekst: `Uspješno presipano`
+            });
+        } catch (error) {
+            setPoruka({
+                tip: "danger",
+                tekst: "Greška pri presipavanju memorija - localStorage: " + error.message
+            });
+        } finally {
+            setLoading(false);
+            dohvatiBrojKategorija();
+            dohvatiBrojPostignuca();
+            dohvatiBrojUcenika();
+            dohvatiBrojLekcija();
+        }
+    }
+
+    const handleMemorijaUFirebase = async () => {
+        // kasnije
+    }
+
     return (
         <Row className="mt-2">
             <Col md={12}>
@@ -505,7 +543,7 @@ export default function GeneriranjePodataka() {
                 </CustomAlert>
                 {poruka && (
                     <CustomAlert variant={poruka.tip} className={"mt-2 mb-0"} dismissible
-                        onClose={() => setPoruka(null)}>
+                                 onClose={() => setPoruka(null)}>
                         {poruka.tekst}
                     </CustomAlert>
                 )}
@@ -538,7 +576,7 @@ export default function GeneriranjePodataka() {
                         >
                             {loading ? "Generiranje..." : "Generiraj kategorije"}
                         </Button>
-                        <CustomAlert variant="warning" className="mt-2" style={{ fontSize: ".9rem" }}>
+                        <CustomAlert variant="warning" className="mt-2" style={{fontSize: ".9rem"}}>
                             <strong>Upozorenje:</strong> Ove akcije će dodati nove podatke u postojeće.
                             Ako želite početi ispočetka, prvo obrišite postojeće podatke.
                         </CustomAlert>
@@ -584,7 +622,7 @@ export default function GeneriranjePodataka() {
                         >
                             {loading ? "Generiranje..." : "Generiraj postignuća"}
                         </Button>
-                        <CustomAlert variant="warning" className="mt-2" style={{ fontSize: ".9rem" }}>
+                        <CustomAlert variant="warning" className="mt-2" style={{fontSize: ".9rem"}}>
                             <strong>Upozorenje:</strong> Ove akcije će dodati nove podatke u postojeće.
                             Ako želite početi ispočetka, prvo obrišite postojeće podatke.
                         </CustomAlert>
@@ -634,7 +672,8 @@ export default function GeneriranjePodataka() {
                                         {loading ? "Generiranje..." : "Generiraj učenike"}
                                     </Button>
                                 </Col>
-                                <Col xs={12} lg={6} className={`d-flex gap-3 align-items-center justify-content-evenly ${moiblnaSirina && "my-2"}`}>
+                                <Col xs={12} lg={6}
+                                     className={`d-flex gap-3 align-items-center justify-content-evenly ${moiblnaSirina && "my-2"}`}>
                                     <Form.Check
                                         type="radio"
                                         label="M"
@@ -663,7 +702,7 @@ export default function GeneriranjePodataka() {
                                 </Col>
                             </Row>
                         </Form.Group>
-                        <CustomAlert variant="warning" className="mt-2" style={{ fontSize: ".9rem" }}>
+                        <CustomAlert variant="warning" className="mt-2" style={{fontSize: ".9rem"}}>
                             <strong>Upozorenje:</strong> Ove akcije će dodati nove podatke u postojeće.
                             Ako želite početi ispočetka, prvo obrišite postojeće podatke.
                         </CustomAlert>
@@ -709,7 +748,7 @@ export default function GeneriranjePodataka() {
                         >
                             {loading ? "Generiranje..." : "Generiraj lekcije"}
                         </Button>
-                        <CustomAlert variant="warning" className="mt-2" style={{ fontSize: ".9rem" }}>
+                        <CustomAlert variant="warning" className="mt-2" style={{fontSize: ".9rem"}}>
                             <strong>Upozorenje:</strong> Ove akcije će dodati nove podatke u postojeće.
                             Ako želite početi ispočetka, prvo obrišite postojeće podatke.
                         </CustomAlert>
@@ -727,6 +766,38 @@ export default function GeneriranjePodataka() {
                     </CustomAlert>
                 </Card>
             </Col>
+            {(DATA_SOURCE == DATA_SOURCES.M || DATA_SOURCE == DATA_SOURCES.L) && (
+                <Col md={12}>
+                    <Card
+                        title={"Pretakanje podataka iz jednog izvora u drugi"}
+                        textAlign={"start"}
+                    >
+                        <Row>
+                            <Col xs={12} md={6} className={"my-2 my-md-0"}>
+                                <Button
+                                    variant={"success"}
+                                    onClick={handleMemorijaULocalStorage}
+                                    disabled={loading}
+                                    className={"w-100 btn btnSuccess"}
+                                >
+                                    {loading ? "Pretakanje..." : "Iz memorije u localStorage"}
+                                </Button>
+                            </Col>
+                            <Col xs={12} md={6} className={"my-2 my-md-0"}>
+                                <Button
+                                    variant={"success"}
+                                    onClick={handleMemorijaUFirebase}
+                                    disabled={loading}
+                                    className={"w-100 btn btnSuccess"}
+                                >
+                                    {loading ? "Pretakanje..." : "Iz memorije u firebase"}
+                                </Button>
+                            </Col>
+                        </Row>
+                    </Card>
+                </Col>
+            )}
         </Row>
+
     );
 }

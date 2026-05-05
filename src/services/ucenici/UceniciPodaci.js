@@ -181,3 +181,7 @@ export const ucenici = [
         ]
     }
 ]
+
+export default {
+    ucenici
+}

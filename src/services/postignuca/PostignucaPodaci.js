@@ -162,3 +162,7 @@ export const postignuca = [
         zavrseno: true,
     },
 ]
+
+export default {
+    postignuca
+}

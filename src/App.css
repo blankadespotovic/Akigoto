@@ -17,6 +17,9 @@
     --text-dark: #3A3A3A;
     --text-light: #6B6B6B;
 
+    --green-main: #A8E6B1;
+    --green-soft: #E8F8EC;
+
     --white: #FFFFFF;
     --border: rgba(0, 0, 0, 0.08);
 }
@@ -29,19 +32,19 @@ body {
     color: var(--text-dark);
 
     background: linear-gradient(0deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.3) 1px, transparent 1px),
-        linear-gradient(rgba(255, 255, 255, 0.3) 1px, transparent 1px),
-        linear-gradient(135deg, #F6C1CC, #CDB7F6, #BFD7F6);
+    linear-gradient(90deg, rgba(255, 255, 255, 0.3) 1px, transparent 1px),
+    linear-gradient(rgba(255, 255, 255, 0.3) 1px, transparent 1px),
+    linear-gradient(135deg, #F6C1CC, #CDB7F6, #BFD7F6);
 
     background-size: 100% 100%,
-        40px 40px,
-        40px 40px,
-        100% 100%;
+    40px 40px,
+    40px 40px,
+    100% 100%;
 
     background-position: 0 0,
-        0 0,
-        0 0,
-        0 0;
+    0 0,
+    0 0,
+    0 0;
 }
 
 .navbar {
@@ -88,7 +91,7 @@ body {
     transition: background 0.2s ease;
 }
 
-.nav-pills>.nav-item>a {
+.nav-pills > .nav-item > a {
     border-radius: 0;
 }
 
@@ -113,22 +116,6 @@ body {
     gap: 2px;
 }
 
-
-.button,
-td>button,
-.btnAdd,
-.btnCancel {
-    background: linear-gradient(135deg, #F6C1CC, #CDB7F6);
-    border: groove white;
-    color: white;
-    padding: 0.6rem 1.2rem;
-    font-weight: 600;
-    cursor: pointer;
-
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
 .btn {
     border: groove white;
     border-radius: 0;
@@ -139,7 +126,6 @@ td>button,
     color: #3A3A3A;
 }
 
-
 .button:hover,
 #btnAdd:hover {
     transform: translateY(-2px);
@@ -147,7 +133,7 @@ td>button,
 }
 
 .button,
-td>button,
+td > button,
 .btnAdd,
 .btnCancel,
 .btnEdit,
@@ -253,7 +239,7 @@ table {
 }
 
 
-.table-striped>tbody>tr:nth-of-type(odd)>* {
+.table-striped > tbody > tr:nth-of-type(odd) > * {
     background-color: #f1eefc;
 }
 
@@ -601,4 +587,65 @@ ul.custom-list li.ucenik::before {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+/*TODO: novi style za dropdown*/
+/* Targets the clickable dropdown (icon + username) */
+.navbar .dropdown-toggle {
+    text-decoration: none;
+    color: white !important;
+    font-weight: 500;
+
+    padding: 0.4rem 0.8rem;
+    border: groove white;
+    background: transparent;
+
+    border-radius: 0;
+
+    transition: all 0.2s ease;
+}
+
+.navbar .dropdown-toggle:hover,
+.navbar .dropdown.show .dropdown-toggle {
+    background: rgba(183, 145, 192, 0.25);
+    color: #9d75a0 !important;
+}
+
+.navbar .dropdown-menu {
+    background-color: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 0;
+    padding: 0.3rem 0;
+}
+
+.navbar .dropdown-item {
+    color: var(--text-dark);
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    transition: background 0.2s ease;
+}
+
+.navbar .dropdown-item:hover,
+.navbar .dropdown-item:focus {
+    background: var(--purple-soft);
+    color: var(--text-dark);
+}
+
+.navbar .dropdown-item.logout:hover,
+.navbar .dropdown-item.logout:focus {
+    background: var(--red-soft);
+}
+
+.navbar .dropdown-item.user:hover,
+.navbar .dropdown-item.user:focus {
+    background: var(--green-soft);
+}
+
+.navbar .dropdown-divider {
+    border-color: var(--border);
+    margin: .2rem 0;
+}
+
+.navbar .dropdown-toggle::after {
+    display: none;
 }

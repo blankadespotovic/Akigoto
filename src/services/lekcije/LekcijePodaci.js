@@ -58,3 +58,7 @@ export const lekcije = [
     }
 
 ]
+
+export default {
+    lekcije
+}
