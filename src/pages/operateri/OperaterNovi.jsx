@@ -74,7 +74,7 @@ export default function OperaterNovi() {
                                         <Form.Control
                                             type="email"
                                             name="email"
-                                            placeholder="operater@edunova.hr"
+                                            placeholder="operater@akigoto.hr"
                                             isInvalid={!!errors.email}
                                             onFocus={() => ocistiGresku('email')}
                                         />

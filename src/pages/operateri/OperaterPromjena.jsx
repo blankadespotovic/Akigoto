@@ -100,7 +100,7 @@ export default function OperaterPromjena() {
                                         <Form.Control
                                             type="email"
                                             name="email"
-                                            placeholder="operater@edunova.hr"
+                                            placeholder="operater@akigoto.hr"
                                             defaultValue={operater.email}
                                             isInvalid={!!errors.email}
                                             onFocus={() => ocistiGresku('email')}

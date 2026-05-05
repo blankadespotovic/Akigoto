@@ -46,6 +46,7 @@ async function dodaj(operater) {
     
     if (operateri.length === 0) {
         operater.sifra = 1
+        operater.uloga = 'admin'
     } else {
         // Pronalaženje najveće šifre da izbjegnemo duplikate
         const maxSifra = Math.max(...operateri.map(o => o.sifra))

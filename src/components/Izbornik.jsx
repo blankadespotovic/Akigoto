@@ -2,6 +2,7 @@ import { Button, Container, Nav, Navbar } from "react-bootstrap"
 import { useNavigate } from "react-router-dom"
 import { IME_APLIKACIJE, RouteNames } from "../constants"
 import useAuth from "../hooks/useAuth"
+import { useEffect } from "react"
 
 
 
@@ -12,6 +13,10 @@ export default function Izbornik() {
 
     const navigate = useNavigate()
     const { isLoggedIn, logout, authUser } = useAuth()
+
+    useEffect(()=>{
+        console.log(authUser)
+    },[authUser])
 
     return (
         <Navbar expand="lg" className="bg-body-tertiary">
@@ -47,10 +52,10 @@ export default function Izbornik() {
 
                                 {authUser.uloga === 'admin' && (
                                     <>
-                                        <Nav.Link className="home-nav d-block d-lg-none"
+                                        <Nav.Link className="home-nav d-block"
                                             onClick={() => navigate(RouteNames.OPERATERI)}
                                         >Operateri</Nav.Link>
-                                        <Nav.Link className="home-nav d-block d-lg-none"
+                                        <Nav.Link className="home-nav d-block"
                                             onClick={() => navigate(RouteNames.GENERIRANJE_PODATAKA)}
                                         >Generiraj podatke</Nav.Link>
                                     </>
@@ -62,18 +67,21 @@ export default function Izbornik() {
                     <Nav className="ms-auto">
                         {isLoggedIn ? (
                             <Button
-                                className="me-2"
+                                className="btn btnCancel"
                                 onClick={() => logout()}
                             >Logout {authUser.email}</Button>
                         ) : (
                             <>
+                            <div className="buttonContainer">
                                 <Button
-                                    className=""
+                                    className="btn btnAdd"
                                     onClick={() => navigate(RouteNames.REGISTRACIJA)}
                                 >Registracija</Button>
                                 <Button
+                                    className="btn btnAdd"
                                     onClick={() => navigate(RouteNames.LOGIN)}
                                 >Login</Button>
+                                </div>
                             </>)}
                     </Nav>
                 </Navbar.Collapse>

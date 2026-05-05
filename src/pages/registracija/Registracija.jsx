@@ -130,7 +130,7 @@ export default function Registracija() {
                                 <Button 
                                     type="submit" 
                                     variant="success"
-                                    className="px-4"
+                                    className="btn btnSuccess w-auto"
                                 >
                                     Registriraj se
                                 </Button>
