@@ -9,7 +9,7 @@ import UceniciService from "../services/ucenici/UceniciService.js";
 import LekcijeService from "../services/lekcije/LekcijeService.js";
 import {CustomInput} from "../components/customInputs/CustomInput.jsx";
 import useBreakpoint from "../hooks/useBreakpoint.js";
-import {DATA_SOURCE, DATA_SOURCES, PrefixStorage} from "../constants.js";
+import {DATA_SOURCE, DATA_SOURCES, PrefixStorage, PrefixStorageNoOper} from "../constants.js";
 import kategorijeMemorija from "../services/kategorije/KategorijePodaci.js"
 import postignucaMemorija from "../services/postignuca/PostignucaPodaci.js"
 import uceniciMemorija from "../services/ucenici/UceniciPodaci.js"
@@ -187,6 +187,7 @@ export default function GeneriranjePodataka() {
                     iznos: faker.number.int({min: 45, max: 150})
                 })
             }
+            console.log(brojUplata, uplate)
             const ucenik = {
                 ime: imeRaw,
                 prezime: prezimePrikaz,
@@ -533,6 +534,32 @@ export default function GeneriranjePodataka() {
         // kasnije
     }
 
+    const handleDeleteAll = () => {
+        if (!window.confirm("Jeste li sigurni da želite obrisati SVE iz local storage-a?")) {
+            return;
+        }
+        setLoading(true);
+        setPoruka(null);
+        try {
+            Object.values(PrefixStorageNoOper).forEach(valueKey => localStorage.removeItem(valueKey));
+            setPoruka({
+                tip: "success",
+                tekst: `Uspješno obrisano`
+            });
+        } catch (error) {
+            setPoruka({
+                tip: "danger",
+                tekst: "Greška pri brisanju local storage-a: " + error.message
+            });
+        } finally {
+            setLoading(false);
+            dohvatiBrojKategorija();
+            dohvatiBrojPostignuca();
+            dohvatiBrojUcenika();
+            dohvatiBrojLekcija();
+        }
+    }
+
     return (
         <Row className="mt-2">
             <Col md={12}>
@@ -766,8 +793,28 @@ export default function GeneriranjePodataka() {
                     </CustomAlert>
                 </Card>
             </Col>
-            {(DATA_SOURCE == DATA_SOURCES.M || DATA_SOURCE == DATA_SOURCES.L) && (
-                <Col md={12}>
+            {DATA_SOURCE === DATA_SOURCES.L && (<Col md={6}>
+                    <Card
+                        title={"Admin ploča"}
+                        textAlign={"start"}
+                    >
+                        <Row>
+                            <Col xs={12} className={"my-2 my-md-0"}>
+                                <Button
+                                    variant={"danger"}
+                                    onDoubleClick={handleDeleteAll}
+                                    disabled={loading}
+                                    className={"w-100 btn btnDanger"}
+                                >
+                                    {loading ? "Brisanje..." : "Obriši sve"}
+                                </Button>
+                            </Col>
+                        </Row>
+                    </Card>
+                </Col>
+            )}
+            {(DATA_SOURCE === DATA_SOURCES.M || DATA_SOURCE === DATA_SOURCES.L) && (
+                <Col md={DATA_SOURCE === DATA_SOURCES.L ? 6 : 12}>
                     <Card
                         title={"Pretakanje podataka iz jednog izvora u drugi"}
                         textAlign={"start"}

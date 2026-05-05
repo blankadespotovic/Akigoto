@@ -138,7 +138,8 @@ td > button,
 .btnCancel,
 .btnEdit,
 .btnInfo,
-.btnSuccess {
+.btnSuccess,
+.btnDanger{
     background: linear-gradient(135deg, #F6C1CC, #CDB7F6);
     border: groove white;
     color: white;
@@ -160,6 +161,10 @@ td > button,
 
 .btnCancel {
     background: linear-gradient(135deg, #F6A1A1, #F26D6D);
+}
+
+.btnDanger {
+    background: linear-gradient(135deg, #E07C7C, #D95757);
 }
 
 .buttonContainer {
