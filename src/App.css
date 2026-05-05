@@ -169,7 +169,7 @@ td>button,
 }
 
 .btnSuccess {
-background: linear-gradient(135deg, #A8E6B5, #4CD97B);
+    background: linear-gradient(135deg, #A8E6B5, #4CD97B);
 }
 
 .btnCancel {
@@ -593,12 +593,12 @@ ul.custom-list li.ucenik::before {
 }
 
 .loading-spinner-overlay {
-  position: absolute;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0,0,0,0.2);
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

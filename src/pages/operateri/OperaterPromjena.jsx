@@ -117,7 +117,7 @@ export default function OperaterPromjena() {
                                     <Form.Group controlId="uloga" className="mb-3">
                                         <Form.Label className="fw-bold">Uloga</Form.Label>
                                         <Form.Select
-                                            onChange={(e) => setOperater({ ...operater, uloga: e.target.value})}
+                                            onChange={(e) => setOperater({ ...operater, uloga: e.target.value })}
                                             name="uloga"
                                             value={operater.uloga || ''}
                                             isInvalid={!!errors.uloga}

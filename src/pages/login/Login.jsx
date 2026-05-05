@@ -1,17 +1,17 @@
-import {useEffect, useMemo, useState} from "react"
+import { useEffect, useMemo, useState } from "react"
 
 import useAuth from "../../hooks/useAuth"
 
-import {Button, Col, Form, Row} from "react-bootstrap"
-import {ShemaLogin} from "../../schemes/ShemaOperater"
-import {CustomInput} from "../../components/customInputs/CustomInput.jsx";
-import {Card} from "../../components/Card.jsx";
-import {FaClipboard, FaClipboardCheck, FaEye, FaEyeSlash, FaLock, FaUser} from "react-icons/fa6";
+import { Button, Col, Form, Row } from "react-bootstrap"
+import { ShemaLogin } from "../../schemes/ShemaOperater"
+import { CustomInput } from "../../components/customInputs/CustomInput.jsx";
+import { Card } from "../../components/Card.jsx";
+import { FaClipboard, FaClipboardCheck, FaEye, FaEyeSlash, FaLock, FaUser } from "react-icons/fa6";
 
 export default function Login() {
     const [errors, setErrors] = useState({})
 
-    const {login} = useAuth();
+    const { login } = useAuth();
 
     function odradiSubmit(e) {
         e.preventDefault()
@@ -25,7 +25,7 @@ export default function Login() {
         })
 
         if (!rezultat.success) {
-            setErrors({email: "Kombinacija email i lozinka ne odgovaraju"})
+            setErrors({ email: "Kombinacija email i lozinka ne odgovaraju" })
             return
         }
 
@@ -34,7 +34,7 @@ export default function Login() {
 
     const ocistiGresku = (nazivPolja) => {
         if (errors[nazivPolja]) {
-            const noveGreske = {...errors}
+            const noveGreske = { ...errors }
             delete noveGreske[nazivPolja]
             setErrors(noveGreske)
         }
@@ -47,26 +47,26 @@ export default function Login() {
         const getPasswordIcon = () => {
             if (passwordShown) {
                 setPasswordIcon(<FaEyeSlash onClick={() => setPasswordShown(!passwordShown)}
-                                            className={"cursor-pointer"}/>)
+                    className={"cursor-pointer"} />)
             } else {
-                setPasswordIcon(<FaEye onClick={() => setPasswordShown(!passwordShown)} className={"cursor-pointer"}/>)
+                setPasswordIcon(<FaEye onClick={() => setPasswordShown(!passwordShown)} className={"cursor-pointer"} />)
             }
         }
         getPasswordIcon();
     }, [passwordShown])
 
-    const [copyIconEmail, setCopyIconEmail] = useState(<FaClipboard size={20}/>);
-    const [copyIconPassword, setCopyIconPassword] = useState(<FaClipboard size={20}/>);
+    const [copyIconEmail, setCopyIconEmail] = useState(<FaClipboard size={20} />);
+    const [copyIconPassword, setCopyIconPassword] = useState(<FaClipboard size={20} />);
 
     const handleCopyEmail = async (e) => {
         console.log(e);
         const text = e.target.innerText.trim();
-        const initialIcon = <FaClipboard size={20}/>;
+        const initialIcon = <FaClipboard size={20} />;
         setCopyIconPassword(initialIcon);
         await navigator.clipboard
             .writeText(text)
             .then(() => {
-                setCopyIconEmail(<FaClipboardCheck size={20} color={"green"}/>)
+                setCopyIconEmail(<FaClipboardCheck size={20} color={"green"} />)
             })
             .catch((err) => console.error("Copy failed: ", err));
         setTimeout(() => setCopyIconEmail(initialIcon), 3000);
@@ -74,12 +74,12 @@ export default function Login() {
 
     const handleCopyPassword = async (e) => {
         const text = e.target.innerText.trim();
-        const initialIcon = <FaClipboard size={20}/>;
+        const initialIcon = <FaClipboard size={20} />;
         setCopyIconEmail(initialIcon);
         await navigator.clipboard
             .writeText(text)
             .then(() => {
-                setCopyIconPassword(<FaClipboardCheck size={20} color={"green"}/>)
+                setCopyIconPassword(<FaClipboardCheck size={20} color={"green"} />)
             })
             .catch((err) => console.error("Copy failed: ", err));
         setTimeout(() => setCopyIconPassword(initialIcon), 3000);
@@ -124,7 +124,7 @@ export default function Login() {
                             isInvalid={!!errors.email}
                             errors={errors.email}
                             onFocus={() => ocistiGresku("email")}
-                            prefix={<FaUser size={12}/>}
+                            prefix={<FaUser size={12} />}
                         />
                     </Col>
                     <Col xs={12}>
@@ -137,7 +137,7 @@ export default function Login() {
                             isInvalid={!!errors.lozinka}
                             errors={errors.lozinka}
                             onFocus={() => ocistiGresku("lozinka")}
-                            prefix={<FaLock size={12}/>}
+                            prefix={<FaLock size={12} />}
                             suffix={passwordIcon}
                         />
                     </Col>

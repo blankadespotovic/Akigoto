@@ -127,8 +127,8 @@ export default function Registracija() {
                             <hr />
 
                             <div className="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-                                <Button 
-                                    type="submit" 
+                                <Button
+                                    type="submit"
                                     variant="success"
                                     className="btn btnSuccess w-auto"
                                 >

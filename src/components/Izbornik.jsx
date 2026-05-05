@@ -14,9 +14,9 @@ export default function Izbornik() {
     const navigate = useNavigate()
     const { isLoggedIn, logout, authUser } = useAuth()
 
-    useEffect(()=>{
+    useEffect(() => {
         console.log(authUser)
-    },[authUser])
+    }, [authUser])
 
     return (
         <Navbar expand="lg" className="bg-body-tertiary">
@@ -72,15 +72,15 @@ export default function Izbornik() {
                             >Logout {authUser.email}</Button>
                         ) : (
                             <>
-                            <div className="buttonContainer">
-                                <Button
-                                    className="btn btnAdd"
-                                    onClick={() => navigate(RouteNames.REGISTRACIJA)}
-                                >Registracija</Button>
-                                <Button
-                                    className="btn btnAdd"
-                                    onClick={() => navigate(RouteNames.LOGIN)}
-                                >Login</Button>
+                                <div className="buttonContainer">
+                                    <Button
+                                        className="btn btnAdd"
+                                        onClick={() => navigate(RouteNames.REGISTRACIJA)}
+                                    >Registracija</Button>
+                                    <Button
+                                        className="btn btnAdd"
+                                        onClick={() => navigate(RouteNames.LOGIN)}
+                                    >Login</Button>
                                 </div>
                             </>)}
                     </Nav>
