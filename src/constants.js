@@ -40,7 +40,7 @@ export const DATA_SOURCES = {
 export const DEFAULT_PAGE_SIZE = 10;
 export const PAGE_SIZES = [5, 10, 25, 50]
 
-export const DATA_SOURCE = DATA_SOURCES.L
+export const DATA_SOURCE = DATA_SOURCES.M
 
 export const PrefixStorage = {
     POSTIGNUCA: 'postignuca',

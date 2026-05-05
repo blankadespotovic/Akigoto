@@ -29,11 +29,29 @@ async function obrisi(sifra){
     lekcije.splice(index,1)
 }
 
+async function getPage(page = 1, pageSize = DEFAULT_PAGE_SIZE) {
+    const startIndex = (page - 1) * pageSize; 
+    const endIndex = startIndex + pageSize; 
+    const paginatedData = lekcije.slice(startIndex, endIndex);
+    const totalItems = lekcije.length;
+    const totalPages = Math.ceil(totalItems / pageSize);
+
+    return {
+        success: true,
+        data: paginatedData,
+        currentPage: page,
+        pageSize: pageSize,
+        totalPages: totalPages,
+        totalItems: totalItems
+    };
+}
+
 
 export default {
     get,
     dodaj,
     getBySifra,
     promjeni,
-    obrisi
+    obrisi,
+    getPage
 }
