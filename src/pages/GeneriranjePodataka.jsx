@@ -9,11 +9,12 @@ import UceniciService from "../services/ucenici/UceniciService.js";
 import LekcijeService from "../services/lekcije/LekcijeService.js";
 import {CustomInput} from "../components/customInputs/CustomInput.jsx";
 import useBreakpoint from "../hooks/useBreakpoint.js";
-import {DATA_SOURCE, DATA_SOURCES, PrefixStorage, PrefixStorageNoOper} from "../constants.js";
+import {DATA_SOURCE, DATA_SOURCES, PrefixStorage} from "../constants.js";
 import kategorijeMemorija from "../services/kategorije/KategorijePodaci.js"
 import postignucaMemorija from "../services/postignuca/PostignucaPodaci.js"
 import uceniciMemorija from "../services/ucenici/UceniciPodaci.js"
 import lekcijeMemorija from "../services/lekcije/LekcijePodaci.js"
+import operaterMemorija from "../services/operateri/OperaterPodaci.js"
 
 
 export default function GeneriranjePodataka() {
@@ -512,6 +513,7 @@ export default function GeneriranjePodataka() {
             localStorage.setItem(PrefixStorage.POSTIGNUCA, JSON.stringify(postignucaMemorija.postignuca));
             localStorage.setItem(PrefixStorage.UCENICI, JSON.stringify(uceniciMemorija.ucenici));
             localStorage.setItem(PrefixStorage.LEKCIJE, JSON.stringify(lekcijeMemorija.lekcije));
+            localStorage.setItem(PrefixStorage.OPERATERI, JSON.stringify(operaterMemorija.operateri))
             setPoruka({
                 tip: "success",
                 tekst: `Uspješno presipano`
@@ -541,7 +543,7 @@ export default function GeneriranjePodataka() {
         setLoading(true);
         setPoruka(null);
         try {
-            Object.values(PrefixStorageNoOper).forEach(valueKey => localStorage.removeItem(valueKey));
+            Object.values(PrefixStorage).forEach(valueKey => localStorage.removeItem(valueKey));
             setPoruka({
                 tip: "success",
                 tekst: `Uspješno obrisano`

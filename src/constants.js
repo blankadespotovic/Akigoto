@@ -42,14 +42,10 @@ export const PAGE_SIZES = [5, 10, 25, 50]
 
 export const DATA_SOURCE = DATA_SOURCES.L
 
-export const PrefixStorageNoOper = {
-    POSTIGNUCA: "postignuca",
+export const PrefixStorage = {
+     POSTIGNUCA: "postignuca",
     KATEGORIJE: "kategorije",
     UCENICI: "ucenici",
     LEKCIJE: "lekcije",
-}
-
-export const PrefixStorage = {
-    ...PrefixStorageNoOper,
     OPERATERI: "operateri"
 }
