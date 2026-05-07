@@ -1,10 +1,10 @@
 export const kategorije = [
     {
-        sifra: 1,
+        sifra: '1',
         naziv: "Početni napredak",
     },
     {
-        sifra: 2,
+        sifra: '2',
         naziv: "Učenje i znanje",
     }
 ]

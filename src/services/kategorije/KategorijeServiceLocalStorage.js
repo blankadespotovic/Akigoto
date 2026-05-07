@@ -2,7 +2,7 @@ import { PrefixStorage } from "../../constants.js";
 
 
 function nadiIndexKategorije(sifra) {
-    return kategorije.findIndex(kat => kat.sifra === Number(sifra))
+    return kategorije.findIndex(kat => kat.sifra === sifra)
 }
 
 function dohvatiSveIzStorage() {
@@ -21,7 +21,7 @@ async function get() {
 
 async function getBySifra(sifra) {
     const kategorije = dohvatiSveIzStorage();
-    const dohvacenaKategorija = kategorije.find(p => p.sifra === parseInt(sifra));
+    const dohvacenaKategorija = kategorije.find(p => p.sifra === sifra);
     return {success: true, data: dohvacenaKategorija}
 }
 
@@ -29,9 +29,9 @@ async function dodaj(kategorija) {
     let kategorije = dohvatiSveIzStorage();
 
     if (kategorije.length === 0) {
-        kategorija.sifra = 1
+        kategorija.sifra = '1'
     } else {
-        kategorija.sifra = kategorije.at(-1).sifra + 1
+        kategorija.sifra = String(parseInt(kategorije[kategorije.length - 1].sifra) + 1)
     }
     kategorije.push(kategorija)
     spremiUStorage(kategorije, PrefixStorage.KATEGORIJE);
@@ -53,7 +53,7 @@ async function promjeni(kategorija) {
 function obrisiPostignucaKategorije(sifraKategorije) {
     let postignuca = JSON.parse(localStorage.getItem(PrefixStorage.POSTIGNUCA));
     if (postignuca && postignuca.length > 0) {
-        postignuca.filter(pos => pos.kategorija !== parseInt(sifraKategorije))
+        postignuca.filter(pos => pos.kategorija !== sifraKategorije)
         spremiUStorage(postignuca, PrefixStorage.POSTIGNUCA)
         if (postignuca.length <= 0) {
             localStorage.removeItem(PrefixStorage.POSTIGNUCA)
@@ -63,7 +63,7 @@ function obrisiPostignucaKategorije(sifraKategorije) {
 
 async function obrisi(sifra) {
     let kategorije = dohvatiSveIzStorage();
-    kategorije = kategorije.filter(s => s.sifra !== parseInt(sifra));
+    kategorije = kategorije.filter(s => s.sifra !== sifra);
     spremiUStorage(kategorije, PrefixStorage.KATEGORIJE);
     obrisiPostignucaKategorije(sifra)
     if (kategorije.length <= 0) {

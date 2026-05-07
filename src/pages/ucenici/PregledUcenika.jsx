@@ -66,12 +66,12 @@ export default function PregledUcenika() {
             const sve = [];
             for (const ucenik of ucenici) {
                 const postignucaUcenikaIds = sveLekcije
-                    .filter(l => l.ucenici.includes(ucenik.sifra))
+                    .filter(l => l.ucenici.includes(Number(ucenik.sifra)))
                     .flatMap(l => l.postignuca);
                 const sortiraniIds = [... new Set(postignucaUcenikaIds)].sort()
-                const postignucaUcenika = svaPostignuca.filter(p => sortiraniIds.includes(p.sifra));
+                const postignucaUcenika = svaPostignuca.filter(p => sortiraniIds.includes(Number(p.sifra)));
                 sve.push({
-                    sifra: ucenik.sifra,
+                    sifra: Number(ucenik.sifra),
                     postignuca: postignucaUcenika
                 });
             }

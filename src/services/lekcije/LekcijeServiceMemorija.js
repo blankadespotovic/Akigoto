@@ -6,26 +6,26 @@ async function get() {
 }
 
 async function getBySifra(sifra) {
-    return { success: true, data: lekcije.find(p => p.sifra === parseInt(sifra)) }
+    return { success: true, data: lekcije.find(p => p.sifra === sifra) }
 }
 
 async function dodaj(lekcija) {
  if(lekcije.length === 0){
-    lekcija.sifra = 1
+    lekcija.sifra = '1'
  }else {
-    lekcija.sifra = lekcije.at(-1).sifra + 1
+    lekcija.sifra = String(parseInt(lekcije[lekcije.length - 1].sifra) + 1)
  }
 
  lekcije.push(lekcija)
 }
 
 async function promjeni(lekcija) {
-    const index = lekcije.findIndex(l => l.sifra === parseInt(lekcija.sifra))
+    const index = lekcije.findIndex(l => l.sifra === lekcija.sifra)
     lekcije[index] = lekcija;
 }
 
 async function obrisi(sifra){
-    const index = lekcije.findIndex(l => l.sifra === parseInt(sifra))
+    const index = lekcije.findIndex(l => l.sifra === sifra)
     lekcije.splice(index,1)
 }
 

@@ -15,7 +15,7 @@ export function PregledPostignucaTablica(
         >
             <Accordion className={"custom-accordion"} defaultActiveKey={0}>
                 {kategorije?.map((kategorija, idx) => {
-                    const imaPostignuca = postignuca.some(pos => pos.kategorija === kategorija.sifra);
+                    const imaPostignuca = postignuca.some(pos => pos.kategorija === Number(kategorija.sifra));
                     return imaPostignuca && (
                         <Accordion.Item
                             className={"custom-accordion-item"}
@@ -37,7 +37,7 @@ export function PregledPostignucaTablica(
                                     </thead>
                                     <tbody>
                                         {postignuca.map((postignuce) => (
-                                            postignuce.kategorija === kategorija.sifra &&
+                                            postignuce.kategorija === Number(kategorija.sifra) &&
                                             <tr key={postignuce.sifra}>
                                                 <td>{postignuce.naziv}</td>
                                                 <td style={{ minWidth: "250px" }}>{postignuce.opis}</td>

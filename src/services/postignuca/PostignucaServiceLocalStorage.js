@@ -2,7 +2,7 @@ import { PrefixStorage } from "../../constants";
 
 function nadiIndexPostignuca(sifra) {
     const postignuca =  dohvatiSveIzStorage()
-    return postignuca.findIndex(pos => pos.sifra === parseInt(sifra))
+    return postignuca.findIndex(pos => pos.sifra === sifra)
 }
 
 function dohvatiSveIzStorage() {
@@ -21,16 +21,16 @@ async function get() {
 
 async function getBySifra(sifra) {
     const postignuca = dohvatiSveIzStorage();
-    const postignuce = postignuca.find(p => p.sifra === parseInt(sifra))
+    const postignuce = postignuca.find(p => p.sifra === sifra)
     return { success: true, data: postignuce }
 }
 
 async function dodaj(postignuce) {
     const postignuca = dohvatiSveIzStorage()
     if (postignuca.length === 0) {
-        postignuce.sifra = 1
+        postignuce.sifra = '1'
     } else {
-        postignuce.sifra = postignuca.at(-1).sifra + 1
+        postignuce.sifra = String(parseInt(postignuca[postignuca.length - 1].sifra) + 1)
     }
 
     postignuca.push(postignuce)
@@ -52,7 +52,7 @@ async function promjeni(postignuce) {
 
 async function obrisi(sifra) {
     let postignuca = dohvatiSveIzStorage();
-    postignuca = postignuca.filter(s => s.sifra !== parseInt(sifra));
+    postignuca = postignuca.filter(s => s.sifra !== sifra);
     spremiUStorage(postignuca)
     if (postignuca.length <= 0) {
         localStorage.removeItem(PrefixStorage.POSTIGNUCA)

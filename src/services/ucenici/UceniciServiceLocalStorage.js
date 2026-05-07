@@ -17,7 +17,7 @@ async function get() {
 
 async function getBySifra(sifra) {
     const ucenici = dohvatiSveIzStorage();
-    const ucenik = ucenici.find(p => p.sifra === parseInt(sifra));
+    const ucenik = ucenici.find(p => p.sifra === sifra);
     return { success: true, data: ucenik }
 }
 
@@ -32,9 +32,9 @@ async function dodaj(ucenik) {
     let ucenici = dohvatiSveIzStorage();
 
     if (ucenici.length === 0) {
-        ucenik.sifra = 1
+        ucenik.sifra = '1'
     } else {
-        ucenik.sifra = ucenici.at(-1).sifra + 1
+        ucenik.sifra = String(parseInt(ucenici[ucenici.length - 1].sifra) + 1)
     }
 
     ucenik.uplate = ucenik?.uplate?.length > 0? ucenik.uplate: [];
@@ -48,7 +48,7 @@ async function dodaj(ucenik) {
 async function promjeni(ucenik, datum, iznos) {
 
     const ucenici = dohvatiSveIzStorage()
-    const index = ucenici.findIndex(u => u.sifra === parseInt(ucenik.sifra))
+    const index = ucenici.findIndex(u => u.sifra === ucenik.sifra)
 
 
     if (index !== -1) {
@@ -68,7 +68,7 @@ async function promjeni(ucenik, datum, iznos) {
 
 async function obrisi(sifra) {
     let ucenici = dohvatiSveIzStorage();
-    ucenici = ucenici.filter(u => u.sifra !== parseInt(sifra))
+    ucenici = ucenici.filter(u => u.sifra !== sifra)
     spremiUStorage(ucenici);
     return { message: "Obrisano" };
 }
@@ -79,7 +79,7 @@ async function obrisiUplatu(ucenikSifra, sifra) {
 
     if (ucenik && Array.isArray(ucenik.uplate)) {
         ucenik.uplate = ucenik.uplate.filter(
-            t => t.sifra !== parseInt(sifra)
+            t => t.sifra !== sifra
         );
     }
     spremiUStorage(ucenici);

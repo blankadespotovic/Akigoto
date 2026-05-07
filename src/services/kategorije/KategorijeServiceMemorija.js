@@ -2,7 +2,7 @@ import {kategorije} from "./KategorijePodaci.js";
 import {postignuca} from "../postignuca/PostignucaPodaci.js";
 
 function nadiIndexKategorije(sifra) {
-    return kategorije.findIndex(kat => kat.sifra === Number(sifra))
+    return kategorije.findIndex(kat => kat.sifra === sifra)
 }
 
 async function get() {
@@ -10,14 +10,14 @@ async function get() {
 }
 
 async function getBySifra(sifra) {
-    return {success: true, data: kategorije.find(p => p.sifra === parseInt(sifra))}
+    return {success: true, data: kategorije.find(p => p.sifra === sifra)}
 }
 
 async function dodaj(kategorija) {
     if (kategorije.length === 0) {
-        kategorija.sifra = 1
+        kategorija.sifra = '1'
     } else {
-        kategorija.sifra = kategorije.at(-1).sifra + 1
+        kategorija.sifra = String(parseInt(kategorije[kategorije.length - 1].sifra) + 1)
     }
     kategorije.push(kategorija)
 }
@@ -30,7 +30,7 @@ async function promjeni(kategorija) {
 function obrisiPostignucaKategorije(sifraKategorije) {
     const postignucaKategorije = postignuca
         .filter(pos => pos.kategorija === parseInt(sifraKategorije))
-        .map(() => postignuca.findIndex(pos => pos.kategorija === parseInt(sifraKategorije)))
+        .map(() => postignuca.findIndex(pos => pos.kategorija === sifraKategorije))
     for(const sifra of postignucaKategorije) {
         postignuca.splice(sifra, 1)
     }

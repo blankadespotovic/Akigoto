@@ -53,7 +53,7 @@ export function PregledUcenikaTablica(
                     </thead>
                     <tbody>
                         {ucenici.map((ucenik) => {
-                            const svaPostignucaUcenika = svaPostignucaSvihUcenika?.find(item => item.sifra === ucenik.sifra)?.postignuca;
+                            const svaPostignucaUcenika = svaPostignucaSvihUcenika?.find(item => Number(item.sifra) === Number(ucenik.sifra))?.postignuca;
                             const brojPostignuca = svaPostignucaUcenika?.length
                             let ukupnoNaplacenoPoUceniku = 0
                             ucenik.uplate.map(u => ukupnoNaplacenoPoUceniku += u.iznos)

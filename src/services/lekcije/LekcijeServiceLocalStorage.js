@@ -17,7 +17,7 @@ async function get() {
 
 async function getBySifra(sifra) {
     const lekcije = dohvatiSveIzStorage();
-    const lekcija = lekcije.find(p => p.sifra === parseInt(sifra));
+    const lekcija = lekcije.find(p => p.sifra === sifra);
     return { success: true, data: lekcija }
 }
 
@@ -25,9 +25,9 @@ async function dodaj(lekcija) {
     let lekcije = dohvatiSveIzStorage();
 
     if (lekcije.length === 0) {
-        lekcija.sifra = 1
+        lekcija.sifra = '1'
     } else {
-        lekcija.sifra = lekcije.at(-1).sifra + 1
+        lekcija.sifra = String(parseInt(lekcije[lekcije.length - 1].sifra) + 1)
     }
 
     lekcije.push(lekcija)
@@ -39,7 +39,7 @@ async function dodaj(lekcija) {
 async function promjeni(lekcija) {
 
     const lekcije = dohvatiSveIzStorage()
-    const index = lekcije.findIndex(u => u.sifra === parseInt(lekcija.sifra))
+    const index = lekcije.findIndex(u => u.sifra === lekcija.sifra)
 
 
     if (index !== -1) {
@@ -54,7 +54,7 @@ async function promjeni(lekcija) {
 
 async function obrisi(sifra) {
     let lekcije = dohvatiSveIzStorage();
-    lekcije = lekcije.filter(u => u.sifra !== parseInt(sifra))
+    lekcije = lekcije.filter(u => u.sifra !== sifra)
     spremiUStorage(lekcije);
     return { message: "Obrisano" };
 }

@@ -188,7 +188,6 @@ export default function GeneriranjePodataka() {
                     iznos: faker.number.int({min: 45, max: 150})
                 })
             }
-            console.log(brojUplata, uplate)
             const ucenik = {
                 ime: imeRaw,
                 prezime: prezimePrikaz,

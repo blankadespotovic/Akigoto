@@ -7,12 +7,12 @@ async function get() {
 }
 
 async function getBySifra(sifra) {
-    return { success: true, data: ucenici.find(p => p.sifra === parseInt(sifra)) }
+    return { success: true, data: ucenici.find(p => p.sifra === sifra) }
 }
 
 async function dodaj(ucenik) {
  if(ucenici.length === 0){
-    ucenik.sifra = 1
+    ucenik.sifra = '1'
  }else {
     ucenik.sifra = ucenici.at(-1).sifra + 1
  }
@@ -23,12 +23,12 @@ async function dodaj(ucenik) {
 }
 
 async function promjeni(ucenik) {
-    const index = ucenici.findIndex(u => u.sifra === parseInt(ucenik.sifra))
+    const index = ucenici.findIndex(u => u.sifra === ucenik.sifra)
     ucenici[index] = ucenik;
 }
 
 async function obrisi(sifra){
-    const index = ucenici.findIndex(u => u.sifra === parseInt(sifra))
+    const index = ucenici.findIndex(u => u.sifra === sifra)
     ucenici.splice(index,1)
 }
 
@@ -36,7 +36,7 @@ async function obrisiUplatu(ucenikSifra, sifra) {
     const ucenik = ucenici.find(u => u.sifra === parseInt(ucenikSifra))
     if (ucenik && Array.isArray(ucenik.uplate)) {
         ucenik.uplate = ucenik.uplate.filter(
-            t => t.sifra !== parseInt(sifra)
+            t => t.sifra !== sifra
         );
     }
     ucenici[parseInt(ucenikSifra)] = ucenik;

@@ -80,7 +80,7 @@ export function PregledKategorijaTablica(
                 </thead>
                 <tbody>
                     {sortedKategorije() && sortedKategorije().map((kategorija) => {
-                    const postignucaKategorije = postignuca.filter(p => p.kategorija === kategorija.sifra)
+                    const postignucaKategorije = postignuca.filter(p => p.kategorija === Number(kategorija.sifra))
                     return (
                             <tr key={kategorija.sifra}>
                                 <td>{kategorija.naziv}</td>
@@ -101,7 +101,7 @@ export function PregledKategorijaTablica(
                                         </Tooltip>
                                     }
                                 >
-                                    <span className={"cursor-pointer"}>{kategorija.brojPostignuca}</span>
+                                    <span className={"cursor-pointer"}>{postignucaKategorije.length}</span>
                                 </OverlayTrigger>
                             </td>
                                 <td>
