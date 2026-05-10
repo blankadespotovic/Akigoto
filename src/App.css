@@ -260,6 +260,16 @@ table {
     background: var(--blue-soft);
 }
 
+.badge-admin{
+    background: #E07C7C;
+    font-size: 14px;
+}
+
+.badge-user{
+    background: #6FAFF0;
+    font-size: 14px;
+}
+
 .table .table-btn {
     padding: 0.3rem 0.7rem;
     font-size: 0.8rem;

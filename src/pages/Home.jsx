@@ -136,11 +136,12 @@ export default function Home() {
             <div className="statKartica">
                 <span className="statLabel">Operateri</span>
                 <span className="statValue">{animatedOperateri}</span>
+                 <div style={{ fontSize: '0.9rem', marginTop: '10px' }}>
+                <span className="badge badge-admin me-5">Admin: {brojAdmina}</span>
+                <span className="badge badge-user">Korisnik: {brojKorisnika}</span>
             </div>
-            <div style={{ fontSize: '0.9rem', marginTop: '10px' }}>
-                <span className="badge bg-danger me-2">Admin: {brojAdmina}</span>
-                <span className="badge bg-primary">Korisnik: {brojKorisnika}</span>
             </div>
+           
         </div>
     )
 

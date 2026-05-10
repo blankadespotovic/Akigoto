@@ -30,7 +30,6 @@ export default function NadzornaPloca() {
                     name: kat.naziv,
                 };
             });
-            console.log(parsedData);
             setPodaci(parsedData);
             hideLoading();
         }
