@@ -6,7 +6,7 @@ import KategorijeService from "../services/kategorije/KategorijeService.js";
 import PostignucaService from "../services/postignuca/PostignucaService.js";
 import useLoading from "../hooks/useLoading.js";
 
-import {Container} from "react-bootstrap";
+import {CustomCard} from "../components/CustomCard.jsx";
 
 const PieChart = HCR.default;
 
@@ -14,9 +14,7 @@ export default function NadzornaPloca() {
     const [podaci, setPodaci] = useState([]);
     const {showLoading, hideLoading} = useLoading();
 
-
     useEffect(() => {
-
         const getPodaci = async () => {
             showLoading();
             const {data: kategorijeData} = await KategorijeService.get();
@@ -33,46 +31,40 @@ export default function NadzornaPloca() {
             setPodaci(parsedData);
             hideLoading();
         }
-        
+
         void getPodaci();
     }, [hideLoading, showLoading]);
 
     const fixedOptions = {
         chart: {
-            plotBackgroundColor: null,
-            plotBorderWidth: null,
-            plotShadow: false,
             type: "pie",
         },
         title: {
-            text: "Postignuća po kategorijama",
-            align: "left",
+            text: "",
         },
-        tooltip: {
-            pointFormat: "<b>{point.y}&nbsp;{series.name}</b> ({point.percentage:.1f}%)",
-        },
-        accessibility: {
-            enabled: false,
-            point: {
-                valueSuffix: "%",
-            },
+        legend: {
+            enabled: true,
+            layout: "vertical",
+            align: "right",
+            verticalAlign: "middle",
+            symbolRadius: 0,
+            symbolHeight: 12,
+            symbolWidth: 12,
+            symbolPadding: 8,
         },
         plotOptions: {
             pie: {
-                allowPointSelect: true,
-                cursor: "pointer",
+                showInLegend: true,
                 dataLabels: {
                     enabled: true,
-                    format: "<b>{point.name}</b>",
                 },
             },
         },
     };
 
-
     return (
-        <Container className="mt-4">
-            {podaci.length > 0 && (
+        podaci.length > 0 && (
+            <CustomCard title={"Postignuća po kategorijama"}>
                 <PieChart
                     highcharts={Highcharts}
                     options={{
@@ -86,7 +78,7 @@ export default function NadzornaPloca() {
                         ],
                     }}
                 />
-            )}
-        </Container>
+            </CustomCard>
+        )
     );
 }

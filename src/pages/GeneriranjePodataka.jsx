@@ -4,7 +4,7 @@ import {Faker, hr} from "@faker-js/faker";
 import KategorijeService from "../services/kategorije/KategorijeService";
 import PostignucaService from "../services/postignuca/PostignucaService";
 import {CustomAlert} from "../components/CustomAlert";
-import {Card} from "../components/Card";
+import {CustomCard} from "../components/CustomCard.jsx";
 import UceniciService from "../services/ucenici/UceniciService.js";
 import LekcijeService from "../services/lekcije/LekcijeService.js";
 import {CustomInput} from "../components/customInputs/CustomInput.jsx";
@@ -577,7 +577,7 @@ export default function GeneriranjePodataka() {
                 )}
             </Col>
             <Col md={6}>
-                <Card
+                <CustomCard
                     title={`Kategorije [trenutno: ${ukupnoKategorija}]`}
                     textAlign={"start"}
                 >
@@ -620,10 +620,10 @@ export default function GeneriranjePodataka() {
                     <CustomAlert variant="danger" className="mt-2">
                         <strong>Oprez!</strong> Brisanje podataka je trajna akcija i ne može se poništiti.
                     </CustomAlert>
-                </Card>
+                </CustomCard>
             </Col>
             <Col md={6}>
-                <Card
+                <CustomCard
                     title={`Postignuća [trenutno: ${ukupnoPostignuca}]`}
                     textAlign={"start"}
                 >
@@ -666,10 +666,10 @@ export default function GeneriranjePodataka() {
                     <CustomAlert variant="danger" className="mt-2">
                         <strong>Oprez!</strong> Brisanje podataka je trajna akcija i ne može se poništiti.
                     </CustomAlert>
-                </Card>
+                </CustomCard>
             </Col>
             <Col md={6}>
-                <Card
+                <CustomCard
                     title={`Učenici [trenutno: ${ukupnoUcenika}]`}
                     textAlign={"start"}
                 >
@@ -746,10 +746,10 @@ export default function GeneriranjePodataka() {
                     <CustomAlert variant="danger" className="mt-2">
                         <strong>Oprez!</strong> Brisanje podataka je trajna akcija i ne može se poništiti.
                     </CustomAlert>
-                </Card>
+                </CustomCard>
             </Col>
             <Col md={6}>
-                <Card
+                <CustomCard
                     title={`Lekcije [trenutno: ${ukupnoLekcija}]`}
                     textAlign={"start"}
                 >
@@ -792,10 +792,10 @@ export default function GeneriranjePodataka() {
                     <CustomAlert variant="danger" className="mt-2">
                         <strong>Oprez!</strong> Brisanje podataka je trajna akcija i ne može se poništiti.
                     </CustomAlert>
-                </Card>
+                </CustomCard>
             </Col>
             {DATA_SOURCE === DATA_SOURCES.L && (<Col md={6}>
-                    <Card
+                    <CustomCard
                         title={"Admin ploča"}
                         textAlign={"start"}
                     >
@@ -811,12 +811,12 @@ export default function GeneriranjePodataka() {
                                 </Button>
                             </Col>
                         </Row>
-                    </Card>
+                    </CustomCard>
                 </Col>
             )}
             {(DATA_SOURCE === DATA_SOURCES.M || DATA_SOURCE === DATA_SOURCES.L) && (
                 <Col md={DATA_SOURCE === DATA_SOURCES.L ? 6 : 12}>
-                    <Card
+                    <CustomCard
                         title={"Pretakanje podataka iz jednog izvora u drugi"}
                         textAlign={"start"}
                     >
@@ -842,7 +842,7 @@ export default function GeneriranjePodataka() {
                                 </Button>
                             </Col>
                         </Row>
-                    </Card>
+                    </CustomCard>
                 </Col>
             )}
         </Row>

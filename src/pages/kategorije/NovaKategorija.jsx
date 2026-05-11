@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import KategorijeService from "../../services/kategorije/KategorijeService.js";
 import { RouteNames } from "../../constants.js";
-import { Card } from "../../components/Card.jsx";
+import { CustomCard } from "../../components/CustomCard.jsx";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { CustomInput } from "../../components/customInputs/CustomInput.jsx";
 import useBreakpoint from "../../hooks/useBreakpoint.js";
@@ -60,7 +60,7 @@ export default function NovaKategorija() {
     };
 
     return (
-        <Card title={"Unos nove kategorije"} textAlign={"left"}>
+        <CustomCard title={"Unos nove kategorije"} textAlign={"left"}>
             <Form onSubmit={odradiSubmit}>
                 <CustomInput
                     id={"naziv"}
@@ -86,6 +86,6 @@ export default function NovaKategorija() {
                     </Col>
                 </Row>
             </Form>
-        </Card>
+        </CustomCard>
     )
 }

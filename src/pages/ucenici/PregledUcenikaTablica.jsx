@@ -1,5 +1,5 @@
 import { Container, Form, InputGroup, OverlayTrigger, Table, Tooltip } from "react-bootstrap";
-import { Card } from "../../components/Card.jsx";
+import { CustomCard } from "../../components/CustomCard.jsx";
 import { CustomButtons } from "../../components/CustomButtons.jsx";
 import { FaEdit, FaTimes, FaTrash } from "react-icons/fa";
 import { useEffect, useState } from "react";
@@ -35,7 +35,7 @@ export function PregledUcenikaTablica(
     return (
 
         <Container className={"pt-0 py-3 px-0"}>
-            <Card
+            <CustomCard
                 title={"Učenici"}
                 padding={0}
                 textAlign={"left"}
@@ -125,7 +125,7 @@ export function PregledUcenikaTablica(
                         </tr>
                     </tfoot>
                 </Table>
-            </Card>
+            </CustomCard>
         </Container>
     )
 }

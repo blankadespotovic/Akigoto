@@ -1,4 +1,4 @@
-import { Card } from "../../components/Card.jsx";
+import { CustomCard } from "../../components/CustomCard.jsx";
 import { Accordion, Button, ButtonGroup, Table } from "react-bootstrap";
 import { FaEdit, FaRegCheckSquare, FaRegWindowClose, FaTrash } from "react-icons/fa";
 import { CustomButtons } from "../../components/CustomButtons.jsx";
@@ -8,7 +8,7 @@ export function PregledPostignucaTablica(
     { kategorije, postignuca, navigate, obrisi }
 ) {
     return (
-        <Card
+        <CustomCard
             title={"Postignuća"}
             padding={0}
             textAlign={"left"}
@@ -66,6 +66,6 @@ export function PregledPostignucaTablica(
                     )
                 })}
             </Accordion>
-        </Card>
+        </CustomCard>
     )
 }

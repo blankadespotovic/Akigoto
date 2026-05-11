@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { RouteNames } from "../../constants";
-import { Card } from "../../components/Card";
+import { CustomCard } from "../../components/CustomCard.jsx";
 import UceniciService from "../../services/ucenici/UceniciService";
 import { CustomInput } from "../../components/customInputs/CustomInput.jsx";
 import useBreakpoint from "../../hooks/useBreakpoint.js";
@@ -65,7 +65,7 @@ export default function NoviUcenici() {
 
     return (
 
-        <Card title={"Unos novog učenika"} textAlign={"left"}>
+        <CustomCard title={"Unos novog učenika"} textAlign={"left"}>
             <Form onSubmit={odradiSubmit}>
                 <CustomInput
                     id={"ime"}
@@ -112,7 +112,7 @@ export default function NoviUcenici() {
                     </Col>
                 </Row>
             </Form>
-        </Card>
+        </CustomCard>
 
 
     )

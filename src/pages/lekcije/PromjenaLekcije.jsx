@@ -2,7 +2,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { RouteNames } from "../../constants";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { useEffect, useState } from "react";
-import { Card } from "../../components/Card";
+import { CustomCard } from "../../components/CustomCard.jsx";
 import LekcijeService from "../../services/lekcije/LekcijeService";
 import UceniciService from "../../services/ucenici/UceniciService";
 import { CustomInput } from "../../components/customInputs/CustomInput.jsx";
@@ -205,7 +205,7 @@ export default function PromjenaLekcije() {
 
     return (
 
-        <Card title={"Promjena lekcije"} textAlign={"left"}>
+        <CustomCard title={"Promjena lekcije"} textAlign={"left"}>
             <Form onSubmit={odradiSubmit}>
 
                 <Row>
@@ -354,7 +354,7 @@ export default function PromjenaLekcije() {
                     </Col>
                 </Row>
             </Form>
-        </Card>
+        </CustomCard>
 
 
     )

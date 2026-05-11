@@ -1,5 +1,5 @@
 import {Button, ButtonGroup, Table} from "react-bootstrap";
-import {Card} from "../../components/Card.jsx";
+import {CustomCard} from "../../components/CustomCard.jsx";
 import { formatirajVrijeme } from "../../util/dateTimeFormatter.js";
 import { FaEdit, FaFilePdf, FaInfoCircle, FaSearch, FaTrash } from "react-icons/fa";
 import { CustomButtons } from "../../components/CustomButtons.jsx";
@@ -8,7 +8,7 @@ export function PregledLekcijaTablica(
     {lekcije, setPodaci, setModalShow, obrisi, generirajPDFZaLekciju}
 ) {
     return (
-        <Card
+        <CustomCard
             title={"Lekcije"}
             padding={0}
             textAlign={"left"}
@@ -59,6 +59,6 @@ export function PregledLekcijaTablica(
                 ))}
                 </tbody>
             </Table>
-        </Card>
+        </CustomCard>
     );
 }

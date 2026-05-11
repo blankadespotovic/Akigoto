@@ -266,7 +266,7 @@ table {
 }
 
 .badge-user{
-    background: #6FAFF0;
+    background-color: #6FAFF0;
     font-size: 14px;
 }
 
@@ -604,8 +604,7 @@ ul.custom-list li.ucenik::before {
     justify-content: center;
 }
 
-/*TODO: novi style za dropdown*/
-/* Targets the clickable dropdown (icon + username) */
+
 .navbar .dropdown-toggle {
     text-decoration: none;
     color: white !important;

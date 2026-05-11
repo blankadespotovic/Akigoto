@@ -2,7 +2,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { RouteNames } from "../../constants";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { useEffect, useState } from "react";
-import { Card } from "../../components/Card";
+import { CustomCard } from "../../components/CustomCard.jsx";
 import KategorijeService from "../../services/kategorije/KategorijeService.js";
 import { CustomInput } from "../../components/customInputs/CustomInput.jsx";
 import useBreakpoint from "../../hooks/useBreakpoint.js";
@@ -80,7 +80,7 @@ export default function PromjenaKategorije() {
 
     return (
 
-        <Card title={"Promjena kategorije"} textAlign={"left"}>
+        <CustomCard title={"Promjena kategorije"} textAlign={"left"}>
             <Form onSubmit={odradiSubmit}>
                 <CustomInput
                     id={"naziv"}
@@ -106,7 +106,7 @@ export default function PromjenaKategorije() {
                     </Col>
                 </Row>
             </Form>
-        </Card>
+        </CustomCard>
 
 
     )

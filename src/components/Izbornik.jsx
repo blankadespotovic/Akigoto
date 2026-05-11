@@ -1,13 +1,14 @@
 import useAuth from "../hooks/useAuth"
 
-import {Button, ButtonGroup, Container, Nav, Navbar, NavDropdown} from "react-bootstrap"
-import {useNavigate} from "react-router-dom"
+import {ButtonGroup, Col, Container, Nav, Navbar, NavDropdown, Row} from "react-bootstrap"
+import {useLocation, useNavigate} from "react-router-dom"
 import {IME_APLIKACIJE, RouteNames} from "../constants"
 import {FaUserCircle} from "react-icons/fa";
 
 export default function Izbornik() {
     const navigate = useNavigate()
     const {isLoggedIn, logout, authUser} = useAuth()
+    const location = useLocation();
 
     return (
         <Navbar expand="lg" className="bg-body-tertiary">
@@ -16,26 +17,50 @@ export default function Izbornik() {
                 <Navbar.Toggle aria-controls="basic-navbar-nav"/>
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
-                        <Nav.Link className="home-nav"
-                                  onClick={() => navigate(RouteNames.HOME)}
-                        >Početna</Nav.Link>
+                        <Nav.Link
+                            className="home-nav"
+                            onClick={() => navigate(RouteNames.HOME)}
+                            active={location.pathname === RouteNames.HOME}
+                        >
+                            Početna
+                        </Nav.Link>
                         {isLoggedIn && (
                             <>
-                                <Nav.Link className="home-nav"
-                                          onClick={() => navigate(RouteNames.NADZORNA_PLOCA)}
-                                >Nadzorna ploča</Nav.Link>
-                                <Nav.Link className="home-nav"
-                                          onClick={() => navigate(RouteNames.POSTIGNUCA)}
-                                >Postignuća</Nav.Link>
-                                <Nav.Link className="home-nav"
-                                          onClick={() => navigate(RouteNames.KATEGORIJE)}
-                                >Kategorije</Nav.Link>
-                                <Nav.Link className="home-nav"
-                                          onClick={() => navigate(RouteNames.UCENICI)}
-                                >Učenici</Nav.Link>
-                                <Nav.Link className="home-nav"
-                                          onClick={() => navigate(RouteNames.LEKCIJE)}
-                                >Lekcije</Nav.Link>
+                                <Nav.Link
+                                    className="home-nav"
+                                    onClick={() => navigate(RouteNames.NADZORNA_PLOCA)}
+                                    active={location.pathname === RouteNames.NADZORNA_PLOCA}
+                                >
+                                    Nadzorna ploča
+                                </Nav.Link>
+                                <Nav.Link
+                                    className="home-nav"
+                                    onClick={() => navigate(RouteNames.POSTIGNUCA)}
+                                    active={location.pathname === RouteNames.POSTIGNUCA}
+                                >
+                                    Postignuća
+                                </Nav.Link>
+                                <Nav.Link
+                                    className="home-nav"
+                                    onClick={() => navigate(RouteNames.KATEGORIJE)}
+                                    active={location.pathname === RouteNames.KATEGORIJE}
+                                >
+                                    Kategorije
+                                </Nav.Link>
+                                <Nav.Link
+                                    className="home-nav"
+                                    onClick={() => navigate(RouteNames.UCENICI)}
+                                    active={location.pathname === RouteNames.UCENICI}
+                                >
+                                    Učenici
+                                </Nav.Link>
+                                <Nav.Link
+                                    className="home-nav"
+                                    onClick={() => navigate(RouteNames.LEKCIJE)}
+                                    active={location.pathname === RouteNames.LEKCIJE}
+                                >
+                                    Lekcije
+                                </Nav.Link>
                             </>
                         )}
                     </Nav>
@@ -70,15 +95,21 @@ export default function Izbornik() {
                                 </NavDropdown.Item>
                             </NavDropdown>
                         ) : (
-                            <ButtonGroup className={"gap-3"}>
-                                <Button
-                                    className="btn btnAdd"
-                                    onClick={() => navigate(RouteNames.REGISTRACIJA)}
-                                >Registracija</Button>
-                                <Button
-                                    className="btn btnAdd"
-                                    onClick={() => navigate(RouteNames.LOGIN)}
-                                >Login</Button>
+                            <ButtonGroup className={"d-flex flex-column flex-md-row gap-md-2"}>
+                                    <Nav.Link
+                                        className="home-nav"
+                                        onClick={() => navigate(RouteNames.REGISTRACIJA)}
+                                        active={location.pathname === RouteNames.REGISTRACIJA}
+                                    >
+                                        Registracija
+                                    </Nav.Link>
+                                    <Nav.Link
+                                        className="home-nav"
+                                        onClick={() => navigate(RouteNames.LOGIN)}
+                                        active={location.pathname === RouteNames.LOGIN}
+                                    >
+                                        Login
+                                    </Nav.Link>
                             </ButtonGroup>
                         )}
                     </Nav>

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { RouteNames } from "../../constants";
-import { Card } from "../../components/Card";
+import { CustomCard } from "../../components/CustomCard.jsx";
 import PostignucaService from "../../services/postignuca/PostignucaService";
 import KategorijeService from "../../services/kategorije/KategorijeService";
 import { CustomSelect } from "../../components/customInputs/CustomSelect.jsx";
@@ -135,7 +135,7 @@ export default function NovaPostignuca() {
 
     return (
 
-        <Card title={"Unos novog postignuća"} textAlign={"left"}>
+        <CustomCard title={"Unos novog postignuća"} textAlign={"left"}>
             <Form onSubmit={odradiSubmit}>
                 <Row>
                     <Col xs={9}>
@@ -206,7 +206,7 @@ export default function NovaPostignuca() {
                     </Col>
                 </Row>
             </Form>
-        </Card>
+        </CustomCard>
 
 
     )

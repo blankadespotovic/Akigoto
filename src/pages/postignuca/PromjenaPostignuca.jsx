@@ -2,7 +2,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { RouteNames } from "../../constants";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { useEffect, useState } from "react";
-import { Card } from "../../components/Card";
+import { CustomCard } from "../../components/CustomCard.jsx";
 import PostignucaService from "../../services/postignuca/PostignucaService";
 import KategorijeService from "../../services/kategorije/KategorijeService";
 import { CustomSelect } from "../../components/customInputs/CustomSelect.jsx";
@@ -104,7 +104,7 @@ export default function PromjenaPostignuca() {
 
     return (
 
-        <Card title={"Promjena postignuća"} textAlign={"left"}>
+        <CustomCard title={"Promjena postignuća"} textAlign={"left"}>
             <Form onSubmit={odradiSubmit}>
 
                 <CustomSelect
@@ -168,7 +168,7 @@ export default function PromjenaPostignuca() {
                     </Col>
                 </Row>
             </Form>
-        </Card>
+        </CustomCard>
     )
 
 }

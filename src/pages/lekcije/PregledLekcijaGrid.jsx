@@ -1,5 +1,5 @@
 import {Col, Container, Row} from "react-bootstrap";
-import {Card} from "../../components/Card.jsx";
+import {CustomCard} from "../../components/CustomCard.jsx";
 import {FaEdit, FaFilePdf, FaInfoCircle, FaMedal, FaRegClock, FaTrash} from "react-icons/fa";
 import {FaPeopleGroup} from "react-icons/fa6";
 import {CustomButtons} from "../../components/CustomButtons.jsx";
@@ -15,7 +15,7 @@ export function PregledLekcijaGrid(
     return (
         <Container className="pt-0 py-3 px-0">
             {lekcije.map((lekcija) => (
-                <Card
+                <CustomCard
                     key={lekcija.sifra}
                     title={isMobile ? truncate(lekcija.naziv, 20) : lekcija.naziv}
                     textAlign={"start"}
@@ -68,7 +68,7 @@ export function PregledLekcijaGrid(
                         pdfLabel={<FaFilePdf/>}
                         needsPdf={true}
                     />
-                </Card>
+                </CustomCard>
             ))}
         </Container>
     )

@@ -5,7 +5,7 @@ import useAuth from "../../hooks/useAuth"
 import { Button, Col, Form, Row } from "react-bootstrap"
 import { ShemaLogin } from "../../schemes/ShemaOperater"
 import { CustomInput } from "../../components/customInputs/CustomInput.jsx";
-import { Card } from "../../components/Card.jsx";
+import { CustomCard } from "../../components/CustomCard.jsx";
 import { FaClipboard, FaClipboardCheck, FaEye, FaEyeSlash, FaLock, FaUser } from "react-icons/fa6";
 
 export default function Login() {
@@ -86,7 +86,7 @@ export default function Login() {
 
     return (
         <Form onSubmit={odradiSubmit}>
-            <Card
+            <CustomCard
                 title={"Prijava"}
                 textAlign={"start"}
             >
@@ -150,7 +150,7 @@ export default function Login() {
                         </Button>
                     </Col>
                 </Row>
-            </Card>
+            </CustomCard>
         </Form>
     )
 }

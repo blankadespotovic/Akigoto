@@ -1,5 +1,5 @@
 import { Button, CardImg, Col, Container, Form, InputGroup, Row } from "react-bootstrap";
-import { Card } from "../../components/Card.jsx";
+import { CustomCard } from "../../components/CustomCard.jsx";
 import { useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import { FaAt, FaMagnifyingGlass } from "react-icons/fa6";
@@ -12,7 +12,7 @@ export function PregledUcenikaGrid({ ucenici, navigate, obrisi }) {
         <Container className={"pt-0 py-3 px-0"}>
 
             {ucenici.map((ucenik) => (
-                <Card
+                <CustomCard
                     key={ucenik.sifra}
                     title={`${ucenik.ime} ${ucenik.prezime}`}
                 >
@@ -64,7 +64,7 @@ export function PregledUcenikaGrid({ ucenici, navigate, obrisi }) {
                             </Button>
                         </Col>
                     </Row>
-                </Card>
+                </CustomCard>
             ))}
         </Container>
     )

@@ -1,14 +1,31 @@
-import { Form, Button, Row, Col, Container, Card } from "react-bootstrap"
-import { RouteNames } from "../../constants"
-import { useNavigate } from "react-router-dom"
+import {Button, Col, Form, Row} from "react-bootstrap"
+import {RouteNames} from "../../constants"
+import {useNavigate} from "react-router-dom"
 import OperaterService from "../../services/operateri/OperaterService"
-import { ShemaOperater } from "../../schemes/ShemaOperater"
-import { useState } from "react"
+import {ShemaOperater} from "../../schemes/ShemaOperater"
+import {useEffect, useState} from "react"
+import {CustomCard} from "../../components/CustomCard.jsx";
+import {CustomInput} from "../../components/customInputs/CustomInput.jsx";
+import {FaEye, FaEyeSlash, FaLock, FaUser} from "react-icons/fa6";
 
 export default function Registracija() {
 
     const navigate = useNavigate()
     const [errors, setErrors] = useState({})
+    const [passwordShown, setPasswordShown] = useState(false);
+    const [repeatPasswordShown, setRepeatPasswordShown] = useState(false);
+    const [passwordIcon, setPasswordIcon] = useState(
+        <FaEyeSlash
+            onClick={() => setPasswordShown(!passwordShown)}
+            className={"cursor-pointer"}
+        />
+    );
+    const [repeatPasswordIcon, setRepeatPasswordIcon] = useState(
+        <FaEyeSlash
+            onClick={() => setRepeatPasswordShown(!repeatPasswordShown)}
+            className={"cursor-pointer"}
+        />
+    );
 
     async function registriraj(operater) {
         await OperaterService.dodaj(operater).then(() => {
@@ -24,8 +41,8 @@ export default function Registracija() {
         const objektPodataka = Object.fromEntries(podaci)
 
         // Provjera podudaranja lozinki
-        if (podaci.get('lozinka') !== podaci.get('potvrdaLozinke')) {
-            setErrors({ potvrdaLozinke: "Lozinke se ne podudaraju!" })
+        if (podaci.get("lozinka") !== podaci.get("potvrdaLozinke")) {
+            setErrors({potvrdaLozinke: "Lozinke se ne podudaraju!"})
             return
         }
 
@@ -33,7 +50,7 @@ export default function Registracija() {
         const rezultat = ShemaOperater.safeParse({
             email: objektPodataka.email,
             lozinka: objektPodataka.lozinka,
-            uloga: 'korisnik'
+            uloga: "korisnik"
         })
 
         if (!rezultat.success) {
@@ -51,94 +68,124 @@ export default function Registracija() {
         }
 
         registriraj({
-            email: podaci.get('email'),
-            lozinka: podaci.get('lozinka'),
-            uloga: 'korisnik'
+            email: podaci.get("email"),
+            lozinka: podaci.get("lozinka"),
+            uloga: "korisnik"
         })
     }
 
     const ocistiGresku = (nazivPolja) => {
         if (errors[nazivPolja]) {
-            const noveGreske = { ...errors }
+            const noveGreske = {...errors}
             delete noveGreske[nazivPolja]
             setErrors(noveGreske)
         }
     }
 
+    useEffect(() => {
+        const getPasswordIcon = () => {
+            if (passwordShown) {
+                setPasswordIcon(
+                    <FaEyeSlash
+                        onClick={() => setPasswordShown(!passwordShown)}
+                        className={"cursor-pointer"}
+                    />
+                );
+            } else {
+                setPasswordIcon(
+                    <FaEye
+                        onClick={() => setPasswordShown(!passwordShown)}
+                        className={"cursor-pointer"}
+                    />
+                );
+            }
+        }
+        getPasswordIcon();
+    }, [passwordShown])
+
+    useEffect(() => {
+        const getRepeatPasswordIcon = () => {
+            if (repeatPasswordShown) {
+                setRepeatPasswordIcon(
+                    <FaEyeSlash
+                        onClick={() => setRepeatPasswordShown(!repeatPasswordShown)}
+                        className={"cursor-pointer"}
+                    />
+                );
+            } else {
+                setRepeatPasswordIcon(
+                    <FaEye
+                        onClick={() => setRepeatPasswordShown(!repeatPasswordShown)}
+                        className={"cursor-pointer"}
+                    />
+                );
+            }
+        }
+        getRepeatPasswordIcon();
+    }, [repeatPasswordShown])
+
     return (
-        <>
-            <Form onSubmit={odradiSubmit}>
-                <Container className="mt-4">
-                    <Card className="shadow-sm">
-                        <Card.Body>
-                            <Card.Title className="mb-4">Podaci za registraciju</Card.Title>
+        <Form onSubmit={odradiSubmit}>
+            <CustomCard
+                title={"Registracija"}
+                textAlign={"start"}
+            >
+                <Row>
+                    <Col xs={12}>
+                        <CustomInput
+                            label={"E-Mail"}
+                            id={"email"}
+                            type="email"
+                            name="email"
+                            placeholder="vas@email.hr"
+                            isInvalid={!!errors.email}
+                            errors={errors.email}
+                            onFocus={() => ocistiGresku("email")}
+                            prefix={<FaUser size={12}/>}
+                        />
+                    </Col>
+                    <Col md={6}>
+                        <CustomInput
+                            label={"Lozinka"}
+                            id={"lozinka"}
+                            type={passwordShown ? "text" : "password"}
+                            name="lozinka"
+                            placeholder="Unesite lozinku"
+                            isInvalid={!!errors.lozinka}
+                            errors={errors.lozinka}
+                            onFocus={() => ocistiGresku("lozinka")}
+                            prefix={<FaLock size={12}/>}
+                            suffix={passwordIcon}
+                        />
+                    </Col>
+                    <Col md={6}>
+                        <CustomInput
+                            label={"Ponovite lozinku"}
+                            id={"potvrdaLozinke"}
+                            type={repeatPasswordShown ? "text" : "password"}
+                            name="potvrdaLozinke"
+                            placeholder="Ponovite lozinku"
+                            isInvalid={!!errors.potvrdaLozinke}
+                            errors={errors.potvrdaLozinke}
+                            onFocus={() => ocistiGresku("potvrdaLozinke")}
+                            prefix={<FaLock size={12}/>}
+                            suffix={repeatPasswordIcon}
+                        />
+                    </Col>
+                </Row>
 
-                            <Row>
-                                <Col xs={12}>
-                                    <Form.Group controlId="email" className="mb-3">
-                                        <Form.Label className="fw-bold">Email</Form.Label>
-                                        <Form.Control
-                                            type="email"
-                                            name="email"
-                                            placeholder="vas@email.hr"
-                                            isInvalid={!!errors.email}
-                                            onFocus={() => ocistiGresku('email')}
-                                        />
-                                        <Form.Control.Feedback type="invalid">
-                                            {errors.email}
-                                        </Form.Control.Feedback>
-                                    </Form.Group>
-                                </Col>
-                            </Row>
+                <hr/>
 
-                            <Row>
-                                <Col md={6}>
-                                    <Form.Group controlId="lozinka" className="mb-3">
-                                        <Form.Label className="fw-bold">Lozinka</Form.Label>
-                                        <Form.Control
-                                            type="password"
-                                            name="lozinka"
-                                            placeholder="Unesite lozinku"
-                                            isInvalid={!!errors.lozinka}
-                                            onFocus={() => ocistiGresku('lozinka')}
-                                        />
-                                        <Form.Control.Feedback type="invalid">
-                                            {errors.lozinka}
-                                        </Form.Control.Feedback>
-                                    </Form.Group>
-                                </Col>
-                                <Col md={6}>
-                                    <Form.Group controlId="potvrdaLozinke" className="mb-3">
-                                        <Form.Label className="fw-bold">Potvrdi lozinku</Form.Label>
-                                        <Form.Control
-                                            type="password"
-                                            name="potvrdaLozinke"
-                                            placeholder="Ponovite lozinku"
-                                            isInvalid={!!errors.potvrdaLozinke}
-                                            onFocus={() => ocistiGresku('potvrdaLozinke')}
-                                        />
-                                        <Form.Control.Feedback type="invalid">
-                                            {errors.potvrdaLozinke}
-                                        </Form.Control.Feedback>
-                                    </Form.Group>
-                                </Col>
-                            </Row>
-
-                            <hr />
-
-                            <div className="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-                                <Button
-                                    type="submit"
-                                    variant="success"
-                                    className="btn btnSuccess w-auto"
-                                >
-                                    Registriraj se
-                                </Button>
-                            </div>
-                        </Card.Body>
-                    </Card>
-                </Container>
-            </Form>
-        </>
+                <div className="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                    <Button
+                        type="submit"
+                        variant="success"
+                        className="btn btnSuccess w-auto"
+                    >
+                        Registriraj se
+                    </Button>
+                </div>
+            </CustomCard>
+        </Form>
     )
 }

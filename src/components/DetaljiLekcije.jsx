@@ -1,7 +1,7 @@
 import { Button, Col, Modal, OverlayTrigger, Row, Tooltip } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import PostignucaService from "../services/postignuca/PostignucaService.js";
-import { Card } from "./Card.jsx";
+import { CustomCard } from "./CustomCard.jsx";
 import UceniciService from "../services/ucenici/UceniciService.js";
 import DOMPurify from "dompurify";
 
@@ -45,7 +45,7 @@ export function DetaljiLekcije(props) {
             aria-labelledby={"contained-modal-title-vcenter"}
             centered
         >
-            <Card
+            <CustomCard
                 title={podaci.naziv}
                 style={{ marginTop: "0" }}
                 textAlign={"start"}
@@ -110,7 +110,7 @@ export function DetaljiLekcije(props) {
                 <div className={"d-flex gap-2 align-items-center justify-content-end"}>
                     <Button className={"btnInfo"} onClick={props.onHide}>Zatvori</Button>
                 </div>
-            </Card>
+            </CustomCard>
         </Modal>
     )
 }

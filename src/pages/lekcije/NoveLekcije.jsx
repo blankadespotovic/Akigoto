@@ -1,7 +1,7 @@
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { RouteNames } from "../../constants";
-import { Card } from "../../components/Card";
+import { CustomCard } from "../../components/CustomCard.jsx";
 import LekcijeService from "../../services/lekcije/LekcijeService";
 import { useEffect, useState } from "react";
 import UceniciService from "../../services/ucenici/UceniciService";
@@ -148,7 +148,7 @@ export default function NoveLekcije() {
 
     return (
 
-        <Card title={"Unos nove lekcije"} textAlign={"left"}>
+        <CustomCard title={"Unos nove lekcije"} textAlign={"left"}>
             <Form onSubmit={odradiSubmit}>
 
                 <Row>
@@ -299,7 +299,7 @@ export default function NoveLekcije() {
                     </Col>
                 </Row>
             </Form>
-        </Card>
+        </CustomCard>
 
 
     )

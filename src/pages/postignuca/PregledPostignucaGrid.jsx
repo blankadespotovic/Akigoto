@@ -1,6 +1,6 @@
 import {useState} from "react";
 import {CustomSelect} from "../../components/customInputs/CustomSelect.jsx";
-import {Card} from "../../components/Card.jsx";
+import {CustomCard} from "../../components/CustomCard.jsx";
 import {FaMedal, FaRegCheckSquare, FaRegClock, FaRegWindowClose} from "react-icons/fa";
 import {Button, Col, Row} from "react-bootstrap";
 
@@ -32,7 +32,7 @@ export function PregledPostignucaGrid(
             {postignuca
                 .filter(p => p.kategorija === aktivnaKategorija)
                 .map(pos => (
-                    <Card
+                    <CustomCard
                         key={pos.sifra}
                         title={pos.naziv}
                     >
@@ -76,7 +76,7 @@ export function PregledPostignucaGrid(
                                 </Button>
                             </Col>
                         </Row>
-                    </Card>
+                    </CustomCard>
                 ))}
         </>
     )

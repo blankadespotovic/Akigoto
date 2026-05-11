@@ -1,5 +1,5 @@
 import {Button, Col, Container, Row} from "react-bootstrap";
-import {Card} from "../../components/Card.jsx";
+import {CustomCard} from "../../components/CustomCard.jsx";
 import {FaMedal} from "react-icons/fa";
 
 export function PregledKategorijaGrid(
@@ -12,7 +12,7 @@ export function PregledKategorijaGrid(
                 const brojPostignucaUKategoriji = postignuca.filter(pos => pos.kategorija === kategorija.sifra).length
                 const tekst = `postignuć${brojPostignucaUKategoriji === 1 ? "e" : "a"}`
                 return (
-                    <Card
+                    <CustomCard
                         key={kategorija.sifra}
                         title={kategorija.naziv}
                         textAlign={"start"}
@@ -41,7 +41,7 @@ export function PregledKategorijaGrid(
                                 </Button>
                             </Col>
                         </Row>
-                    </Card>
+                    </CustomCard>
                 );
             })}
         </Container>

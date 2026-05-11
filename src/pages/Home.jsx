@@ -1,15 +1,19 @@
-import { Card } from "../components/Card";
-import { IME_APLIKACIJE } from "../constants";
-import shiba from '../assets/shiba.png'
-import { useEffect, useState } from "react";
+import {CustomCard} from "../components/CustomCard.jsx";
+import {IME_APLIKACIJE, RouteNames} from "../constants";
+import shiba from "../assets/shiba.png"
+import {useEffect, useState} from "react";
 import KategorijeService from "../services/kategorije/KategorijeService";
 import UceniciService from "../services/ucenici/UceniciService";
 import LekcijeService from "../services/lekcije/LekcijeService";
 import PostignucaService from "../services/postignuca/PostignucaService.js";
 import OperaterService from "../services/operateri/OperaterService.js";
+import {Badge, Col, Container, Row} from "react-bootstrap";
+import {useNavigate} from "react-router-dom";
+import useAuth from "../hooks/useAuth.js";
 
 export default function Home() {
-
+    const {isLoggedIn} = useAuth()
+    const navigate = useNavigate();
     const [brojPostignuca, setBrojPostignuca] = useState(0)
     const [brojKategorija, setBrojKategorija] = useState(0)
     const [brojUcenika, setBrojUcenika] = useState(0)
@@ -39,12 +43,12 @@ export default function Home() {
                 setBrojOperatera(operateri.data.length);
 
                 // Izračunaj broj admina i korisnika
-                const admini = operateri.data.filter(op => op.uloga === 'admin').length;
-                const korisnici = operateri.data.filter(op => op.uloga === 'korisnik').length;
+                const admini = operateri.data.filter(op => op.uloga === "admin").length;
+                const korisnici = operateri.data.filter(op => op.uloga === "korisnik").length;
                 setBrojAdmina(admini);
                 setBrojKorisnika(korisnici);
             } catch (error) {
-                console.error('Greška pri dohvaćanju podataka:', error)
+                console.error("Greška pri dohvaćanju podataka:", error)
             }
         }
 
@@ -97,9 +101,8 @@ export default function Home() {
     }, [animatedOperateri, brojOperatera]);
 
 
-
     const homeCardChildren = (
-        <>
+        <Container className="align-items-centerl">
             <p>
                 Akigoto je web aplikacija za učenje japanskog jezika koja spaja vizualno učenje i interaktivne vježbe u
                 zabavu! Naziv <b>明語都 (Akigoto)</b> nosi posebno značenje <i>mjesto gdje jezik postaje jasan</i>.
@@ -107,8 +110,9 @@ export default function Home() {
                 to je i cilj ove aplikacije, kroz intuitivne i zabavne metode učenja razviti razumijevanje japanskog
                 jezika.
             </p>
-            <button className="button">Započni učenje</button>
-        </>
+            {!isLoggedIn &&
+                <button className="button" onClick={() => navigate(RouteNames.LOGIN)}>Započni učenje</button>}
+        </Container>
     );
 
     const statsCardChildren = (
@@ -136,19 +140,23 @@ export default function Home() {
             <div className="statKartica">
                 <span className="statLabel">Operateri</span>
                 <span className="statValue">{animatedOperateri}</span>
-                 <div style={{ fontSize: '0.9rem', marginTop: '10px' }}>
-                <span className="badge badge-admin me-5">Admin: {brojAdmina}</span>
-                <span className="badge badge-user">Korisnik: {brojKorisnika}</span>
+                <Row>
+                    <Col xs={12} xl={6}>
+                        <Badge bg={"none"} className={"badge-admin w-100"}>Admin: {brojAdmina}</Badge>
+                    </Col>
+                    <Col xs={12} xl={6}>
+                        <Badge bg={"none"} className={"badge-user w-100"}>Korisnik: {brojKorisnika}</Badge>
+                    </Col>
+                </Row>
             </div>
-            </div>
-           
+
         </div>
     )
 
 
     return (
         <div className="d-flex flex-column flex-lg-row gap-3">
-            <Card
+            <CustomCard
                 style={{
                     flex: 1,
                 }}
@@ -157,15 +165,15 @@ export default function Home() {
                 isHomepage={true}
             >
                 {homeCardChildren}
-            </Card>
-            <Card
+            </CustomCard>
+            <CustomCard
                 style={{
                     flex: "0 0 25%",
                 }}
                 title={"Statistika"}
             >
                 {statsCardChildren}
-            </Card>
+            </CustomCard>
         </div>
     );
 

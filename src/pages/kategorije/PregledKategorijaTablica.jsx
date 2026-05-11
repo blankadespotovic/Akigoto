@@ -1,4 +1,4 @@
-import { Card } from "../../components/Card.jsx";
+import { CustomCard } from "../../components/CustomCard.jsx";
 import { Button, ButtonGroup, OverlayTrigger, Table, Tooltip } from "react-bootstrap";
 import { CustomButtons } from "../../components/CustomButtons.jsx";
 import { FaEdit, FaSort, FaSortDown, FaSortUp, FaTrash } from "react-icons/fa";
@@ -63,7 +63,7 @@ export function PregledKategorijaTablica(
 
 
     return (
-        <Card
+        <CustomCard
             key={"sve-kategorije"}
             title={"Kategorije"}
             padding={0}
@@ -121,6 +121,6 @@ export function PregledKategorijaTablica(
                     })}
                 </tbody>
             </Table>
-        </Card>
+        </CustomCard>
     );
 }
