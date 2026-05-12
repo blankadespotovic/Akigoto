@@ -1,5 +1,6 @@
 import {Form} from "react-bootstrap";
 import "../../styles/customComponents.css"
+import {useEffect, useState} from "react";
 
 export function CustomSelect(
     {
@@ -9,6 +10,11 @@ export function CustomSelect(
 ) {
     const baseClass = className || "custom-select";
     const finalClassName = `${baseClass} ${additionalClasses}`.trim();
+    const [defVal, setDefVal] = useState()
+
+    useEffect(() => {
+        if (defaultValue) setDefVal(defaultValue);
+    }, [defaultValue]);
     return podaci && (
         <Form.Group controlId={id}>
             {label && <Form.Label column={"lg"}>{label}</Form.Label>}
@@ -17,7 +23,7 @@ export function CustomSelect(
                 className={finalClassName}
                 onChange={onChange}
                 value={value === undefined ? undefined : value}
-                defaultValue={value === undefined ? (defaultValue ?? podaci[0].value) : undefined}
+                defaultValue={value === undefined ? (defVal ?? podaci[0].value) : undefined}
             >
                 {podaci.map((podatak) => (
                     <option key={podatak.value} value={podatak.value}>{podatak.label}</option>

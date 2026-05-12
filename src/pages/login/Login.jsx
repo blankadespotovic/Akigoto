@@ -1,17 +1,17 @@
-import { useEffect, useMemo, useState } from "react"
+import {useEffect, useState} from "react"
 
 import useAuth from "../../hooks/useAuth"
 
-import { Button, Col, Form, Row } from "react-bootstrap"
-import { ShemaLogin } from "../../schemes/ShemaOperater"
-import { CustomInput } from "../../components/customInputs/CustomInput.jsx";
-import { CustomCard } from "../../components/CustomCard.jsx";
-import { FaClipboard, FaClipboardCheck, FaEye, FaEyeSlash, FaLock, FaUser } from "react-icons/fa6";
+import {Button, ButtonGroup, Col, Form, Row} from "react-bootstrap"
+import {ShemaLogin} from "../../schemes/ShemaOperater"
+import {CustomInput} from "../../components/customInputs/CustomInput.jsx";
+import {CustomCard} from "../../components/CustomCard.jsx";
+import {FaClipboard, FaClipboardCheck, FaEye, FaEyeSlash, FaLock, FaUser} from "react-icons/fa6";
 
 export default function Login() {
     const [errors, setErrors] = useState({})
 
-    const { login } = useAuth();
+    const {login} = useAuth();
 
     function odradiSubmit(e) {
         e.preventDefault()
@@ -25,7 +25,7 @@ export default function Login() {
         })
 
         if (!rezultat.success) {
-            setErrors({ email: "Kombinacija email i lozinka ne odgovaraju" })
+            setErrors({email: "Kombinacija email i lozinka ne odgovaraju"})
             return
         }
 
@@ -34,7 +34,7 @@ export default function Login() {
 
     const ocistiGresku = (nazivPolja) => {
         if (errors[nazivPolja]) {
-            const noveGreske = { ...errors }
+            const noveGreske = {...errors}
             delete noveGreske[nazivPolja]
             setErrors(noveGreske)
         }
@@ -47,25 +47,25 @@ export default function Login() {
         const getPasswordIcon = () => {
             if (passwordShown) {
                 setPasswordIcon(<FaEyeSlash onClick={() => setPasswordShown(!passwordShown)}
-                    className={"cursor-pointer"} />)
+                                            className={"cursor-pointer"}/>)
             } else {
-                setPasswordIcon(<FaEye onClick={() => setPasswordShown(!passwordShown)} className={"cursor-pointer"} />)
+                setPasswordIcon(<FaEye onClick={() => setPasswordShown(!passwordShown)} className={"cursor-pointer"}/>)
             }
         }
         getPasswordIcon();
     }, [passwordShown])
 
-    const [copyIconEmail, setCopyIconEmail] = useState(<FaClipboard size={20} />);
-    const [copyIconPassword, setCopyIconPassword] = useState(<FaClipboard size={20} />);
+    const [copyIconEmail, setCopyIconEmail] = useState(<FaClipboard size={20}/>);
+    const [copyIconPassword, setCopyIconPassword] = useState(<FaClipboard size={20}/>);
 
     const handleCopyEmail = async (e) => {
         const text = e.target.innerText.trim();
-        const initialIcon = <FaClipboard size={20} />;
+        const initialIcon = <FaClipboard size={20}/>;
         setCopyIconPassword(initialIcon);
         await navigator.clipboard
             .writeText(text)
             .then(() => {
-                setCopyIconEmail(<FaClipboardCheck size={20} color={"green"} />)
+                setCopyIconEmail(<FaClipboardCheck size={20} color={"green"}/>)
             })
             .catch((err) => console.error("Copy failed: ", err));
         setTimeout(() => setCopyIconEmail(initialIcon), 3000);
@@ -73,15 +73,25 @@ export default function Login() {
 
     const handleCopyPassword = async (e) => {
         const text = e.target.innerText.trim();
-        const initialIcon = <FaClipboard size={20} />;
+        const initialIcon = <FaClipboard size={20}/>;
         setCopyIconEmail(initialIcon);
         await navigator.clipboard
             .writeText(text)
             .then(() => {
-                setCopyIconPassword(<FaClipboardCheck size={20} color={"green"} />)
+                setCopyIconPassword(<FaClipboardCheck size={20} color={"green"}/>)
             })
             .catch((err) => console.error("Copy failed: ", err));
         setTimeout(() => setCopyIconPassword(initialIcon), 3000);
+    }
+
+    const [emailValue, setEmailValue] = useState("");
+    const [passwordValue, setPasswordValue] = useState("");
+
+    const handleClickFill = (
+        isAdmin
+    ) => {
+        setEmailValue(isAdmin ? "admin@akigoto.hr" : "operater@akigoto.hr");
+        setPasswordValue("Akigoto123!");
     }
 
     return (
@@ -92,21 +102,35 @@ export default function Login() {
             >
                 <Row>
                     <Col xs={12}>
-                        <h4>Podaci za prijavu</h4>
-                        <p>
-                            <span
-                                onClick={handleCopyEmail}
-                                className={"d-flex align-items-center cursor-pointer"}
+                        <ButtonGroup className={"w-100 mt-2 mb-4"}>
+                            <Button
+                                className={"btn btnInfo w-100 mx-2"}
+                                onClick={() => handleClickFill(true)}
                             >
-                                {copyIconEmail}&nbsp;admin@akigoto.hr
-                            </span>
-                            <span
-                                onClick={handleCopyPassword}
-                                className={"d-flex align-items-center cursor-pointer"}
+                                Admin<br/>admin@akigoto.hr
+                            </Button>
+                            <Button
+                                className={"btn btnInfo w-100 mx-2"}
+                                onClick={() => handleClickFill(false)}
                             >
-                                {copyIconPassword}&nbsp;Akigoto123!
-                            </span>
-                        </p>
+                                Korisnik<br/>operater@akigoto.hr
+                            </Button>
+                        </ButtonGroup>
+                        {/*<h4>Podaci za prijavu</h4>*/}
+                        {/*<p>*/}
+                        {/*    <span*/}
+                        {/*        onClick={handleCopyEmail}*/}
+                        {/*        className={"d-flex align-items-center cursor-pointer"}*/}
+                        {/*    >*/}
+                        {/*        {copyIconEmail}&nbsp;admin@akigoto.hr*/}
+                        {/*    </span>*/}
+                        {/*    <span*/}
+                        {/*        onClick={handleCopyPassword}*/}
+                        {/*        className={"d-flex align-items-center cursor-pointer"}*/}
+                        {/*    >*/}
+                        {/*        {copyIconPassword}&nbsp;Akigoto123!*/}
+                        {/*    </span>*/}
+                        {/*</p>*/}
                         {errors.opce && (
                             <div className="alert alert-danger" role="alert">
                                 {errors.opce}
@@ -117,13 +141,14 @@ export default function Login() {
                         <CustomInput
                             label={"E-Mail"}
                             id={"email"}
-                            type="email"
-                            name="email"
+                            type={"email"}
+                            name={"email"}
                             placeholder="vas@email.hr"
                             isInvalid={!!errors.email}
                             errors={errors.email}
                             onFocus={() => ocistiGresku("email")}
-                            prefix={<FaUser size={12} />}
+                            prefix={<FaUser size={12}/>}
+                            value={emailValue}
                         />
                     </Col>
                     <Col xs={12}>
@@ -136,8 +161,9 @@ export default function Login() {
                             isInvalid={!!errors.lozinka}
                             errors={errors.lozinka}
                             onFocus={() => ocistiGresku("lozinka")}
-                            prefix={<FaLock size={12} />}
+                            prefix={<FaLock size={12}/>}
                             suffix={passwordIcon}
+                            value={passwordValue}
                         />
                     </Col>
                     <Col xs={12} className="mt-4 text-end">

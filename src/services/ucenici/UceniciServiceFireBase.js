@@ -35,7 +35,8 @@ async function getBySifra(sifra) {
 async function dodaj(ucenik) {
     try {
         const skupUcenika = collection(getFirebaseDB(), PrefixStorage.UCENICI);
-        ucenik.uplate = []
+        if (!ucenik.uplate || ucenik.uplate.length < 1)
+            ucenik.uplate = []
         const docRef = await addDoc(skupUcenika, ucenik);
         return { success: true, data: { sifra: docRef.id, ...ucenik } };
     } catch (e) {

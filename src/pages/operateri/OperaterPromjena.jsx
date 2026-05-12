@@ -1,9 +1,12 @@
-import { useEffect, useState } from "react"
-import { Link, useNavigate, useParams } from "react-router-dom"
+import {useEffect, useState} from "react"
+import {Link, useNavigate, useParams} from "react-router-dom"
 import OperaterService from "../../services/operateri/OperaterService"
-import { Form, Button, Row, Col, Container, Card } from "react-bootstrap"
-import { RouteNames } from "../../constants"
-import { z } from 'zod'
+import {Button, Col, Form, Row} from "react-bootstrap"
+import {RouteNames} from "../../constants"
+import {z} from "zod"
+import {CustomCard} from "../../components/CustomCard.jsx";
+import useBreakpoint from "../../hooks/useBreakpoint.js";
+import {CustomInput} from "../../components/customInputs/CustomInput.jsx";
 
 export default function OperaterPromjena() {
 
@@ -11,6 +14,8 @@ export default function OperaterPromjena() {
     const params = useParams()
     const [operater, setOperater] = useState({})
     const [errors, setErrors] = useState({})
+    const sirina = useBreakpoint()
+    const mobilnaSirina = ["xs", "sm", "md"].includes(sirina)
 
     // Shema za email i ulogu (bez lozinke)
     const ShemaEmailUloga = z.object({
@@ -18,31 +23,31 @@ export default function OperaterPromjena() {
             .trim()
             .min(1, "Email je obavezan!")
             .email("Unesite ispravan email format!"),
-        uloga: z.enum(['admin', 'korisnik'], {
-            errorMap: () => ({ message: "Uloga mora biti 'admin' ili 'korisnik'!" })
+        uloga: z.enum(["admin", "korisnik"], {
+            errorMap: () => ({message: "Uloga mora biti 'admin' ili 'korisnik'!"})
         })
     })
-
-    useEffect(() => {
-        ucitajOperatera()
-    }, [])
 
     async function ucitajOperatera() {
         const odgovor = await OperaterService.getBySifra(params.sifra)
         if (!odgovor.success) {
-            alert('Operater nije pronađen')
+            alert("Operater nije pronađen")
             navigate(RouteNames.OPERATERI)
             return
         }
         setOperater(odgovor.data)
     }
 
+    useEffect(() => {
+        ucitajOperatera()
+    }, [])
+
     async function promjeni(operater) {
         const rezultat = await OperaterService.promjeni(params.sifra, operater)
         if (rezultat.success) {
             navigate(RouteNames.OPERATERI)
         } else {
-            alert(rezultat.message || 'Greška pri promjeni operatera')
+            alert(rezultat.message || "Greška pri promjeni operatera")
         }
     }
 
@@ -71,83 +76,71 @@ export default function OperaterPromjena() {
         }
 
         promjeni({
-            email: podaci.get('email'),
-            uloga: podaci.get('uloga')
+            email: podaci.get("email"),
+            uloga: podaci.get("uloga")
         })
     }
 
     const ocistiGresku = (nazivPolja) => {
         if (errors[nazivPolja]) {
-            const noveGreske = { ...errors }
+            const noveGreske = {...errors}
             delete noveGreske[nazivPolja]
             setErrors(noveGreske)
         }
     }
 
     return (
-        <>
-            <h3>Promjena operatera</h3>
+        <CustomCard title={"Promjena operatera"} textAlign={"left"}>
             <Form onSubmit={odradiSubmit}>
-                <Container className="mt-4">
-                    <Card className="shadow-sm">
-                        <Card.Body>
-                            <Card.Title className="mb-4">Podaci o operateru</Card.Title>
+                <Row>
+                    <Col xs={12} md={6}>
+                        <CustomInput
+                            id={"email"}
+                            type={"email"}
+                            label={"E-Mail"}
+                            defaultValue={operater.email}
+                            isInvalid={!!errors.email}
+                            errors={errors.email}
+                            onFocus={() => ocistiGresku("email")}
+                        />
+                    </Col>
+                    <Col xs={12} md={6}>
+                       
+                        <Form.Group controlId="uloga" className="mb-3">
+                            <Form.Label className="fw-bold">Uloga</Form.Label>
+                            <Form.Select
+                                onChange={(e) => setOperater({...operater, uloga: e.target.value})}
+                                name="uloga"
+                                value={operater.uloga || ""}
+                                isInvalid={!!errors.uloga}
+                                onFocus={() => ocistiGresku("uloga")}
+                            >
+                                <option value="">Odaberite ulogu...</option>
+                                <option value="admin">Admin</option>
+                                <option value="korisnik">Korisnik</option>
+                            </Form.Select>
+                            <Form.Control.Feedback type="invalid">
+                                {errors.uloga}
+                            </Form.Control.Feedback>
+                        </Form.Group>
+                    </Col>
+                </Row>
 
-                            <Row>
-                                <Col xs={12}>
-                                    <Form.Group controlId="email" className="mb-3">
-                                        <Form.Label className="fw-bold">Email</Form.Label>
-                                        <Form.Control
-                                            type="email"
-                                            name="email"
-                                            placeholder="operater@akigoto.hr"
-                                            defaultValue={operater.email}
-                                            isInvalid={!!errors.email}
-                                            onFocus={() => ocistiGresku('email')}
-                                        />
-                                        <Form.Control.Feedback type="invalid">
-                                            {errors.email}
-                                        </Form.Control.Feedback>
-                                    </Form.Group>
-                                </Col>
-                            </Row>
 
-                            <Row>
-                                <Col xs={12}>
-                                    <Form.Group controlId="uloga" className="mb-3">
-                                        <Form.Label className="fw-bold">Uloga</Form.Label>
-                                        <Form.Select
-                                            onChange={(e) => setOperater({ ...operater, uloga: e.target.value })}
-                                            name="uloga"
-                                            value={operater.uloga || ''}
-                                            isInvalid={!!errors.uloga}
-                                            onFocus={() => ocistiGresku('uloga')}
-                                        >
-                                            <option value="">Odaberite ulogu...</option>
-                                            <option value="admin">Admin</option>
-                                            <option value="korisnik">Korisnik</option>
-                                        </Form.Select>
-                                        <Form.Control.Feedback type="invalid">
-                                            {errors.uloga}
-                                        </Form.Control.Feedback>
-                                    </Form.Group>
-                                </Col>
-                            </Row>
-
-                            <hr />
-
-                            <div className="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-                                <Link to={RouteNames.OPERATERI} className="btn btn-danger px-4">
-                                    Odustani
-                                </Link>
-                                <Button type="submit" variant="success">
-                                    Promjeni operatera
-                                </Button>
-                            </div>
-                        </Card.Body>
-                    </Card>
-                </Container>
+                <Row className="mt-4 justi">
+                    <Col xs={12} md={6} className={"order-2 order-md-1"}>
+                        <Link to={RouteNames.OPERATERI}
+                              className={`btn btnCancel${mobilnaSirina ? " w-100 my-1" : ""}`}>
+                            Odustani
+                        </Link>
+                    </Col>
+                    <Col xs={12} md={6} className={"order-1 order-md-2 text-end"}>
+                        <Button type="submit" className={`btn btnAdd${mobilnaSirina ? " w-100 my-1" : ""}`}>
+                            Promijeni
+                        </Button>
+                    </Col>
+                </Row>
             </Form>
-        </>
+        </CustomCard>
     )
 }

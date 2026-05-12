@@ -129,9 +129,7 @@ async function prijava(email, lozinka) {
         const q = query(skupOperatera, where("email", "==", email), limit(1));
         const querySnapshot = await getDocs(q);
         const operaterDoc = querySnapshot.docs[0];
-        console.log(operaterDoc)
         const operaterPodaci = operaterDoc.data();
-        console.log(operaterPodaci)
         const isMatch = bcrypt.compareSync(lozinka, operaterPodaci.lozinka);
         if (!isMatch) {
             return { success: false, message: "Email i lozinka ne odgovaraju" };

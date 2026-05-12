@@ -34,7 +34,6 @@ export default function Home() {
     useEffect(() => {
         const checkLocalStorage = async () => {
             const {data} = await OperaterServiceLocalStorage.get();
-            console.log(data);
             setSwitchToLSDisabled(data.length < 1);
         }
 

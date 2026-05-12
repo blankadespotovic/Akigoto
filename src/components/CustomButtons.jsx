@@ -5,11 +5,11 @@ export function CustomButtons(
     {
         sifra, customClass, editLink, editLabel = "Promijeni", deleteFunc, deleteLabel = "ObriÅ¡i",
         detailsFunc, detailsLabel = "Detalji", isDetails = false, pdfFunc, pdfLabel = "PFD",
-        needsPdf = false
+        needsPdf = false, isChangePwd = false, changePwdFunc, changePwdLabel = "Pormijeni lozinku"
     }
 ) {
     const navigate = useNavigate()
-    const needsCustomPadding = isDetails && needsPdf
+    const needsCustomPadding = isChangePwd || (isDetails && needsPdf)
 
     return (
         <ButtonGroup className={`d-flex justify-content-center gap-2 ${customClass}`}>
@@ -29,6 +29,15 @@ export function CustomButtons(
             >
                 {editLabel}
             </Button>
+            {isChangePwd &&
+                <Button
+                    key={`btn-${sifra}-promijeni-lozinku`}
+                    className={`btnWarning${needsCustomPadding ? " p-1" : ""}`}
+                    onClick={changePwdFunc}
+                >
+                    {changePwdLabel}
+                </Button>
+            }
             <Button
                 key={`btn-${sifra}-obrisi`}
                 className={`btnCancel${needsCustomPadding ? " p-1" : ""}`}

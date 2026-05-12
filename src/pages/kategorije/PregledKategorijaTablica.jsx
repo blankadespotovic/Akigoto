@@ -80,7 +80,7 @@ export function PregledKategorijaTablica(
                 </thead>
                 <tbody>
                     {sortedKategorije() && sortedKategorije().map((kategorija) => {
-                    const postignucaKategorije = postignuca.filter(p => p.kategorija === Number(kategorija.sifra))
+                    const postignucaKategorije = postignuca.filter(p => p.kategorija === kategorija.sifra)
                     return (
                             <tr key={kategorija.sifra}>
                                 <td>{kategorija.naziv}</td>

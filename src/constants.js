@@ -38,13 +38,18 @@ export const DATA_SOURCES = {
     F: "firebase"
 }
 
+export const ULOGE = {
+    ADMIN: "admin",
+    KORISNIK: "korisnik",
+}
+
 export const DEFAULT_PAGE_SIZE = 10;
 export const PAGE_SIZES = [5, 10, 25, 50]
 
-export const DATA_SOURCE = localStorage.getItem('dataSource') || DATA_SOURCES.F;
+export const DATA_SOURCE = localStorage.getItem("dataSource") || DATA_SOURCES.F;
 
 export const PrefixStorage = {
-     POSTIGNUCA: "e32.postignuca",
+    POSTIGNUCA: "e32.postignuca",
     KATEGORIJE: "e32.kategorije",
     UCENICI: "e32.ucenici",
     LEKCIJE: "e32.lekcije",

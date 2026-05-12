@@ -2,13 +2,24 @@ import useAuth from "../hooks/useAuth"
 
 import {Button, ButtonGroup, Col, Container, Nav, Navbar, NavDropdown, Row} from "react-bootstrap"
 import {useLocation, useNavigate} from "react-router-dom"
-import {DATA_SOURCE, IME_APLIKACIJE, RouteNames} from "../constants"
+import {DATA_SOURCE, DATA_SOURCES, IME_APLIKACIJE, RouteNames} from "../constants"
 import {FaUserCircle} from "react-icons/fa";
 
 export default function Izbornik() {
     const navigate = useNavigate()
     const {isLoggedIn, logout, authUser} = useAuth()
     const location = useLocation();
+
+    const getDatasourceName = () => {
+        switch (DATA_SOURCE) {
+            case DATA_SOURCES.M:
+                return "Memorija";
+            case DATA_SOURCES.L:
+                return "Local Storage";
+            case DATA_SOURCES.F:
+                return "Firebase";
+        }
+    }
 
     return (
         <Navbar expand="xl" className="bg-body-tertiary">
@@ -65,10 +76,12 @@ export default function Izbornik() {
                         )}
                     </Nav>
                     <Nav className="ms-auto">
-                            <Button
-                                className="btn me-2 btnWarning"
-                            >{DATA_SOURCE}</Button>
+
                         {isLoggedIn ? (
+                            <>
+                            <Button
+                                className={"btn btnWarning me-2"}
+                            >{getDatasourceName()}</Button>
                             
                             <NavDropdown
                                 title={
@@ -98,6 +111,7 @@ export default function Izbornik() {
                                     Logout
                                 </NavDropdown.Item>
                             </NavDropdown>
+                            </>
                         ) : (
                             <ButtonGroup className={"d-flex flex-column flex-md-row gap-md-2"}>
                                     <Nav.Link
