@@ -1,12 +1,13 @@
-import {useEffect, useState} from "react"
+import {useEffect, useMemo, useState} from "react"
 import {Link, useNavigate, useParams} from "react-router-dom"
 import OperaterService from "../../services/operateri/OperaterService"
 import {Button, Col, Form, Row} from "react-bootstrap"
-import {RouteNames} from "../../constants"
+import {RouteNames, ULOGE} from "../../constants"
 import {z} from "zod"
 import {CustomCard} from "../../components/CustomCard.jsx";
 import useBreakpoint from "../../hooks/useBreakpoint.js";
 import {CustomInput} from "../../components/customInputs/CustomInput.jsx";
+import {CustomSelect} from "../../components/customInputs/CustomSelect.jsx";
 
 export default function OperaterPromjena() {
 
@@ -16,6 +17,7 @@ export default function OperaterPromjena() {
     const [errors, setErrors] = useState({})
     const sirina = useBreakpoint()
     const mobilnaSirina = ["xs", "sm", "md"].includes(sirina)
+    const [operaterUloga, setOperaterUloga] = useState();
 
     // Shema za email i ulogu (bez lozinke)
     const ShemaEmailUloga = z.object({
@@ -35,6 +37,7 @@ export default function OperaterPromjena() {
             navigate(RouteNames.OPERATERI)
             return
         }
+        setOperaterUloga(odgovor.data.uloga);
         setOperater(odgovor.data)
     }
 
@@ -89,6 +92,18 @@ export default function OperaterPromjena() {
         }
     }
 
+    const uloge = useMemo(() => {
+        const parsedRoles = [];
+        Object.values(ULOGE).forEach(uloga => {
+            const novaUloga = {
+                value: uloga,
+                label: uloga.charAt(0).toUpperCase() + uloga.slice(1),
+            };
+            parsedRoles.push(novaUloga);
+        });
+        return parsedRoles;
+    }, []);
+
     return (
         <CustomCard title={"Promjena operatera"} textAlign={"left"}>
             <Form onSubmit={odradiSubmit}>
@@ -105,28 +120,15 @@ export default function OperaterPromjena() {
                         />
                     </Col>
                     <Col xs={12} md={6}>
-                       
-                        <Form.Group controlId="uloga" className="mb-3">
-                            <Form.Label className="fw-bold">Uloga</Form.Label>
-                            <Form.Select
-                                onChange={(e) => setOperater({...operater, uloga: e.target.value})}
-                                name="uloga"
-                                value={operater.uloga || ""}
-                                isInvalid={!!errors.uloga}
-                                onFocus={() => ocistiGresku("uloga")}
-                            >
-                                <option value="">Odaberite ulogu...</option>
-                                <option value="admin">Admin</option>
-                                <option value="korisnik">Korisnik</option>
-                            </Form.Select>
-                            <Form.Control.Feedback type="invalid">
-                                {errors.uloga}
-                            </Form.Control.Feedback>
-                        </Form.Group>
+                        <CustomSelect
+                            id={"uloga"}
+                            label={"Uloga"}
+                            podaci={uloge}
+                            value={operaterUloga}
+                            onChange={(e) => setOperaterUloga(e.target.value)}
+                        />
                     </Col>
                 </Row>
-
-
                 <Row className="mt-4 justi">
                     <Col xs={12} md={6} className={"order-2 order-md-1"}>
                         <Link to={RouteNames.OPERATERI}
