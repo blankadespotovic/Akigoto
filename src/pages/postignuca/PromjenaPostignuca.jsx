@@ -88,7 +88,7 @@ export default function PromjenaPostignuca() {
             opis: podaci.get("opis"),
             procjena: podaci.get("procjena"),
             zavrseno: zavrseno,
-            kategorija: parseInt(podaci.get("kategorija")),
+            kategorija: podaci.get("kategorija"),
         })
     }
 
@@ -111,7 +111,7 @@ export default function PromjenaPostignuca() {
                     id={"kategorija"}
                     label={"Kategorija"}
                     podaci={kategorije}
-                    defaultValue={kategorije?.find(e => e.value === postignuce?.kategorija).value}
+                    defaultValue={kategorije?.find(e => e.value === postignuce?.kategorija)?.value}
                 />
 
                 <CustomInput

@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 
 import Highcharts from "highcharts";
 import HCR from "highcharts-react-official";
@@ -6,19 +6,20 @@ import KategorijeService from "../services/kategorije/KategorijeService.js";
 import PostignucaService from "../services/postignuca/PostignucaService.js";
 import useLoading from "../hooks/useLoading.js";
 
-import {CustomCard} from "../components/CustomCard.jsx";
+import { CustomCard } from "../components/CustomCard.jsx";
 
 const PieChart = HCR.default;
 
 export default function NadzornaPloca() {
     const [podaci, setPodaci] = useState([]);
-    const {showLoading, hideLoading} = useLoading();
+    const { showLoading, hideLoading } = useLoading();
 
     useEffect(() => {
         const getPodaci = async () => {
+            try{ 
             showLoading();
-            const {data: kategorijeData} = await KategorijeService.get();
-            const {data: postignucaData} = await PostignucaService.get();
+            const { data: kategorijeData } = await KategorijeService.get();
+            const { data: postignucaData } = await PostignucaService.get();
             const parsedData = kategorijeData.map((kat) => {
                 const postignucaKategorije = postignucaData.filter((pos) =>
                     Number.parseInt(pos.kategorija) === Number.parseInt(kat.sifra)
@@ -29,10 +30,14 @@ export default function NadzornaPloca() {
                 };
             });
             setPodaci(parsedData);
-            hideLoading();
+            } catch(err){
+                console.error(err)
+            } finally{
+                hideLoading()
+            }
         }
 
-        void getPodaci();
+       void getPodaci();
     }, [hideLoading, showLoading]);
 
     const fixedOptions = {

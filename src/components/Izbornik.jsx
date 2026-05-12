@@ -1,8 +1,8 @@
 import useAuth from "../hooks/useAuth"
 
-import {ButtonGroup, Col, Container, Nav, Navbar, NavDropdown, Row} from "react-bootstrap"
+import {Button, ButtonGroup, Col, Container, Nav, Navbar, NavDropdown, Row} from "react-bootstrap"
 import {useLocation, useNavigate} from "react-router-dom"
-import {IME_APLIKACIJE, RouteNames} from "../constants"
+import {DATA_SOURCE, IME_APLIKACIJE, RouteNames} from "../constants"
 import {FaUserCircle} from "react-icons/fa";
 
 export default function Izbornik() {
@@ -11,7 +11,7 @@ export default function Izbornik() {
     const location = useLocation();
 
     return (
-        <Navbar expand="lg" className="bg-body-tertiary">
+        <Navbar expand="xl" className="bg-body-tertiary">
             <Container>
                 <Navbar.Brand href="/">{IME_APLIKACIJE} </Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav"/>
@@ -65,7 +65,11 @@ export default function Izbornik() {
                         )}
                     </Nav>
                     <Nav className="ms-auto">
+                            <Button
+                                className="btn me-2 btnWarning"
+                            >{DATA_SOURCE}</Button>
                         {isLoggedIn ? (
+                            
                             <NavDropdown
                                 title={
                                     <>

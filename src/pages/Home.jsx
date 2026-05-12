@@ -1,5 +1,5 @@
 import {CustomCard} from "../components/CustomCard.jsx";
-import {IME_APLIKACIJE, RouteNames} from "../constants";
+import {DATA_SOURCE, DATA_SOURCES, IME_APLIKACIJE, RouteNames} from "../constants";
 import shiba from "../assets/shiba.png"
 import {useEffect, useState} from "react";
 import KategorijeService from "../services/kategorije/KategorijeService";
@@ -7,12 +7,14 @@ import UceniciService from "../services/ucenici/UceniciService";
 import LekcijeService from "../services/lekcije/LekcijeService";
 import PostignucaService from "../services/postignuca/PostignucaService.js";
 import OperaterService from "../services/operateri/OperaterService.js";
-import {Badge, Col, Container, Row} from "react-bootstrap";
+import {Badge, Button, ButtonGroup, Col, Container, Row} from "react-bootstrap";
 import {useNavigate} from "react-router-dom";
 import useAuth from "../hooks/useAuth.js";
+import OperaterServiceLocalStorage from "../services/operateri/OperaterServiceLocalStorage.js";
+import OperaterServiceFireBase from "../services/operateri/OperaterServiceFireBase.js";
 
 export default function Home() {
-    const {isLoggedIn} = useAuth()
+    const {isLoggedIn, logout} = useAuth()
     const navigate = useNavigate();
     const [brojPostignuca, setBrojPostignuca] = useState(0)
     const [brojKategorija, setBrojKategorija] = useState(0)
@@ -26,6 +28,48 @@ export default function Home() {
     const [animatedUcenici, setAnimatedUcenici] = useState(0)
     const [animatedLekcije, setAnimatedLekcije] = useState(0)
     const [animatedOperateri, setAnimatedOperateri] = useState(0);
+
+    const [switchToLSDisabled, setSwitchToLSDisabled] = useState(true);
+
+    useEffect(() => {
+        const checkLocalStorage = async () => {
+            const {data} = await OperaterServiceLocalStorage.get();
+            console.log(data);
+            setSwitchToLSDisabled(data.length < 1);
+        }
+
+        void checkLocalStorage();
+    }, []);
+
+
+    const promijeniIzvor = async (noviIzvor) => {
+
+        let izvor = DATA_SOURCES.M;
+
+        if (noviIzvor === DATA_SOURCES.L) {
+            const servis = await OperaterServiceLocalStorage.get();
+            if (servis.data.length > 0) {
+                izvor = noviIzvor;
+            } else {
+                alert(`Nije moguće promijeniti izvor podataka na ${DATA_SOURCES.L} jer nema podataka.`);
+                return;
+            }
+
+        }
+        if (noviIzvor === DATA_SOURCES.F) {
+            const servis = await OperaterServiceFireBase.get();
+            if (servis.data.length > 0) {
+                izvor = noviIzvor;
+            } else {
+                alert(`Nije moguće promijeniti izvor podataka na ${DATA_SOURCES.F} jer nema podataka.`);
+                return;
+            }
+        }
+
+        localStorage.setItem("dataSource", izvor);
+        logout()
+        window.location.reload();
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -110,8 +154,43 @@ export default function Home() {
                 to je i cilj ove aplikacije, kroz intuitivne i zabavne metode učenja razviti razumijevanje japanskog
                 jezika.
             </p>
-            {!isLoggedIn &&
-                <button className="button" onClick={() => navigate(RouteNames.LOGIN)}>Započni učenje</button>}
+            {!isLoggedIn ?
+                <Row className={"mt-4 gap-0 g-0"}>
+                    <Col xs={6} className={"m-auto"}>
+                        <Button
+                            className="button mb-3"
+                            onClick={() => navigate(RouteNames.LOGIN)}
+                        >
+                            Započni učenje
+                        </Button>
+                    </Col>
+                </Row> :
+                <Row>
+                    <Col sm={12} className={"mt-3 text-center"}>
+                        <h5 className={"mt-0"}><b>Izvor podataka:</b></h5>
+                        <ButtonGroup className={"gap-2"}>
+                            <Button
+                                onClick={() => promijeniIzvor(DATA_SOURCES.M)}
+                                className={`button ${DATA_SOURCE === DATA_SOURCES.M ? "btnSuccess" : "btnWarning"}`}
+                            >
+                                Memorija
+                            </Button>
+                            <Button
+                                onClick={() => promijeniIzvor(DATA_SOURCES.L)}
+                                className={`button ${DATA_SOURCE === DATA_SOURCES.L ? "btnSuccess" : "btnWarning"}`}
+                                disabled={switchToLSDisabled}
+                            >
+                                Local Storage
+                            </Button>
+                            <Button
+                                onClick={() => promijeniIzvor(DATA_SOURCES.F)}
+                                className={`button ${DATA_SOURCE === DATA_SOURCES.F ? "btnSuccess" : "btnWarning"}`}
+                            >
+                                Firebase
+                            </Button>
+                        </ButtonGroup>
+                    </Col>
+                </Row>}
         </Container>
     );
 
@@ -152,7 +231,6 @@ export default function Home() {
 
         </div>
     )
-
 
     return (
         <div className="d-flex flex-column flex-lg-row gap-3">

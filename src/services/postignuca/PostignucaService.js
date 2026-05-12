@@ -1,6 +1,7 @@
 import PostignucaServiceLocalStorage from "./PostignucaServiceLocalStorage";
 import PostignucaServiceMemorija from "./PostignucaServiceMemorija";
-import {DATA_SOURCE} from "../../constants";
+import { DATA_SOURCE } from "../../constants";
+import PostignucaServiceFireBase from "./PostignucaServiceFireBase";
 
 let Servis = null;
 
@@ -12,14 +13,17 @@ switch (DATA_SOURCE) {
     case "localStorage":
         Servis = PostignucaServiceLocalStorage;
         break;
+    case 'firebase':
+        Servis = PostignucaServiceFireBase;
+        break;
     default:
         Servis = null;
 }
 
 
 const PrazanServis = {
-    get: async () => ({success: false, data: []}),
-    getBySifra: async (sifra) => ({success: false, data: []}),
+    get: async () => ({ success: false, data: [] }),
+    getBySifra: async (sifra) => ({ success: false, data: [] }),
     dodaj: async (postignuce) => {
         console.error("Servis nije učitan");
     },

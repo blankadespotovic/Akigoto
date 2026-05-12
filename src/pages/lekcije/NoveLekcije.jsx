@@ -40,7 +40,7 @@ export default function NoveLekcije() {
                 return
             }
             const filtriraniUcenici = odgovor.data.map(
-                uc => ({ value: parseInt(uc.sifra), label: `${uc.ime} ${uc.prezime}` })
+                uc => ({ value: uc.sifra, label: `${uc.ime} ${uc.prezime}` })
             )
             setUcenici(filtriraniUcenici)
         })
@@ -57,7 +57,7 @@ export default function NoveLekcije() {
                 return
             }
             const filtriranaPostignuca = odgovor.data.map(
-                p => ({ value: parseInt(p.sifra), label: p.naziv })
+                p => ({ value: p.sifra, label: p.naziv })
             )
             setPostignuca(filtriranaPostignuca)
         })

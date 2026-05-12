@@ -35,17 +35,18 @@ export const RouteNames = {
 export const DATA_SOURCES = {
     L: "localStorage",
     M: "memorija",
+    F: "firebase"
 }
 
 export const DEFAULT_PAGE_SIZE = 10;
 export const PAGE_SIZES = [5, 10, 25, 50]
 
-export const DATA_SOURCE = DATA_SOURCES.L
+export const DATA_SOURCE = localStorage.getItem('dataSource') || DATA_SOURCES.F;
 
 export const PrefixStorage = {
-     POSTIGNUCA: "postignuca",
-    KATEGORIJE: "kategorije",
-    UCENICI: "ucenici",
-    LEKCIJE: "lekcije",
-    OPERATERI: "operateri"
+     POSTIGNUCA: "e32.postignuca",
+    KATEGORIJE: "e32.kategorije",
+    UCENICI: "e32.ucenici",
+    LEKCIJE: "e32.lekcije",
+    OPERATERI: "e32.operateri"
 }

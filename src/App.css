@@ -167,6 +167,11 @@ td > button,
     background: linear-gradient(135deg, #E07C7C, #D95757);
 }
 
+.btnWarning {
+    background: linear-gradient(135deg, #F6E7BFD7, #F0D76F);
+    color: var(--text-dark)
+}
+
 .buttonContainer {
     display: flex;
     gap: 10px;

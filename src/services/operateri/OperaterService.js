@@ -1,6 +1,7 @@
 import OperaterServiceLocalStorage from "./OperaterServiceLocalStorage"
 import OperaterServiceMemorija from "./OperaterServiceMemorija"
 import { DATA_SOURCE } from "../../constants"
+import OperaterServiceFireBase from "./OperaterServiceFireBase"
 
 let Servis = null
 
@@ -12,19 +13,22 @@ switch (DATA_SOURCE) {
     case 'localStorage':
         Servis = OperaterServiceLocalStorage
         break
+    case 'firebase':
+        Servis = OperaterServiceFireBase;
+        break;
     default:
         Servis = null
 }
 
 // 2. Definiranje defaultnog (praznog) ponašanja ako Servis nije pronađen
 const PrazanServis = {
-    get: async () => ({ success: false, data: []}),
+    get: async () => ({ success: false, data: [] }),
     getBySifra: async (sifra) => ({ success: false, data: null }),
-    dodaj: async (operater) => { console.error("Servis nije učitan"); return {success: false} },
-    promjeni: async (sifra, operater) => { console.error("Servis nije učitan"); return {success: false} },
-    promjeniLozinku: async (sifra, novaLozinka) => { console.error("Servis nije učitan"); return {success: false} },
-    obrisi: async (sifra) => { console.error("Servis nije učitan"); return {success: false} },
-    prijava: async (email, lozinka) => { console.error("Servis nije učitan"); return {success: false, message: "Servis nije učitan"} }
+    dodaj: async (operater) => { console.error("Servis nije učitan"); return { success: false } },
+    promjeni: async (sifra, operater) => { console.error("Servis nije učitan"); return { success: false } },
+    promjeniLozinku: async (sifra, novaLozinka) => { console.error("Servis nije učitan"); return { success: false } },
+    obrisi: async (sifra) => { console.error("Servis nije učitan"); return { success: false } },
+    prijava: async (email, lozinka) => { console.error("Servis nije učitan"); return { success: false, message: "Servis nije učitan" } }
 }
 
 // 3. Jedan jedini export na kraju

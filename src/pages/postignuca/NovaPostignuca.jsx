@@ -94,8 +94,9 @@ export default function NovaPostignuca() {
             return;
         }
 
+
         dodaj({
-            kategorija: parseInt(podaci.get("kategorija")),
+            kategorija: podaci.get("kategorija"),
             naziv: podaci.get("naziv"),
             opis: podaci.get("opis"),
             procjena: podaci.get("procjena"),

@@ -1,6 +1,7 @@
 import KategorijeServiceLocalStorage from "../kategorije/KategorijeServiceLocalStorage.js";
 import KategorijeServiceMemorija from "./KategorijeServiceMemorija.js";
-import {DATA_SOURCE} from "../../constants.js";
+import { DATA_SOURCE } from "../../constants.js";
+import KategorijeServiceFireBase from "./KategorijeServiceFireBase.js";
 
 let Servis = null;
 
@@ -12,14 +13,17 @@ switch (DATA_SOURCE) {
     case "localStorage":
         Servis = KategorijeServiceLocalStorage;
         break;
+    case "firebase":
+        Servis = KategorijeServiceFireBase;
+        break;
     default:
         Servis = null;
 }
 
 
 const PrazanServis = {
-    get: async () => ({success: false, data: []}),
-    getBySifra: async (sifra) => ({success: false, data: {}}),
+    get: async () => ({ success: false, data: [] }),
+    getBySifra: async (sifra) => ({ success: false, data: {} }),
     dodaj: async (kategorija) => {
         console.error("Servis nije učitan");
     },

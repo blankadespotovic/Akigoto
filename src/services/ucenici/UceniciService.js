@@ -1,6 +1,7 @@
 import UceniciServiceLocalStorage from "./UceniciServiceLocalStorage";
 import UceniciServiceMemorija from "./UceniciServiceMemorija";
-import {DATA_SOURCE} from "../../constants";
+import { DATA_SOURCE } from "../../constants";
+import UceniciServiceFireBase from "./UceniciServiceFireBase";
 
 let Servis = null;
 
@@ -12,16 +13,19 @@ switch (DATA_SOURCE) {
     case "localStorage":
         Servis = UceniciServiceLocalStorage;
         break;
+    case 'firebase':
+        Servis = UceniciServiceFireBase;
+        break;
     default:
         Servis = null;
 }
 
 
 const PrazanServis = {
-    get: async () => ({success: false, data: []}),
-    getAll: async () => ({success: false, data: []}),
-    getBySifra: async (sifra) => ({success: false, data: {}}),
-    getLastFewIds: async (brojUcenika) => ({success: false, data: []}),
+    get: async () => ({ success: false, data: [] }),
+    getAll: async () => ({ success: false, data: [] }),
+    getBySifra: async (sifra) => ({ success: false, data: {} }),
+    getLastFewIds: async (brojUcenika) => ({ success: false, data: [] }),
     dodaj: async (ucenik) => {
         console.error("Servis nije učitan");
     },
