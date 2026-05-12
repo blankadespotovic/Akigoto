@@ -22,7 +22,7 @@ export default function NadzornaPloca() {
             const { data: postignucaData } = await PostignucaService.get();
             const parsedData = kategorijeData.map((kat) => {
                 const postignucaKategorije = postignucaData.filter((pos) =>
-                    Number.parseInt(pos.kategorija) === Number.parseInt(kat.sifra)
+                    pos.kategorija === kat.sifra
                 );
                 return {
                     y: postignucaKategorije.length,
@@ -38,7 +38,7 @@ export default function NadzornaPloca() {
         }
 
        void getPodaci();
-    }, [hideLoading, showLoading]);
+    }, []);
 
     const fixedOptions = {
         chart: {
