@@ -1,9 +1,14 @@
-import { useEffect, useState } from "react"
-import { Link, useNavigate, useParams } from "react-router-dom"
+import {useEffect, useState} from "react"
+import {Link, useNavigate, useParams} from "react-router-dom"
 import OperaterService from "../../services/operateri/OperaterService"
-import { Form, Button, Row, Col, Container, Card, Alert } from "react-bootstrap"
-import { RouteNames } from "../../constants"
-import { ShemaPromjenaLozinke } from "../../schemes/ShemaOperater"
+import {Button, Col, Form, Row} from "react-bootstrap"
+import {RouteNames} from "../../constants"
+import {ShemaPromjenaLozinke} from "../../schemes/ShemaOperater"
+import {CustomCard} from "../../components/CustomCard.jsx";
+import {CustomAlert} from "../../components/CustomAlert.jsx";
+import {CustomInput} from "../../components/customInputs/CustomInput.jsx";
+import {FaEye, FaEyeSlash, FaLock} from "react-icons/fa6";
+import useBreakpoint from "../../hooks/useBreakpoint.js";
 
 export default function OperaterPromjenaLozinke() {
 
@@ -11,28 +16,86 @@ export default function OperaterPromjenaLozinke() {
     const params = useParams()
     const [operater, setOperater] = useState({})
     const [errors, setErrors] = useState({})
-
-    useEffect(() => {
-        ucitajOperatera()
-    }, [])
+    const sirina = useBreakpoint()
+    const mobilnaSirina = ["xs", "sm", "md"].includes(sirina)
+    const [passwordShown, setPasswordShown] = useState(false);
+    const [repeatPasswordShown, setRepeatPasswordShown] = useState(false);
+    const [passwordIcon, setPasswordIcon] = useState(
+        <FaEyeSlash
+            onClick={() => setPasswordShown(!passwordShown)}
+            className={"cursor-pointer"}
+        />
+    );
+    const [repeatPasswordIcon, setRepeatPasswordIcon] = useState(
+        <FaEyeSlash
+            onClick={() => setRepeatPasswordShown(!repeatPasswordShown)}
+            className={"cursor-pointer"}
+        />
+    );
 
     async function ucitajOperatera() {
         const odgovor = await OperaterService.getBySifra(params.sifra)
         if (!odgovor.success) {
-            alert('Operater nije pronađen')
+            alert("Operater nije pronađen")
             navigate(RouteNames.OPERATERI)
             return
         }
         setOperater(odgovor.data)
     }
 
+    useEffect(() => {
+        ucitajOperatera()
+    }, [])
+
+    useEffect(() => {
+        const getPasswordIcon = () => {
+            if (passwordShown) {
+                setPasswordIcon(
+                    <FaEyeSlash
+                        onClick={() => setPasswordShown(!passwordShown)}
+                        className={"cursor-pointer"}
+                    />
+                );
+            } else {
+                setPasswordIcon(
+                    <FaEye
+                        onClick={() => setPasswordShown(!passwordShown)}
+                        className={"cursor-pointer"}
+                    />
+                );
+            }
+        }
+        getPasswordIcon();
+    }, [passwordShown])
+
+    useEffect(() => {
+        const getRepeatPasswordIcon = () => {
+            if (repeatPasswordShown) {
+                setRepeatPasswordIcon(
+                    <FaEyeSlash
+                        onClick={() => setRepeatPasswordShown(!repeatPasswordShown)}
+                        className={"cursor-pointer"}
+                    />
+                );
+            } else {
+                setRepeatPasswordIcon(
+                    <FaEye
+                        onClick={() => setRepeatPasswordShown(!repeatPasswordShown)}
+                        className={"cursor-pointer"}
+                    />
+                );
+            }
+        }
+        getRepeatPasswordIcon();
+    }, [repeatPasswordShown])
+
     async function promjeniLozinku(novaLozinka) {
         const rezultat = await OperaterService.promjeniLozinku(params.sifra, novaLozinka)
         if (rezultat.success) {
-            alert('Lozinka uspješno promijenjena!')
+            alert("Lozinka uspješno promijenjena!")
             navigate(RouteNames.OPERATERI)
         } else {
-            alert(rezultat.message || 'Greška pri promjeni lozinke')
+            alert(rezultat.message || "Greška pri promjeni lozinke")
         }
     }
 
@@ -60,89 +123,78 @@ export default function OperaterPromjenaLozinke() {
             return
         }
 
-        promjeniLozinku(podaci.get('novaLozinka'))
+        promjeniLozinku(podaci.get("novaLozinka"))
     }
 
     const ocistiGresku = (nazivPolja) => {
         if (errors[nazivPolja]) {
-            const noveGreske = { ...errors }
+            const noveGreske = {...errors}
             delete noveGreske[nazivPolja]
             setErrors(noveGreske)
         }
     }
 
     return (
-        <>
-            <h3>Promjena lozinke</h3>
+        <CustomCard title={"Promjena lozinke"} textAlign={"left"}>
             <Form onSubmit={odradiSubmit}>
-                <Container className="mt-4">
-                    <Card className="shadow-sm">
-                        <Card.Body>
-                            <Card.Title className="mb-4">
-                                Promjena lozinke za: <strong>{operater.email}</strong>
-                            </Card.Title>
+                <p>
+                    Operater: <strong>{operater.email}</strong>
+                </p>
+                <CustomAlert variant={"info"}>
+                    <strong>Zahtjevi za lozinku:</strong>
+                    <ul className="mb-0 mt-2">
+                        <li>Najmanje 8 znakova</li>
+                        <li>Barem jedno veliko slovo (A-Z)</li>
+                        <li>Barem jedno malo slovo (a-z)</li>
+                        <li>Barem jedan broj (0-9)</li>
+                        <li>Barem jedan interpukcijski znak (!@#$%^&*...)</li>
+                    </ul>
+                </CustomAlert>
+                <Row>
+                    <Col xs={12} md={6}>
+                        <CustomInput
+                            label={"Lozinka"}
+                            id={"novaLozinka"}
+                            type={passwordShown ? "text" : "password"}
+                            name="novaLozinka"
+                            placeholder="Unesite novu lozinku"
+                            isInvalid={!!errors.novaLozinka}
+                            errors={errors.novaLozinka}
+                            onFocus={() => ocistiGresku("novaLozinka")}
+                            prefix={<FaLock size={12}/>}
+                            suffix={passwordIcon}
+                        />
+                    </Col>
+                    <Col xs={12} md={6}>
+                        <CustomInput
+                            label={"Ponovite lozinku"}
+                            id={"potvrdaLozinke"}
+                            type={repeatPasswordShown ? "text" : "password"}
+                            name="potvrdaLozinke"
+                            placeholder="Ponovite novu lozinku"
+                            isInvalid={!!errors.potvrdaLozinke}
+                            errors={errors.potvrdaLozinke}
+                            onFocus={() => ocistiGresku("potvrdaLozinke")}
+                            prefix={<FaLock size={12}/>}
+                            suffix={repeatPasswordIcon}
+                        />
+                    </Col>
+                </Row>
 
-                            <Alert variant="info">
-                                <strong>Zahtjevi za lozinku:</strong>
-                                <ul className="mb-0 mt-2">
-                                    <li>Najmanje 8 znakova</li>
-                                    <li>Barem jedno veliko slovo (A-Z)</li>
-                                    <li>Barem jedno malo slovo (a-z)</li>
-                                    <li>Barem jedan broj (0-9)</li>
-                                    <li>Barem jedan interpukcijski znak (!@#$%^&*...)</li>
-                                </ul>
-                            </Alert>
-
-                            <Row>
-                                <Col xs={12}>
-                                    <Form.Group controlId="novaLozinka" className="mb-3">
-                                        <Form.Label className="fw-bold">Nova lozinka</Form.Label>
-                                        <Form.Control
-                                            type="password"
-                                            name="novaLozinka"
-                                            placeholder="Unesite novu lozinku"
-                                            isInvalid={!!errors.novaLozinka}
-                                            onFocus={() => ocistiGresku('novaLozinka')}
-                                        />
-                                        <Form.Control.Feedback type="invalid">
-                                            {errors.novaLozinka}
-                                        </Form.Control.Feedback>
-                                    </Form.Group>
-                                </Col>
-                            </Row>
-
-                            <Row>
-                                <Col xs={12}>
-                                    <Form.Group controlId="potvrdaLozinke" className="mb-3">
-                                        <Form.Label className="fw-bold">Potvrda lozinke</Form.Label>
-                                        <Form.Control
-                                            type="password"
-                                            name="potvrdaLozinke"
-                                            placeholder="Ponovite novu lozinku"
-                                            isInvalid={!!errors.potvrdaLozinke}
-                                            onFocus={() => ocistiGresku('potvrdaLozinke')}
-                                        />
-                                        <Form.Control.Feedback type="invalid">
-                                            {errors.potvrdaLozinke}
-                                        </Form.Control.Feedback>
-                                    </Form.Group>
-                                </Col>
-                            </Row>
-
-                            <hr />
-
-                            <div className="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-                                <Link to={RouteNames.OPERATERI} className="btn btn-danger px-4">
-                                    Odustani
-                                </Link>
-                                <Button type="submit" variant="success">
-                                    Promjeni lozinku
-                                </Button>
-                            </div>
-                        </Card.Body>
-                    </Card>
-                </Container>
+                <Row className="mt-4 justi">
+                    <Col xs={12} md={6} className={"order-2 order-md-1"}>
+                        <Link to={RouteNames.OPERATERI}
+                              className={`btn btnCancel${mobilnaSirina ? " w-100 my-1" : ""}`}>
+                            Odustani
+                        </Link>
+                    </Col>
+                    <Col xs={12} md={6} className={"order-1 order-md-2 text-end"}>
+                        <Button type="submit" className={`btn btnAdd${mobilnaSirina ? " w-100 my-1" : ""}`}>
+                            Promijeni
+                        </Button>
+                    </Col>
+                </Row>
             </Form>
-        </>
+        </CustomCard>
     )
 }

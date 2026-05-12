@@ -6,10 +6,14 @@ import {Button, ButtonGroup, Col, Form, Row} from "react-bootstrap"
 import {ShemaLogin} from "../../schemes/ShemaOperater"
 import {CustomInput} from "../../components/customInputs/CustomInput.jsx";
 import {CustomCard} from "../../components/CustomCard.jsx";
-import {FaClipboard, FaClipboardCheck, FaEye, FaEyeSlash, FaLock, FaUser} from "react-icons/fa6";
+import {FaEye, FaEyeSlash, FaLock, FaUser} from "react-icons/fa6";
 
 export default function Login() {
     const [errors, setErrors] = useState({})
+    const [passwordShown, setPasswordShown] = useState(false);
+    const [passwordIcon, setPasswordIcon] = useState()
+    const [emailValue, setEmailValue] = useState("");
+    const [passwordValue, setPasswordValue] = useState("");
 
     const {login} = useAuth();
 
@@ -40,9 +44,6 @@ export default function Login() {
         }
     }
 
-    const [passwordShown, setPasswordShown] = useState(false);
-    const [passwordIcon, setPasswordIcon] = useState()
-
     useEffect(() => {
         const getPasswordIcon = () => {
             if (passwordShown) {
@@ -54,38 +55,6 @@ export default function Login() {
         }
         getPasswordIcon();
     }, [passwordShown])
-
-    const [copyIconEmail, setCopyIconEmail] = useState(<FaClipboard size={20}/>);
-    const [copyIconPassword, setCopyIconPassword] = useState(<FaClipboard size={20}/>);
-
-    const handleCopyEmail = async (e) => {
-        const text = e.target.innerText.trim();
-        const initialIcon = <FaClipboard size={20}/>;
-        setCopyIconPassword(initialIcon);
-        await navigator.clipboard
-            .writeText(text)
-            .then(() => {
-                setCopyIconEmail(<FaClipboardCheck size={20} color={"green"}/>)
-            })
-            .catch((err) => console.error("Copy failed: ", err));
-        setTimeout(() => setCopyIconEmail(initialIcon), 3000);
-    };
-
-    const handleCopyPassword = async (e) => {
-        const text = e.target.innerText.trim();
-        const initialIcon = <FaClipboard size={20}/>;
-        setCopyIconEmail(initialIcon);
-        await navigator.clipboard
-            .writeText(text)
-            .then(() => {
-                setCopyIconPassword(<FaClipboardCheck size={20} color={"green"}/>)
-            })
-            .catch((err) => console.error("Copy failed: ", err));
-        setTimeout(() => setCopyIconPassword(initialIcon), 3000);
-    }
-
-    const [emailValue, setEmailValue] = useState("");
-    const [passwordValue, setPasswordValue] = useState("");
 
     const handleClickFill = (
         isAdmin
@@ -116,21 +85,6 @@ export default function Login() {
                                 Korisnik<br/>operater@akigoto.hr
                             </Button>
                         </ButtonGroup>
-                        {/*<h4>Podaci za prijavu</h4>*/}
-                        {/*<p>*/}
-                        {/*    <span*/}
-                        {/*        onClick={handleCopyEmail}*/}
-                        {/*        className={"d-flex align-items-center cursor-pointer"}*/}
-                        {/*    >*/}
-                        {/*        {copyIconEmail}&nbsp;admin@akigoto.hr*/}
-                        {/*    </span>*/}
-                        {/*    <span*/}
-                        {/*        onClick={handleCopyPassword}*/}
-                        {/*        className={"d-flex align-items-center cursor-pointer"}*/}
-                        {/*    >*/}
-                        {/*        {copyIconPassword}&nbsp;Akigoto123!*/}
-                        {/*    </span>*/}
-                        {/*</p>*/}
                         {errors.opce && (
                             <div className="alert alert-danger" role="alert">
                                 {errors.opce}
@@ -149,6 +103,7 @@ export default function Login() {
                             onFocus={() => ocistiGresku("email")}
                             prefix={<FaUser size={12}/>}
                             value={emailValue}
+                            onChange={e => setEmailValue(e.target.value)}
                         />
                     </Col>
                     <Col xs={12}>
@@ -164,6 +119,7 @@ export default function Login() {
                             prefix={<FaLock size={12}/>}
                             suffix={passwordIcon}
                             value={passwordValue}
+                            onChange={e => setPasswordValue(e.target.value)}
                         />
                     </Col>
                     <Col xs={12} className="mt-4 text-end">

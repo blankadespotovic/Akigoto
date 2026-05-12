@@ -265,14 +265,19 @@ table {
     background: var(--blue-soft);
 }
 
+.badge-admin,
+.badge-user {
+    border-radius: 0;
+    font-size: 14px;
+    min-width: 80px;
+}
+
 .badge-admin{
     background: #E07C7C;
-    font-size: 14px;
 }
 
 .badge-user{
     background-color: #6FAFF0;
-    font-size: 14px;
 }
 
 .table .table-btn {
