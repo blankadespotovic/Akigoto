@@ -7,6 +7,7 @@ import {ShemaLogin} from "../../schemes/ShemaOperater"
 import {CustomInput} from "../../components/customInputs/CustomInput.jsx";
 import {CustomCard} from "../../components/CustomCard.jsx";
 import {FaEye, FaEyeSlash, FaLock, FaUser} from "react-icons/fa6";
+import useBreakpoint from "../../hooks/useBreakpoint.js";
 
 export default function Login() {
     const [errors, setErrors] = useState({})
@@ -14,6 +15,8 @@ export default function Login() {
     const [passwordIcon, setPasswordIcon] = useState()
     const [emailValue, setEmailValue] = useState("");
     const [passwordValue, setPasswordValue] = useState("");
+    const sirina = useBreakpoint()
+    const moiblnaSirina = ["xs", "sm", "md"].includes(sirina)
 
     const {login} = useAuth();
 
@@ -71,7 +74,7 @@ export default function Login() {
             >
                 <Row>
                     <Col xs={12}>
-                        <Row className={"mt-2 mb-4 gap-2 gap-md-0"}>
+                        <Row className={`${!moiblnaSirina && 'w-100'} mt-2 mb-4 gap-2 gap-md-0`}>
                             <Col xs={12} md={6}>
                                 <Button
                                     className={"btn btnInfo w-100 mx-md-2"}
