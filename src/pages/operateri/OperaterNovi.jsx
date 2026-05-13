@@ -1,21 +1,30 @@
-import { Form, Button, Row, Col, Container, Card } from "react-bootstrap"
-import { RouteNames } from "../../constants"
-import { Link, useNavigate } from "react-router-dom"
+import {Button, Col, Form, Row} from "react-bootstrap"
+import {RouteNames, ULOGE} from "../../constants"
+import {Link, useNavigate} from "react-router-dom"
 import OperaterService from "../../services/operateri/OperaterService"
-import { ShemaOperater } from "../../schemes/ShemaOperater"
-import { useState } from "react"
+import {ShemaOperater} from "../../schemes/ShemaOperater"
+import {useEffect, useState} from "react"
+import {CustomCard} from "../../components/CustomCard.jsx";
+import useBreakpoint from "../../hooks/useBreakpoint.js";
+import {CustomInput} from "../../components/customInputs/CustomInput.jsx";
+import {FaEye, FaEyeSlash, FaLock, FaUser} from "react-icons/fa6";
+import {CustomSelect} from "../../components/customInputs/CustomSelect.jsx";
 
 export default function OperaterNovi() {
 
     const navigate = useNavigate()
     const [errors, setErrors] = useState({})
+    const sirina = useBreakpoint()
+    const mobilnaSirina = ["xs", "sm", "md"].includes(sirina);
+    const [passwordShown, setPasswordShown] = useState(false);
+    const [passwordIcon, setPasswordIcon] = useState()
 
     async function dodaj(operater) {
         const rezultat = await OperaterService.dodaj(operater)
         if (rezultat.success) {
             navigate(RouteNames.OPERATERI)
         } else {
-            alert(rezultat.message || 'Greška pri dodavanju operatera')
+            alert(rezultat.message || "Greška pri dodavanju operatera")
         }
     }
 
@@ -44,102 +53,94 @@ export default function OperaterNovi() {
         }
 
         dodaj({
-            email: podaci.get('email'),
-            lozinka: podaci.get('lozinka'),
-            uloga: podaci.get('uloga')
+            email: podaci.get("email"),
+            lozinka: podaci.get("lozinka"),
+            uloga: podaci.get("uloga")
         })
     }
 
     const ocistiGresku = (nazivPolja) => {
         if (errors[nazivPolja]) {
-            const noveGreske = { ...errors }
+            const noveGreske = {...errors}
             delete noveGreske[nazivPolja]
             setErrors(noveGreske)
         }
     }
 
+    useEffect(() => {
+        const getPasswordIcon = () => {
+            if (passwordShown) {
+                setPasswordIcon(<FaEyeSlash onClick={() => setPasswordShown(!passwordShown)}
+                                            className={"cursor-pointer"}/>)
+            } else {
+                setPasswordIcon(<FaEye onClick={() => setPasswordShown(!passwordShown)} className={"cursor-pointer"}/>)
+            }
+        }
+        getPasswordIcon();
+    }, [passwordShown])
+
+    const uloge = Object.values(ULOGE).map(uloga => ({
+        value: uloga,
+        label: uloga.charAt(0).toUpperCase() + uloga.slice(1),
+    }));
+
     return (
-        <>
-            <h3>Unos novog operatera</h3>
+        <CustomCard title={"Unos novog operatera"} textAlign={"left"}>
             <Form onSubmit={odradiSubmit}>
-                <Container className="mt-4">
-                    <Card className="shadow-sm">
-                        <Card.Body>
-                            <Card.Title className="mb-4">Podaci o operateru</Card.Title>
+                <Row>
+                    <Col xs={12}>
+                        <CustomInput
+                            id={"email"}
+                            type={"email"}
+                            label={"E-mail adresa operatera"}
+                            placeholder={"operater@akigoto.hr"}
+                            isInvalid={!!errors.email}
+                            errors={errors.email}
+                            onFocus={() => ocistiGresku("email")}
+                            prefix={<FaUser size={12}/>}
+                        />
+                    </Col>
+                    <Col xs={6}>
 
-                            <Row>
-                                <Col xs={12}>
-                                    <Form.Group controlId="email" className="mb-3">
-                                        <Form.Label className="fw-bold">Email</Form.Label>
-                                        <Form.Control
-                                            type="email"
-                                            name="email"
-                                            placeholder="operater@akigoto.hr"
-                                            isInvalid={!!errors.email}
-                                            onFocus={() => ocistiGresku('email')}
-                                        />
-                                        <Form.Control.Feedback type="invalid">
-                                            {errors.email}
-                                        </Form.Control.Feedback>
-                                    </Form.Group>
-                                </Col>
-                            </Row>
+                        <CustomInput
+                            label={"Lozinka"}
+                            id={"lozinka"}
+                            type={passwordShown ? "text" : "password"}
+                            name="lozinka"
+                            placeholder="Unesite lozinku"
+                            isInvalid={!!errors.lozinka}
+                            errors={errors.lozinka}
+                            onFocus={() => ocistiGresku("lozinka")}
+                            prefix={<FaLock size={12}/>}
+                            suffix={passwordIcon}
+                        />
+                        <span className="text-muted small">
+                            Lozinka mora sadržavati: najmanje 8 znakova, veliko slovo, malo slovo, broj i interpukcijski znak (!@#$%^&*...)
+                        </span>
+                    </Col>
+                    <Col xs={6}>
+                        <CustomSelect
+                            id={"uloga"}
+                            label={"Uloga"}
+                            podaci={uloge}
+                        />
+                    </Col>
+                </Row>
 
-                            <Row>
-                                <Col xs={12}>
-                                    <Form.Group controlId="lozinka" className="mb-3">
-                                        <Form.Label className="fw-bold">Lozinka</Form.Label>
-                                        <Form.Control
-                                            type="password"
-                                            name="lozinka"
-                                            placeholder="Min 8 znakova, velika/mala slova, broj i znak"
-                                            isInvalid={!!errors.lozinka}
-                                            onFocus={() => ocistiGresku('lozinka')}
-                                        />
-                                        <Form.Control.Feedback type="invalid">
-                                            {errors.lozinka}
-                                        </Form.Control.Feedback>
-                                        <Form.Text className="text-muted">
-                                            Lozinka mora sadržavati: najmanje 8 znakova, veliko slovo, malo slovo, broj i interpukcijski znak (!@#$%^&*...)
-                                        </Form.Text>
-                                    </Form.Group>
-                                </Col>
-                            </Row>
-
-                            <Row>
-                                <Col xs={12}>
-                                    <Form.Group controlId="uloga" className="mb-3">
-                                        <Form.Label className="fw-bold">Uloga</Form.Label>
-                                        <Form.Select
-                                            name="uloga"
-                                            isInvalid={!!errors.uloga}
-                                            onFocus={() => ocistiGresku('uloga')}
-                                        >
-                                            <option value="">Odaberite ulogu...</option>
-                                            <option value="admin">Admin</option>
-                                            <option value="korisnik">Korisnik</option>
-                                        </Form.Select>
-                                        <Form.Control.Feedback type="invalid">
-                                            {errors.uloga}
-                                        </Form.Control.Feedback>
-                                    </Form.Group>
-                                </Col>
-                            </Row>
-
-                            <hr />
-
-                            <div className="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-                                <Link to={RouteNames.OPERATERI} className="btn btn-danger px-4">
-                                    Odustani
-                                </Link>
-                                <Button type="submit" variant="success">
-                                    Dodaj novog operatera
-                                </Button>
-                            </div>
-                        </Card.Body>
-                    </Card>
-                </Container>
+                <Row className="mt-4 justi">
+                    <Col xs={12} md={6} className={"order-2 order-md-1"}>
+                        <Link to={RouteNames.OPERATERI}
+                              className={`btn btnCancel${mobilnaSirina ? " w-100 my-1" : ""}`}>
+                            Odustani
+                        </Link>
+                    </Col>
+                    <Col xs={12} md={6} className={"order-1 order-md-2 text-end"}>
+                        <Button type="submit" className={`btn btnAdd${mobilnaSirina ? " w-100 my-1" : ""}`}>
+                            Spremi
+                        </Button>
+                    </Col>
+                </Row>
             </Form>
-        </>
+        </CustomCard>
     )
 }
