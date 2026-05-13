@@ -92,9 +92,7 @@ export default function Izbornik() {
                                 id="user-dropdown"
                                 align="end"
                             >
-                                <NavDropdown.Item className={"user"} onClick={() => navigate(RouteNames.PROFIL)}>
-                                    Profil
-                                </NavDropdown.Item>
+                        
                                 {authUser.uloga === "admin" &&
                                     <>
                                         <hr className={"dropdown-divider"}/>

@@ -9,7 +9,6 @@ import PregledPostignuca from './pages/postignuca/PregledPostignuca'
 import NovaPostignuca from './pages/postignuca/NovaPostignuca'
 import PromjenaPostignuca from './pages/postignuca/PromjenaPostignuca'
 import { Footer } from './components/Footer'
-import Profil from './pages/profil/Profil'
 import PromjenaKategorije from './pages/kategorije/PromjenaKategorija'
 import NovaKategorija from './pages/kategorije/NovaKategorija'
 import PregledKategorija from './pages/kategorije/PregledKategorija'
@@ -47,7 +46,6 @@ function App() {
             <>
               <Route path={RouteNames.NADZORNA_PLOCA} element={<NadzornaPloca />} />
 
-              <Route path={RouteNames.PROFIL} element={<Profil />} />
               <Route path={RouteNames.POSTIGNUCA} element={<PregledPostignuca />} />
               <Route path={RouteNames.POSTIGNUCA_NOVA} element={<NovaPostignuca />} />
               <Route path={RouteNames.PROMJENA_POSTIGNUCA} element={<PromjenaPostignuca />} />
