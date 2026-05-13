@@ -78,11 +78,6 @@ export default function Izbornik() {
                     <Nav className="ms-auto">
 
                         {isLoggedIn ? (
-                            <>
-                            <Button
-                                className={"btn btnWarning me-2"}
-                            >{getDatasourceName()}</Button>
-                            
                             <NavDropdown
                                 title={
                                     <>
@@ -92,10 +87,8 @@ export default function Izbornik() {
                                 id="user-dropdown"
                                 align="end"
                             >
-                        
                                 {authUser.uloga === "admin" &&
                                     <>
-                                        <hr className={"dropdown-divider"}/>
                                         <NavDropdown.Item onClick={() => navigate(RouteNames.GENERIRANJE_PODATAKA)}>
                                             Generiraj podatke
                                         </NavDropdown.Item>
@@ -109,7 +102,6 @@ export default function Izbornik() {
                                     Logout
                                 </NavDropdown.Item>
                             </NavDropdown>
-                            </>
                         ) : (
                             <ButtonGroup className={"d-flex flex-column flex-md-row gap-md-2"}>
                                     <Nav.Link

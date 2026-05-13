@@ -101,6 +101,7 @@ export default function Login() {
                             isInvalid={!!errors.email}
                             errors={errors.email}
                             onFocus={() => ocistiGresku("email")}
+                            autoComplete="email"
                             prefix={<FaUser size={12}/>}
                             value={emailValue}
                             onChange={e => setEmailValue(e.target.value)}
@@ -116,6 +117,7 @@ export default function Login() {
                             isInvalid={!!errors.lozinka}
                             errors={errors.lozinka}
                             onFocus={() => ocistiGresku("lozinka")}
+                            autoComplete="password"
                             prefix={<FaLock size={12}/>}
                             suffix={passwordIcon}
                             value={passwordValue}

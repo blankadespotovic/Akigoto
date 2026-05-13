@@ -8,7 +8,7 @@ export function CustomInput(
         id, label, type, required = false, placeholder = undefined, defaultValue = undefined,
         prefix = undefined, suffix = undefined, trebaFormatiratuVrijeme = false,
         min = undefined, max = undefined, value = undefined, onChange = undefined,
-        disabled = false, onFocus = undefined, isInvalid, errors
+        disabled = false, onFocus = undefined, isInvalid, errors, autoComplete
     }
 ) {
     const [vrijednost, setVrijednost] = useState(0)
@@ -48,6 +48,7 @@ export function CustomInput(
                     value={value}
                     disabled={disabled}
                     onFocus={onFocus}
+                    autoComplete={autoComplete}
                 />
                 {suffix && <InputGroup.Text className={"custom-addon"}>{suffix}</InputGroup.Text>}
                 {errors && (

@@ -139,7 +139,7 @@ td > button,
 .btnEdit,
 .btnInfo,
 .btnSuccess,
-.btnDanger{
+.btnDanger {
     background: linear-gradient(135deg, #F6C1CC, #CDB7F6);
     border: groove white;
     color: white;
@@ -272,11 +272,11 @@ table {
     min-width: 80px;
 }
 
-.badge-admin{
+.badge-admin {
     background: #E07C7C;
 }
 
-.badge-user{
+.badge-user {
     background-color: #6FAFF0;
 }
 
@@ -672,4 +672,24 @@ ul.custom-list li.ucenik::before {
 
 .navbar .dropdown-toggle::after {
     display: none;
+}
+
+.data-source-picker-wrapper {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1050;
+}
+
+.data-source-picker-dropdown {
+    opacity: 60%;
+    transition: opacity 0.5s ease;
+}
+
+.data-source-picker-dropdown:hover {
+    opacity: 1;
+}
+
+.data-source-picker-dropdown-menu {
+    border-radius: 0;
 }

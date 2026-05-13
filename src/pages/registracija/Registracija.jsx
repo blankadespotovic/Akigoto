@@ -141,6 +141,7 @@ export default function Registracija() {
                             isInvalid={!!errors.email}
                             errors={errors.email}
                             onFocus={() => ocistiGresku("email")}
+                            autoComplete="email"
                             prefix={<FaUser size={12}/>}
                         />
                     </Col>
@@ -154,6 +155,7 @@ export default function Registracija() {
                             isInvalid={!!errors.lozinka}
                             errors={errors.lozinka}
                             onFocus={() => ocistiGresku("lozinka")}
+                            autoComplete="password"
                             prefix={<FaLock size={12}/>}
                             suffix={passwordIcon}
                         />
@@ -168,6 +170,7 @@ export default function Registracija() {
                             isInvalid={!!errors.potvrdaLozinke}
                             errors={errors.potvrdaLozinke}
                             onFocus={() => ocistiGresku("potvrdaLozinke")}
+                            autoComplete="password"
                             prefix={<FaLock size={12}/>}
                             suffix={repeatPasswordIcon}
                         />
