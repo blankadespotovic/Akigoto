@@ -2,7 +2,7 @@ import {useEffect, useState} from "react"
 
 import useAuth from "../../hooks/useAuth"
 
-import {Button, ButtonGroup, Col, Form, Row} from "react-bootstrap"
+import {Button, Col, Form, Row} from "react-bootstrap"
 import {ShemaLogin} from "../../schemes/ShemaOperater"
 import {CustomInput} from "../../components/customInputs/CustomInput.jsx";
 import {CustomCard} from "../../components/CustomCard.jsx";
@@ -71,20 +71,24 @@ export default function Login() {
             >
                 <Row>
                     <Col xs={12}>
-                        <ButtonGroup className={"w-100 mt-2 mb-4"}>
-                            <Button
-                                className={"btn btnInfo w-100 mx-2"}
-                                onClick={() => handleClickFill(true)}
-                            >
-                                Admin<br/>admin@akigoto.hr
-                            </Button>
-                            <Button
-                                className={"btn btnInfo w-100 mx-2"}
-                                onClick={() => handleClickFill(false)}
-                            >
-                                Korisnik<br/>operater@akigoto.hr
-                            </Button>
-                        </ButtonGroup>
+                        <Row className={"mt-2 mb-4 gap-2 gap-md-0"}>
+                            <Col xs={12} md={6}>
+                                <Button
+                                    className={"btn btnInfo w-100 mx-md-2"}
+                                    onClick={() => handleClickFill(true)}
+                                >
+                                    Admin<br/>admin@akigoto.hr
+                                </Button>
+                            </Col>
+                            <Col xs={12} md={6}>
+                                <Button
+                                    className={"btn btnInfo w-100 mx-md-2"}
+                                    onClick={() => handleClickFill(false)}
+                                >
+                                    Korisnik<br/>operater@akigoto.hr
+                                </Button>
+                            </Col>
+                        </Row>
                         {errors.opce && (
                             <div className="alert alert-danger" role="alert">
                                 {errors.opce}
@@ -101,7 +105,6 @@ export default function Login() {
                             isInvalid={!!errors.email}
                             errors={errors.email}
                             onFocus={() => ocistiGresku("email")}
-                            autoComplete="email"
                             prefix={<FaUser size={12}/>}
                             value={emailValue}
                             onChange={e => setEmailValue(e.target.value)}
@@ -117,7 +120,6 @@ export default function Login() {
                             isInvalid={!!errors.lozinka}
                             errors={errors.lozinka}
                             onFocus={() => ocistiGresku("lozinka")}
-                            autoComplete="password"
                             prefix={<FaLock size={12}/>}
                             suffix={passwordIcon}
                             value={passwordValue}
