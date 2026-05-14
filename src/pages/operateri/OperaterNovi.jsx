@@ -7,7 +7,7 @@ import {useEffect, useState} from "react"
 import {CustomCard} from "../../components/CustomCard.jsx";
 import useBreakpoint from "../../hooks/useBreakpoint.js";
 import {CustomInput} from "../../components/customInputs/CustomInput.jsx";
-import {FaEye, FaEyeSlash, FaLock, FaUser} from "react-icons/fa6";
+import {FaEye, FaEyeSlash, FaLock, FaUser, FaUserGear} from "react-icons/fa6";
 import {CustomSelect} from "../../components/customInputs/CustomSelect.jsx";
 
 export default function OperaterNovi() {
@@ -37,6 +37,7 @@ export default function OperaterNovi() {
 
         // Provjera pomoću Zod sheme
         const rezultat = ShemaOperater.safeParse(objektPodataka)
+        console.log(rezultat)
 
         if (!rezultat.success) {
             const noveGreske = {}
@@ -79,10 +80,20 @@ export default function OperaterNovi() {
         getPasswordIcon();
     }, [passwordShown])
 
-    const uloge = Object.values(ULOGE).map(uloga => ({
-        value: uloga,
-        label: uloga.charAt(0).toUpperCase() + uloga.slice(1),
-    }));
+    const uloge = [
+        {
+            value: "none",
+            label: "Odaberite ulogu..."
+        }
+    ];
+
+    Object.values(ULOGE).forEach(uloga => {
+        uloge.push({
+            value: uloga,
+            label: uloga.charAt(0).toUpperCase() + uloga.slice(1),
+        })
+    });
+
 
     return (
         <CustomCard title={"Unos novog operatera"} textAlign={"left"}>
@@ -100,8 +111,7 @@ export default function OperaterNovi() {
                             prefix={<FaUser size={12}/>}
                         />
                     </Col>
-                    <Col xs={6}>
-
+                    <Col xs={12} md={6}>
                         <CustomInput
                             label={"Lozinka"}
                             id={"lozinka"}
@@ -118,11 +128,15 @@ export default function OperaterNovi() {
                             Lozinka mora sadržavati: najmanje 8 znakova, veliko slovo, malo slovo, broj i interpukcijski znak (!@#$%^&*...)
                         </span>
                     </Col>
-                    <Col xs={6}>
+                    <Col xs={12} md={6}>
                         <CustomSelect
                             id={"uloga"}
                             label={"Uloga"}
                             podaci={uloge}
+                            prefix={<FaUserGear size={12}/>}
+                            isInvalid={!!errors.uloga}
+                            errors={errors.uloga}
+                            onFocus={() => ocistiGresku("uloge")}
                         />
                     </Col>
                 </Row>
