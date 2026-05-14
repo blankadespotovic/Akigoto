@@ -67,7 +67,7 @@ export function CustomPagination(
     return pages;
 };
 
-    return totalItems > DEFAULT_PAGE_SIZE && (["xs", "sm", "md"].includes(sirina) ? (
+    return (["xs", "sm", "md"].includes(sirina) ? (
 
         <MobileCustomPagination
             startItem={startItem}
