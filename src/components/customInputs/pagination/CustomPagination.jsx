@@ -1,14 +1,13 @@
-import { Pagination } from "react-bootstrap";
+import {Pagination} from "react-bootstrap";
 import "../../../styles/customComponents.css"
-import { CustomSelect } from "../CustomSelect.jsx";
-import { useMemo } from "react";
-import { DEFAULT_PAGE_SIZE, PAGE_SIZES } from "../../../constants.js";
+import {useMemo} from "react";
+import {PAGE_SIZES} from "../../../constants.js";
 import useBreakpoint from "../../../hooks/useBreakpoint.js";
-import { CustomPaginationScreen } from "./CustomPaginationScreen.jsx";
-import { MobileCustomPagination } from "./MobileCustomPagination.jsx";
+import {CustomPaginationScreen} from "./CustomPaginationScreen.jsx";
+import {MobileCustomPagination} from "./MobileCustomPagination.jsx";
 
 export function CustomPagination(
-    { currentPage, totalPages, pageSize, handlePageSizeChange, totalItems, handlePageChange, resultsLabel }
+    {currentPage, totalPages, pageSize, handlePageSizeChange, totalItems, handlePageChange, resultsLabel}
 ) {
     const startItem = (currentPage - 1) * pageSize + 1;
     const endItem = Math.min(currentPage * pageSize, totalItems);
@@ -40,63 +39,72 @@ export function CustomPagination(
             } else {
                 const prev = pages.at(-1);
                 if (!prev || prev.type !== Pagination.Ellipsis) {
-                    pages.push(<Pagination.Ellipsis key={`e-${i}`} disabled />);
+                    pages.push(<Pagination.Ellipsis key={`e-${i}`} disabled/>);
                 }
             }
         }
-        return pages;
+        return pages.length > 0 ? pages : (
+            <Pagination.Item key={"-1"} disabled={true} active={true}>
+                1
+            </Pagination.Item>
+        );
     };
 
-   const renderMobilePages = () => {
-    const pages = [];
 
-    for (let i = currentPage - 1; i <= currentPage + 1; i++) {
-        if (i >= 1 && i <= totalPages) {
-            pages.push(
-                <Pagination.Item
-                    key={i}
-                    active={i === currentPage}
-                    onClick={() => handlePageChange(i)}
-                >
-                    {i}
-                </Pagination.Item>
-            );
+    const renderMobilePages = () => {
+        const pages = [];
+
+        for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+            if (i >= 1 && i <= totalPages) {
+                pages.push(
+                    <Pagination.Item
+                        key={i}
+                        active={i === currentPage}
+                        onClick={() => handlePageChange(i)}
+                    >
+                        {i}
+                    </Pagination.Item>
+                );
+            }
         }
-    }
 
-    return pages;
-};
+        return pages.length > 0 ? pages : (
+            <Pagination.Item key={"-1"} disabled={true} active={true}>
+                1
+            </Pagination.Item>
+        );
+    };
 
     return (["xs", "sm", "md"].includes(sirina) ? (
 
-        <MobileCustomPagination
-            startItem={startItem}
-            endItem={endItem}
-            renderPages={renderMobilePages}
-            numberOfResults={numberOfResults}
-            currentPage={currentPage}
-            totalPages={totalPages}
-            pageSize={pageSize}
-            handlePageSizeChange={handlePageSizeChange}
-            totalItems={totalItems}
-            handlePageChange={handlePageChange}
-            resultsLabel={resultsLabel}
-        />
+            <MobileCustomPagination
+                startItem={startItem}
+                endItem={endItem}
+                renderPages={renderMobilePages}
+                numberOfResults={numberOfResults}
+                currentPage={currentPage}
+                totalPages={totalPages}
+                pageSize={pageSize}
+                handlePageSizeChange={handlePageSizeChange}
+                totalItems={totalItems}
+                handlePageChange={handlePageChange}
+                resultsLabel={resultsLabel}
+            />
 
-    ) : (
-        <CustomPaginationScreen
-            startItem={startItem}
-            endItem={endItem}
-            renderPages={renderPages}
-            numberOfResults={numberOfResults}
-            currentPage={currentPage}
-            totalPages={totalPages}
-            pageSize={pageSize}
-            handlePageSizeChange={handlePageSizeChange}
-            totalItems={totalItems}
-            handlePageChange={handlePageChange}
-            resultsLabel={resultsLabel}
-        />
-    )
+        ) : (
+            <CustomPaginationScreen
+                startItem={startItem}
+                endItem={endItem}
+                renderPages={renderPages}
+                numberOfResults={numberOfResults}
+                currentPage={currentPage}
+                totalPages={totalPages}
+                pageSize={pageSize}
+                handlePageSizeChange={handlePageSizeChange}
+                totalItems={totalItems}
+                handlePageChange={handlePageChange}
+                resultsLabel={resultsLabel}
+            />
+        )
     );
 }

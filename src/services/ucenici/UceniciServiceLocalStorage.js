@@ -75,7 +75,7 @@ async function obrisi(sifra) {
 
 async function obrisiUplatu(ucenikSifra, sifra) {
     let ucenici = dohvatiSveIzStorage();
-    const ucenik = ucenici.find(u => u.sifra === parseInt(ucenikSifra))
+    const ucenik = ucenici.find(u => u.sifra === ucenikSifra)
 
     if (ucenik && Array.isArray(ucenik.uplate)) {
         ucenik.uplate = ucenik.uplate.filter(

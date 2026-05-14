@@ -33,13 +33,14 @@ async function obrisi(sifra){
 }
 
 async function obrisiUplatu(ucenikSifra, sifra) {
-    const ucenik = ucenici.find(u => u.sifra === parseInt(ucenikSifra))
+    const ucenik = ucenici.find(u => u.sifra === ucenikSifra)
+    const ucenikIndex = ucenici.findIndex(u => u.sifra === ucenikSifra)
     if (ucenik && Array.isArray(ucenik.uplate)) {
         ucenik.uplate = ucenik.uplate.filter(
             t => t.sifra !== sifra
         );
     }
-    ucenici[parseInt(ucenikSifra)] = ucenik;
+    ucenici[ucenikIndex] = ucenik;
 }
 
 async function getPage(page = 1, pageSize = DEFAULT_PAGE_SIZE, vrijednostPretrage){

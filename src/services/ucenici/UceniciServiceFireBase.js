@@ -1,6 +1,17 @@
-import { collection, doc, updateDoc, getDoc, getDocs, addDoc, deleteDoc, query, orderBy, limit, startAfter, where } from "firebase/firestore";
+import {
+    addDoc,
+    arrayRemove,
+    collection,
+    deleteDoc,
+    doc,
+    getDoc,
+    getDocs,
+    orderBy,
+    query,
+    updateDoc
+} from "firebase/firestore";
 import getFirebaseDB from "../Firebase";
-import { PrefixStorage } from "../../constants";
+import {PrefixStorage} from "../../constants";
 
 // 1/4 Read - dohvati sve
 async function get() {
@@ -11,9 +22,9 @@ async function get() {
             sifra: doc.id,
             ...doc.data()
         }));
-        return { success: true, data: data };
+        return {success: true, data: data};
     } catch (e) {
-        return { success: false, message: e.message };
+        return {success: false, message: e.message};
     }
 }
 
@@ -23,11 +34,11 @@ async function getBySifra(sifra) {
         const docRef = doc(getFirebaseDB(), PrefixStorage.UCENICI, sifra);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-            return { success: true, data: { sifra: docSnap.id, ...docSnap.data() } };
+            return {success: true, data: {sifra: docSnap.id, ...docSnap.data()}};
         }
-        return { success: false, message: "Učenik nije pronađen" };
+        return {success: false, message: "Učenik nije pronađen"};
     } catch (e) {
-        return { success: false, message: e.message };
+        return {success: false, message: e.message};
     }
 }
 
@@ -38,9 +49,9 @@ async function dodaj(ucenik) {
         if (!ucenik.uplate || ucenik.uplate.length < 1)
             ucenik.uplate = []
         const docRef = await addDoc(skupUcenika, ucenik);
-        return { success: true, data: { sifra: docRef.id, ...ucenik } };
+        return {success: true, data: {sifra: docRef.id, ...ucenik}};
     } catch (e) {
-        return { success: false, message: e.message };
+        return {success: false, message: e.message};
     }
 }
 
@@ -48,16 +59,16 @@ async function dodaj(ucenik) {
 async function promjeni(ucenik, datum, iznos) {
     try {
         const docRef = doc(getFirebaseDB(), PrefixStorage.UCENICI, ucenik.sifra);
-         const uplate = ucenik.uplate
+        const uplate = ucenik.uplate
         const sljedecaSifra = Math.max(...uplate.map(uplata => parseInt(uplata.sifra))) + 1;
         if (iznos && datum) {
-            uplate.push({ sifra: sljedecaSifra, datum, iznos: Number.parseFloat(iznos) })
+            uplate.push({sifra: sljedecaSifra, datum, iznos: Number.parseFloat(iznos)})
         }
         ucenik.uplate = uplate
         await updateDoc(docRef, ucenik);
-        return { success: true, data: { ...ucenik } };
+        return {success: true, data: {...ucenik}};
     } catch (e) {
-        return { success: false, message: e.message };
+        return {success: false, message: e.message};
     }
 }
 
@@ -66,9 +77,24 @@ async function obrisi(sifra) {
     try {
         const docRef = doc(getFirebaseDB(), PrefixStorage.UCENICI, sifra);
         await deleteDoc(docRef);
-        return { success: true, message: 'Uspješno obrisano' };
+        return {success: true, message: "Uspješno obrisano"};
     } catch (e) {
-        return { success: false, message: e.message };
+        return {success: false, message: e.message};
+    }
+}
+
+async function obrisiUplatu(ucenikSifra, sifra) {
+    try {
+        const docRef = doc(getFirebaseDB(), PrefixStorage.UCENICI, ucenikSifra);
+        const ucenik = await getDoc(docRef);
+        if (ucenik.exists()) {
+            console.log(ucenik.data());
+            const uplataToDelete = ucenik.data().uplate.find(t => t.sifra === sifra);
+            await updateDoc(docRef, {uplate: arrayRemove(uplataToDelete)});
+            return {success: true, data: {...ucenik}};
+        }
+    } catch (e) {
+        return {success: false, message: e.message};
     }
 }
 
@@ -78,7 +104,7 @@ async function obrisi(sifra) {
  * Za pravo serversko straničenje (startAfter) potreban je zadnji dokument prethodne stranice.
  * Ovdje koristimo pojednostavljenu verziju koja dohvaća podatke i filtrira ih.
  */
-async function getPage(page = 1, pageSize = 8, searchTerm = '') {
+async function getPage(page = 1, pageSize = 8, searchTerm = "") {
     try {
         const skupUcenika = collection(getFirebaseDB(), PrefixStorage.UCENICI);
         let q = query(skupUcenika, orderBy("prezime"));
@@ -92,12 +118,12 @@ async function getPage(page = 1, pageSize = 8, searchTerm = '') {
         });
 
         // Filtriranje (budući da Firestore ne podržava kompleksni "OR" search na više polja s "includes")
-        if (searchTerm && searchTerm.trim() !== '') {
+        if (searchTerm && searchTerm.trim() !== "") {
             const lowerSearchTerm = searchTerm.toLowerCase().trim();
             ucenici = ucenici.filter(u =>
-                (u.ime || '').toLowerCase().includes(lowerSearchTerm) ||
-                (u.prezime || '').toLowerCase().includes(lowerSearchTerm) ||
-                (u.email || '').toLowerCase().includes(lowerSearchTerm)
+                (u.ime || "").toLowerCase().includes(lowerSearchTerm) ||
+                (u.prezime || "").toLowerCase().includes(lowerSearchTerm) ||
+                (u.email || "").toLowerCase().includes(lowerSearchTerm)
             );
         }
 
@@ -115,7 +141,7 @@ async function getPage(page = 1, pageSize = 8, searchTerm = '') {
             totalItems: totalItems
         };
     } catch (e) {
-        return { success: false, message: e.message };
+        return {success: false, message: e.message};
     }
 }
 
@@ -125,5 +151,6 @@ export default {
     getBySifra,
     promjeni,
     obrisi,
+    obrisiUplatu,
     getPage
 };

@@ -16,7 +16,7 @@ export default function PregledPostignuca() {
     const [postignuca, setPostignuca] = useState([])
     const [kategorije, setKategorije] = useState([])
     const [brojKategorija, setBrojKategorija] = useState(-1)
-    const { showLoading, hideLoading } = useLoading()
+    const { showLoading, hideLoading, loading } = useLoading()
     
 
     const dohvatiSveKategorije = async () => {
@@ -46,22 +46,16 @@ export default function PregledPostignuca() {
         ucitajPostignuca();
     }, []);
 
-       
-        
-
     async function obrisi(sifra) {
         if (!confirm("Sigurno obrisati?")) {
             return showLoading()
-         // samo za potrebe testa prikaza rada loading
-        await new Promise(resolve => setTimeout(resolve, 2000));
         }
         await PostignucaService.obrisi(sifra)
         await ucitajPostignuca()
         hideLoading()
     }
     
-
-    return (
+    return !loading && (
         <>
             {brojKategorija < 1 ? (
                 <CustomAlert variant={"warning"}>Trenutno nema kategorija. Dodajte kategorije kako bi se omogućio unos

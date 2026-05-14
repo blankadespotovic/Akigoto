@@ -1,6 +1,6 @@
 import useAuth from "../hooks/useAuth"
 
-import {Button, ButtonGroup, Col, Container, Nav, Navbar, NavDropdown, Row} from "react-bootstrap"
+import {ButtonGroup, Container, Nav, Navbar, NavDropdown} from "react-bootstrap"
 import {useLocation, useNavigate} from "react-router-dom"
 import {DATA_SOURCE, DATA_SOURCES, IME_APLIKACIJE, RouteNames} from "../constants"
 import {FaUserCircle} from "react-icons/fa";
@@ -20,7 +20,6 @@ export default function Izbornik() {
                 return "Firebase";
         }
     }
-
     return (
         <Navbar expand="xl" className="bg-body-tertiary">
             <Container>
@@ -75,7 +74,7 @@ export default function Izbornik() {
                             </>
                         )}
                     </Nav>
-                    <Nav className="ms-auto">
+                    <Nav className="ms-auto my-3 my-xl-0">
 
                         {isLoggedIn ? (
                             <NavDropdown
@@ -103,22 +102,22 @@ export default function Izbornik() {
                                 </NavDropdown.Item>
                             </NavDropdown>
                         ) : (
-                            <ButtonGroup className={"d-flex flex-column flex-md-row gap-md-2"}>
-                                    <Nav.Link
-                                        className="home-nav"
-                                        onClick={() => navigate(RouteNames.REGISTRACIJA)}
-                                        active={location.pathname === RouteNames.REGISTRACIJA}
-                                    >
-                                        Registracija
-                                    </Nav.Link>
-                                    <Nav.Link
-                                        className="home-nav"
-                                        onClick={() => navigate(RouteNames.LOGIN)}
-                                        active={location.pathname === RouteNames.LOGIN}
-                                    >
-                                        Login
-                                    </Nav.Link>
-                            </ButtonGroup>
+                            <>
+                                <Nav.Link
+                                    className={"home-nav mb-3 mb-xl-0 me-sm-0 me-xl-3"}
+                                    onClick={() => navigate(RouteNames.REGISTRACIJA)}
+                                    active={location.pathname === RouteNames.REGISTRACIJA}
+                                >
+                                    Registracija
+                                </Nav.Link>
+                                <Nav.Link
+                                    className={"home-nav"}
+                                    onClick={() => navigate(RouteNames.LOGIN)}
+                                    active={location.pathname === RouteNames.LOGIN}
+                                >
+                                    Login
+                                </Nav.Link>
+                            </>
                         )}
                     </Nav>
                 </Navbar.Collapse>

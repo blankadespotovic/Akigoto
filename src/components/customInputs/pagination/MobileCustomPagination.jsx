@@ -1,20 +1,29 @@
-import { Col, Pagination, Row } from "react-bootstrap";
-import { CustomSelect } from "../CustomSelect";
+import {Col, Pagination, Row} from "react-bootstrap";
+import {CustomSelect} from "../CustomSelect";
 
 export function MobileCustomPagination(
-    { startItem, endItem, renderPages, numberOfResults, currentPage, totalPages, pageSize, handlePageSizeChange, totalItems, handlePageChange, resultsLabel }
+    {
+        startItem,
+        endItem,
+        renderPages,
+        numberOfResults,
+        currentPage,
+        totalPages,
+        pageSize,
+        handlePageSizeChange,
+        totalItems,
+        handlePageChange,
+        resultsLabel
+    }
 ) {
     return (
         <div className="table-pagination-wrapper">
             <Row className="g-3">
                 <Col xs={6} className="justify-content-start">
                     <div className="pagination-info text-center">
-                        {totalItems &&
-                            <span>Prikazuje se <b>{startItem}</b>–<b>{endItem}</b> od <b>{totalItems}</b> {resultsLabel ? ` ${resultsLabel}` : ' rezultata'}</span>
-                        }
+                        <span>Prikazuje se <b>{totalItems ? startItem : 0}</b>–<b>{endItem}</b> od <b>{totalItems}</b> {resultsLabel ? ` ${resultsLabel}` : " rezultata"}</span>
                     </div>
                 </Col>
-
                 <Col xs={6} className="flex-fill">
                     <div className="pagination-size">
                         {pageSize && (
@@ -32,20 +41,20 @@ export function MobileCustomPagination(
                     <Pagination className="custom-pagination d-flex align-items-center justify-content-center">
                         <Pagination.First
                             onClick={() => handlePageChange(1)}
-                            disabled={currentPage === 1}
+                            disabled={currentPage === 1 || totalItems < 1}
                         />
                         <Pagination.Prev
                             onClick={() => handlePageChange(currentPage - 1)}
-                            disabled={currentPage === 1}
+                            disabled={currentPage === 1 || totalItems < 1}
                         />
                         {renderPages()}
                         <Pagination.Next
                             onClick={() => handlePageChange(currentPage + 1)}
-                            disabled={currentPage === totalPages}
+                            disabled={currentPage === totalPages || totalItems < 1}
                         />
                         <Pagination.Last
                             onClick={() => handlePageChange(totalPages)}
-                            disabled={currentPage === totalPages}
+                            disabled={currentPage === totalPages || totalItems < 1}
                         />
                     </Pagination>
                 </Col>

@@ -16,7 +16,7 @@ export default function PregledKategorija() {
     const [postignuca, setPostignuca] = useState([])
     const [kategorijeSPostignucima, setKategorijeSPostignucima] = useState([])
 
-    const { showLoading, hideLoading } = useLoading()
+    const { showLoading, hideLoading, loading } = useLoading()
 
     async function ucitajKategorije() {
         showLoading();
@@ -74,7 +74,7 @@ export default function PregledKategorija() {
         hideLoading()
     }
 
-    return (
+    return !loading && (
         <>
             <Link to={RouteNames.KATEGORIJE_NOVA} id="btnAdd"
                   className="btn btnAdd w-100 my-3">

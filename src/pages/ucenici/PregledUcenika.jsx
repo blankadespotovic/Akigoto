@@ -27,7 +27,7 @@ export default function PregledUcenika() {
     const {pageSize, setPageSize} = usePaginationSettings("ucenici")
     const [vrijednostPretrage, setVrijednostPretrage] = useState("")
 
-    const {showLoading, hideLoading} = useLoading()
+    const {showLoading, hideLoading, loading} = useLoading()
 
 
     async function ucitajUcenike(selectedPage, selectedPageSize, vrijednostPretrage) {
@@ -125,16 +125,14 @@ export default function PregledUcenika() {
         setCurrentPage(1)
     }
 
-    return (
-
+    return !loading && (
         <>
-
             <Link to={RouteNames.UCENICI_NOVI} id="btnAdd"
                   className="btn btnAdd w-100 my-3">
                 Dodavanje novog učenika
             </Link>
 
-            <InputGroup>
+            {ucenici.length > 0 && <InputGroup>
                 <Form.Control
                     type={"text"}
                     value={vrijednostPretrage}
@@ -149,7 +147,7 @@ export default function PregledUcenika() {
                         <FaMagnifyingGlass/>
                     )}
                 </InputGroup.Text>
-            </InputGroup>
+            </InputGroup>}
 
             {ucenici.length > 0 &&
                 (["xs", "sm", "md"].includes(sirina) ? (
