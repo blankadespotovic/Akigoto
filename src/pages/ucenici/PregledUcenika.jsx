@@ -93,9 +93,9 @@ export default function PregledUcenika() {
 
     async function obrisi(sifra) {
         if (!confirm("Sigurno obrisati?")) {
-            return showLoading()
+            return 
             // samo za potrebe testa prikaza rada loading
-            await new Promise(resolve => setTimeout(resolve, 2000));
+           // await new Promise(resolve => setTimeout(resolve, 2000));
         }
         await UceniciService.obrisi(sifra)
 

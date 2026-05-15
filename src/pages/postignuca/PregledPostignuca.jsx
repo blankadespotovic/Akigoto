@@ -48,7 +48,7 @@ export default function PregledPostignuca() {
 
     async function obrisi(sifra) {
         if (!confirm("Sigurno obrisati?")) {
-            return showLoading()
+            return 
         }
         await PostignucaService.obrisi(sifra)
         await ucitajPostignuca()

@@ -65,13 +65,13 @@ export default function PregledKategorija() {
 
     async function obrisi(sifra) {
         if (!confirm("Sigurno obrisati?\nOPREZ! Obrisat će se sva postignuća iz kategorije.")) {
-            return showLoading()
+            return 
          // samo za potrebe testa prikaza rada loading
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        //await new Promise(resolve => setTimeout(resolve, 2000));
         }
         await KategorijeService.obrisi(sifra)
         ucitajKategorije()
-        hideLoading()
+       hideLoading()
     }
 
     return !loading && (

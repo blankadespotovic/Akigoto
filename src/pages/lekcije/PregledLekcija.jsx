@@ -52,9 +52,9 @@ export default function PregledLekcija() {
 
     async function obrisi(sifra) {
         if (!confirm("Sigurno obrisati?")) {
-            return showLoading()
-         // samo za potrebe testa prikaza rada loading
-        await new Promise(resolve => setTimeout(resolve, 2000));
+         return 
+        //  // samo za potrebe testa prikaza rada loading
+        // await new Promise(resolve => setTimeout(resolve, 2000));
         }
         await LekcijeService.obrisi(sifra)
         const newTotalItems = totalItems - 1;
