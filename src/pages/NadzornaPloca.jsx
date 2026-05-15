@@ -7,12 +7,14 @@ import PostignucaService from "../services/postignuca/PostignucaService.js";
 import useLoading from "../hooks/useLoading.js";
 
 import {CustomCard} from "../components/CustomCard.jsx";
+import useBreakpoint from "../hooks/useBreakpoint.js";
 
 const PieChart = HCR.default;
 
 export default function NadzornaPloca() {
     const [podaci, setPodaci] = useState([]);
     const {showLoading, hideLoading} = useLoading();
+    const sirina = useBreakpoint();
 
     useEffect(() => {
         const getPodaci = async () => {
@@ -50,8 +52,8 @@ export default function NadzornaPloca() {
         legend: {
             enabled: true,
             layout: "vertical",
-            align: "right",
-            verticalAlign: "middle",
+            align: ["xs", "sm", "md"].includes(sirina) ? "top" : "right",
+            verticalAlign: ["xs", "sm", "md"].includes(sirina) ? "top" : "middle",
             symbolRadius: 0,
             symbolHeight: 12,
             symbolWidth: 12,
