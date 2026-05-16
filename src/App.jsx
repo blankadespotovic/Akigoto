@@ -40,6 +40,8 @@ function App() {
             <Container className="d-flex flex-column min-vh-100">
                 <Izbornik/>
 
+                {isLoggedIn && <DataSourcePicker />}
+
                 <Routes>
                     <Route path={RouteNames.HOME} element={<Home/>}/>
 
@@ -84,7 +86,7 @@ function App() {
 
                 </Routes>
                 <Footer/>
-                <DataSourcePicker/>
+                
             </Container>
         </>
     )
