@@ -1,8 +1,8 @@
-import {Button, ButtonGroup, Table} from "react-bootstrap";
+import {Table} from "react-bootstrap";
 import {CustomCard} from "../../components/CustomCard.jsx";
-import { formatirajVrijeme } from "../../util/dateTimeFormatter.js";
-import { FaEdit, FaFilePdf, FaInfoCircle, FaSearch, FaTrash } from "react-icons/fa";
-import { CustomButtons } from "../../components/CustomButtons.jsx";
+import {formatirajVrijeme} from "../../util/dateTimeFormatter.js";
+import {FaEdit, FaFilePdf, FaInfoCircle, FaTrash} from "react-icons/fa";
+import {CustomButtons} from "../../components/CustomButtons.jsx";
 
 export function PregledLekcijaTablica(
     {lekcije, setPodaci, setModalShow, obrisi, generirajPDFZaLekciju}
@@ -38,20 +38,21 @@ export function PregledLekcijaTablica(
                             <CustomButtons
                                 key={lekcija.sifra}
                                 sifra={lekcija.sifra}
-                                 detailsFunc={() => {
-                                        setPodaci(lekcija)
-                                        setModalShow(true)}}
-                                detailsLabel={<FaInfoCircle />}
+                                detailsFunc={() => {
+                                    setPodaci(lekcija)
+                                    setModalShow(true)
+                                }}
+                                detailsLabel={<FaInfoCircle/>}
                                 isDetails={true}
 
                                 editLink={`${lekcija.sifra}`}
-                                editLabel={<FaEdit />}
+                                editLabel={<FaEdit/>}
 
                                 deleteFunc={() => obrisi(lekcija.sifra)}
-                                deleteLabel={<FaTrash />}
+                                deleteLabel={<FaTrash/>}
 
                                 pdfFunc={() => generirajPDFZaLekciju(lekcija)}
-                                pdfLabel={<FaFilePdf />}
+                                pdfLabel={<FaFilePdf/>}
                                 needsPdf={true}
                             />
                         </td>

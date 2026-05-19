@@ -42,6 +42,20 @@ async function getBySifra(sifra) {
     }
 }
 
+async function getLastFewIds(brojUcenika) {
+    const skupUcenika = collection(getFirebaseDB(), PrefixStorage.UCENICI);
+    const snapshot = await getDocs(skupUcenika);
+
+    const ucenici = snapshot.docs.map(doc => ({
+        sifra: doc.id,
+        ...doc.data()
+    }));
+
+    const zadnjiUcenici = ucenici.slice(-brojUcenika)
+    const zadnjiUceniciIds = zadnjiUcenici.map(u => u.sifra)
+    return {success: true, data: zadnjiUceniciIds}
+}
+
 // 2/4 Create - dodaj novi
 async function dodaj(ucenik) {
     try {
@@ -88,7 +102,6 @@ async function obrisiUplatu(ucenikSifra, sifra) {
         const docRef = doc(getFirebaseDB(), PrefixStorage.UCENICI, ucenikSifra);
         const ucenik = await getDoc(docRef);
         if (ucenik.exists()) {
-            console.log(ucenik.data());
             const uplataToDelete = ucenik.data().uplate.find(t => t.sifra === sifra);
             await updateDoc(docRef, {uplate: arrayRemove(uplataToDelete)});
             return {success: true, data: {...ucenik}};
@@ -149,6 +162,7 @@ export default {
     get,
     dodaj,
     getBySifra,
+    getLastFewIds,
     promjeni,
     obrisi,
     obrisiUplatu,

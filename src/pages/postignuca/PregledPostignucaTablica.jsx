@@ -1,11 +1,11 @@
-import { CustomCard } from "../../components/CustomCard.jsx";
-import { Accordion, Button, ButtonGroup, Table } from "react-bootstrap";
-import { FaEdit, FaRegCheckSquare, FaRegWindowClose, FaTrash } from "react-icons/fa";
-import { CustomButtons } from "../../components/CustomButtons.jsx";
-import { formatirajVrijeme } from "../../util/dateTimeFormatter.js";
+import {CustomCard} from "../../components/CustomCard.jsx";
+import {Accordion, Table} from "react-bootstrap";
+import {FaEdit, FaRegCheckSquare, FaRegWindowClose, FaTrash} from "react-icons/fa";
+import {CustomButtons} from "../../components/CustomButtons.jsx";
+import {formatirajVrijeme} from "../../util/dateTimeFormatter.js";
 
 export function PregledPostignucaTablica(
-    { kategorije, postignuca, navigate, obrisi }
+    {kategorije, postignuca, obrisi}
 ) {
     return (
         <CustomCard
@@ -27,38 +27,38 @@ export function PregledPostignucaTablica(
                             <Accordion.Body className={"custom-accordion-body"}>
                                 <Table striped hover responsive>
                                     <thead>
-                                        <tr>
-                                            <th>Naziv postignuća</th>
-                                            <th>Opis</th>
-                                            <th className={"text-end"}>Procjena</th>
-                                            <th className={"text-center"}>Postignuto</th>
-                                            <th className={"text-center"}>Akcija</th>
-                                        </tr>
+                                    <tr>
+                                        <th>Naziv postignuća</th>
+                                        <th>Opis</th>
+                                        <th className={"text-end"}>Procjena</th>
+                                        <th className={"text-center"}>Postignuto</th>
+                                        <th className={"text-center"}>Akcija</th>
+                                    </tr>
                                     </thead>
                                     <tbody>
-                                        {postignuca.map((postignuce) => (
-                                            postignuce.kategorija === kategorija.sifra &&
-                                            <tr key={postignuce.sifra}>
-                                                <td>{postignuce.naziv}</td>
-                                                <td style={{ minWidth: "250px" }}>{postignuce.opis}</td>
-                                                <td className={"text-end"}>{formatirajVrijeme(postignuce.procjena)}</td>
-                                                <td className={"text-center"}>
-                                                    {postignuce.zavrseno ?
-                                                        <FaRegCheckSquare size={24} color={"green"} /> :
-                                                        <FaRegWindowClose size={24} color={"red"} />}
-                                                </td>
-                                                <td>
+                                    {postignuca.map((postignuce) => (
+                                        postignuce.kategorija === kategorija.sifra &&
+                                        <tr key={postignuce.sifra}>
+                                            <td>{postignuce.naziv}</td>
+                                            <td style={{minWidth: "250px"}}>{postignuce.opis}</td>
+                                            <td className={"text-end"}>{formatirajVrijeme(postignuce.procjena)}</td>
+                                            <td className={"text-center"}>
+                                                {postignuce.zavrseno ?
+                                                    <FaRegCheckSquare size={24} color={"green"}/> :
+                                                    <FaRegWindowClose size={24} color={"red"}/>}
+                                            </td>
+                                            <td>
 
-                                                    <CustomButtons 
-                                                        editLink={`/postignuca/${kategorija.sifra}/${postignuce.sifra}`}
-                                                        editLabel={<FaEdit />}
-                                                        deleteFunc={() => obrisi(postignuce.sifra)}
-                                                        deleteLabel={<FaTrash />}
-                                                    />
+                                                <CustomButtons
+                                                    editLink={`/postignuca/${kategorija.sifra}/${postignuce.sifra}`}
+                                                    editLabel={<FaEdit/>}
+                                                    deleteFunc={() => obrisi(postignuce.sifra)}
+                                                    deleteLabel={<FaTrash/>}
+                                                />
 
-                                                </td>
-                                            </tr>
-                                        ))}
+                                            </td>
+                                        </tr>
+                                    ))}
                                     </tbody>
                                 </Table>
                             </Accordion.Body>

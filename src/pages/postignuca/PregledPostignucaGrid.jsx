@@ -21,7 +21,7 @@ export function PregledPostignucaGrid(
                 label={"Kategorija"}
                 podaci={transformiraneKategorije}
                 value={aktivnaKategorija}
-                onChange={(e) => setAktivnaKategorija(parseInt(e.target.value))}
+                onChange={(e) => setAktivnaKategorija(e.target.value)}
             >
                 {kategorije.map(k => (
                     <option key={k.sifra} value={k.sifra}>
@@ -38,6 +38,7 @@ export function PregledPostignucaGrid(
                     >
                         <Row className={"row-gap-2"}>
                             <Col xs={6} className={"text-start align-items-center"}>
+                                <FaMedal color={"lightblue"} className={"mb-1"}/>&nbsp;
                                 {pos.zavrseno ? (
                                     <FaRegCheckSquare
                                         size={24}

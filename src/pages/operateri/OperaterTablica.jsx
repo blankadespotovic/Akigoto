@@ -32,7 +32,6 @@ const OperaterTablica = (
                             <Badge bg={"none"} className={`${operater.uloga === "admin" ? "badge-admin" : "badge-user"}`}>
                                 {getOperaterUloga(operater)}
                             </Badge>
-                            
                         </td>
                         <td className="text-center">
                             <CustomButtons

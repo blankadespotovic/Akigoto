@@ -1,10 +1,10 @@
 import {Pagination} from "react-bootstrap";
-import "../../../styles/customComponents.css"
 import {useMemo} from "react";
 import {PAGE_SIZES} from "../../../constants.js";
 import useBreakpoint from "../../../hooks/useBreakpoint.js";
 import {CustomPaginationScreen} from "./CustomPaginationScreen.jsx";
 import {MobileCustomPagination} from "./MobileCustomPagination.jsx";
+import "../../../styles/customComponents.css"
 
 export function CustomPagination(
     {currentPage, totalPages, pageSize, handlePageSizeChange, totalItems, handlePageChange, resultsLabel}
@@ -38,7 +38,7 @@ export function CustomPagination(
                 );
             } else {
                 const prev = pages.at(-1);
-                if (!prev || prev.type !== Pagination.Ellipsis) {
+                if (!prev || prev?.type !== Pagination.Ellipsis) {
                     pages.push(<Pagination.Ellipsis key={`e-${i}`} disabled/>);
                 }
             }
@@ -49,7 +49,6 @@ export function CustomPagination(
             </Pagination.Item>
         );
     };
-
 
     const renderMobilePages = () => {
         const pages = [];
@@ -76,7 +75,6 @@ export function CustomPagination(
     };
 
     return (["xs", "sm", "md"].includes(sirina) ? (
-
             <MobileCustomPagination
                 startItem={startItem}
                 endItem={endItem}
@@ -90,7 +88,6 @@ export function CustomPagination(
                 handlePageChange={handlePageChange}
                 resultsLabel={resultsLabel}
             />
-
         ) : (
             <CustomPaginationScreen
                 startItem={startItem}

@@ -1,23 +1,24 @@
-import { useEffect, useState } from "react"
+import {useEffect, useState} from "react"
 import OperaterService from "../../services/operateri/OperaterService"
-import { Link, useNavigate } from "react-router-dom"
-import { IME_APLIKACIJE, RouteNames } from "../../constants"
+import {Link, useNavigate} from "react-router-dom"
+import {IME_APLIKACIJE, RouteNames} from "../../constants"
 import useBreakpoint from "../../hooks/useBreakpoint.js";
 import OperaterTablica from "./OperaterTablica.jsx";
-import { PregledOperateraGrid } from "./PregledOperateraGrid.jsx";
+import {PregledOperateraGrid} from "./PregledOperateraGrid.jsx";
 
 export default function OperaterPregled() {
     const navigate = useNavigate()
-    const [operateri, setOperateri] = useState([])
     const sirina = useBreakpoint();
 
-    useEffect(() => {
-        document.title = "Operateri, " + IME_APLIKACIJE
-    })
+    const [operateri, setOperateri] = useState([])
 
     useEffect(() => {
-        ucitajOperatere()
-    }, [])
+        const previousTitle = document.title;
+        document.title = "Operateri - " + IME_APLIKACIJE;
+        return () => {
+            document.title = previousTitle;
+        };
+    })
 
     async function ucitajOperatere() {
         await OperaterService.get().then((odgovor) => {
@@ -28,6 +29,10 @@ export default function OperaterPregled() {
             setOperateri(odgovor.data)
         })
     }
+
+    useEffect(() => {
+        ucitajOperatere()
+    }, [])
 
     async function obrisi(sifra) {
         if (!confirm("Sigurno obrisati operatera?")) return
@@ -42,25 +47,25 @@ export default function OperaterPregled() {
 
     return (
         <>
-            <Link to={RouteNames.OPERATERI_NOVI}
-                className="btn btnAdd w-100 my-3">
+            <Link
+                to={RouteNames.OPERATERI_NOVI}
+                className="btn btnAdd w-100 my-3"
+            >
                 Dodavanje novog operatera
             </Link>
-            {operateri.length > 0 &&
-                (["xs", "sm", "md"].includes(sirina) ? (
-                    <PregledOperateraGrid
-                        operateri={operateri}
-                        navigate={navigate}
-                        obrisi={obrisi}
-                    />
-                ) : (
-                    <OperaterTablica
-                        operateri={operateri}
-                        navigate={navigate}
-                        obrisi={obrisi}
-                    />
-                )
-                )}
+            {operateri.length > 0 && ["xs", "sm", "md"].includes(sirina) ? (
+                <PregledOperateraGrid
+                    operateri={operateri}
+                    navigate={navigate}
+                    obrisi={obrisi}
+                />
+            ) : (
+                <OperaterTablica
+                    operateri={operateri}
+                    navigate={navigate}
+                    obrisi={obrisi}
+                />
+            )}
         </>
     )
 }

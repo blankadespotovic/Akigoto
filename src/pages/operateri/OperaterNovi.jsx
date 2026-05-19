@@ -11,11 +11,11 @@ import {FaEye, FaEyeSlash, FaLock, FaUser, FaUserGear} from "react-icons/fa6";
 import {CustomSelect} from "../../components/customInputs/CustomSelect.jsx";
 
 export default function OperaterNovi() {
-
     const navigate = useNavigate()
-    const [errors, setErrors] = useState({})
     const sirina = useBreakpoint()
     const mobilnaSirina = ["xs", "sm", "md"].includes(sirina);
+
+    const [errors, setErrors] = useState({})
     const [passwordShown, setPasswordShown] = useState(false);
     const [passwordIcon, setPasswordIcon] = useState()
 
@@ -35,20 +35,16 @@ export default function OperaterNovi() {
         setErrors({})
         const objektPodataka = Object.fromEntries(podaci)
 
-        // Provjera pomoću Zod sheme
         const rezultat = ShemaOperater.safeParse(objektPodataka)
-        console.log(rezultat)
 
         if (!rezultat.success) {
             const noveGreske = {}
-
             rezultat.error.issues.forEach((issue) => {
                 const kljuc = issue.path[0]
                 if (!noveGreske[kljuc]) {
                     noveGreske[kljuc] = issue.message
                 }
             })
-
             setErrors(noveGreske)
             return
         }
@@ -71,10 +67,15 @@ export default function OperaterNovi() {
     useEffect(() => {
         const getPasswordIcon = () => {
             if (passwordShown) {
-                setPasswordIcon(<FaEyeSlash onClick={() => setPasswordShown(!passwordShown)}
-                                            className={"cursor-pointer"}/>)
+                setPasswordIcon(<FaEyeSlash
+                    onClick={() => setPasswordShown(!passwordShown)}
+                    className={"cursor-pointer"}
+                />)
             } else {
-                setPasswordIcon(<FaEye onClick={() => setPasswordShown(!passwordShown)} className={"cursor-pointer"}/>)
+                setPasswordIcon(<FaEye
+                    onClick={() => setPasswordShown(!passwordShown)}
+                    className={"cursor-pointer"}
+                />)
             }
         }
         getPasswordIcon();
@@ -93,7 +94,6 @@ export default function OperaterNovi() {
             label: uloga.charAt(0).toUpperCase() + uloga.slice(1),
         })
     });
-
 
     return (
         <CustomCard title={"Unos novog operatera"} textAlign={"left"}>
@@ -140,7 +140,6 @@ export default function OperaterNovi() {
                         />
                     </Col>
                 </Row>
-
                 <Row className="mt-4 justi">
                     <Col xs={12} md={6} className={"order-2 order-md-1"}>
                         <Link to={RouteNames.OPERATERI}

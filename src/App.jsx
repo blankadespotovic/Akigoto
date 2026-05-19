@@ -40,7 +40,7 @@ function App() {
             <Container className="d-flex flex-column min-vh-100">
                 <Izbornik/>
 
-                {isLoggedIn && authUser?.uloga === "admin" && <DataSourcePicker />}
+                {isLoggedIn && authUser?.uloga === "admin" && <DataSourcePicker/>}
 
                 <Routes>
                     <Route path={RouteNames.HOME} element={<Home/>}/>
@@ -65,7 +65,6 @@ function App() {
                             <Route path={RouteNames.LEKCIJE_NOVE} element={<NoveLekcije/>}/>
                             <Route path={RouteNames.PROMJENA_LEKCIJA} element={<PromjenaLekcija/>}/>
 
-
                             {authUser.uloga === "admin" && (
                                 <>
                                     <Route path={RouteNames.OPERATERI} element={<OperaterPregled/>}/>
@@ -83,10 +82,8 @@ function App() {
                             <Route path={RouteNames.REGISTRACIJA} element={<Registracija/>}/>
                         </>
                     )}
-
                 </Routes>
                 <Footer/>
-                
             </Container>
         </>
     )

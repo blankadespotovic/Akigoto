@@ -2,7 +2,6 @@ import Dropdown from "react-bootstrap/Dropdown";
 import OperaterServiceLocalStorage from "../services/operateri/OperaterServiceLocalStorage.js";
 import OperaterServiceFireBase from "../services/operateri/OperaterServiceFireBase.js";
 import useAuth from "../hooks/useAuth.js";
-
 import {FaCheck} from "react-icons/fa6";
 import {DATA_SOURCE, DATA_SOURCES} from "../constants.js";
 
@@ -32,8 +31,8 @@ const DataSourcePicker = () => {
                 alert(`Nije moguće promijeniti izvor podataka na ${DATA_SOURCES.L} jer nema podataka.`);
                 return;
             }
-
         }
+
         if (noviIzvor === DATA_SOURCES.F) {
             const servis = await OperaterServiceFireBase.get();
             if (servis.data.length > 0) {
@@ -68,7 +67,7 @@ const DataSourcePicker = () => {
     })
 
     return (
-        <div className={'data-source-picker-wrapper'}>
+        <div className={"data-source-picker-wrapper"}>
             <Dropdown align="end" drop="up" className={"data-source-picker-dropdown"}>
                 <Dropdown.Toggle className={"btn btnWarning"}>
                     {getDatasourceName()}

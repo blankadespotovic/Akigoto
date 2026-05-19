@@ -24,7 +24,14 @@ export function WYSIWYGEditor(
     {value, onChange, name, disabled, defaultValue}
 ) {
     return (
-        <Editor value={value} onChange={onChange} name={name} className={'custom-input'} defaultValue={defaultValue} disabled={disabled}>
+        <Editor
+            value={value}
+            onChange={onChange}
+            name={name}
+            className={"custom-input"}
+            defaultValue={defaultValue}
+            disabled={disabled}
+        >
             <Toolbar>
                 <BtnUndo/>
                 <BtnRedo/>

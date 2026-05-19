@@ -25,43 +25,35 @@ export default function LekcijPDFGenerator({lekcija, postignuca, ucenici}) {
 
         const doc = new jsPDF();
 
-        // 2. Registracija REGULAR verzije
         doc.addFileToVFS("Roboto-Regular.ttf", regBase64);
         doc.addFont("Roboto-Regular.ttf", "Roboto", "normal");
 
-        // 3. Registracija BOLD verzije
-        // Ključno: isto ime 'Roboto', ali stil 'bold'
         doc.addFileToVFS("Roboto-Bold.ttf", boldBase64);
         doc.addFont("Roboto-Bold.ttf", "Roboto", "bold");
 
         doc.addFileToVFS("Roboto-Italic.ttf", italicBase64);
         doc.addFont("Roboto-Italic.ttf", "Roboto", "italic");
 
-        // 4. Postavi defaultni font
         doc.setFont("Roboto", "normal");
-        // Dodaj logo - konvertiraj SVG u tekst (jednostavna verzija)
         doc.setFontSize(20);
-        doc.setTextColor(46, 125, 50); // Zelena boja iz loga
+        doc.setTextColor(126, 69, 232);
         doc.text("AKIGOTO", 20, 20);
 
         doc.setFontSize(10);
         doc.setTextColor(102, 102, 102);
         doc.text("EVIDENCIJA LEKCIJA, POSTIGNUĆA I UČENIKA", 20, 27);
 
-        // Naslov dokumenta
         doc.setFont("Roboto", "bold");
         doc.setFontSize(16);
         doc.setTextColor(0, 0, 0);
         doc.text("POPIS LEKCIJA", 20, 45);
 
-        // Linija ispod naslova
-        doc.setDrawColor(46, 125, 50);
+        doc.setDrawColor(126, 69, 232);
         doc.setLineWidth(0.5);
         doc.line(20, 48, 190, 48);
 
         let yPosition = 60;
 
-        // Podaci o grupi
         doc.setFontSize(14);
         doc.setFont(undefined, "bold");
         doc.text("Podaci o lekciji:", 20, yPosition);
@@ -77,14 +69,12 @@ export default function LekcijPDFGenerator({lekcija, postignuca, ucenici}) {
         const marginRight = 15;
         const usableWidth = pageWidth - marginLeft - marginRight;
 
-        const lines = doc.splitTextToSize(lekcija.opis, usableWidth);
-        lines[0] = `Opis: ${lines[0]}`;
-
+        const fullText = `Desc: ${lekcija.opis}`;
+        const lines = doc.splitTextToSize(fullText, usableWidth);
         doc.text(lines, 25, yPosition);
 
         const lineHeight = doc.getLineHeight() / doc.internal.scaleFactor;
         yPosition += (lines.length * lineHeight) + 3;
-
 
         doc.text(`Predviđeno trajanje: ${formatirajVrijeme(lekcija.trajanje)}`, 25, yPosition);
         yPosition += 7;
@@ -104,7 +94,9 @@ export default function LekcijPDFGenerator({lekcija, postignuca, ucenici}) {
                 const kategorijeOdgovor = await KategorijeService.getBySifra(postignuce.kategorija)
                 kategorijePostignucaLekcije.push(kategorijeOdgovor.data)
             }
-            const kategorijeUnikati = [...new Map(kategorijePostignucaLekcije.map(obj => [obj.sifra, obj])).values()]
+            const kategorijeUnikati = [...new Map(
+                kategorijePostignucaLekcije.map(obj => [obj.sifra, obj])
+            ).values()]
 
             const postignucaData = postignuca.map(postignuce => {
                 return [
@@ -131,7 +123,7 @@ export default function LekcijPDFGenerator({lekcija, postignuca, ucenici}) {
                 headStyles: {
                     font: "Roboto",
                     fontStyle: "bold",
-                    fillColor: [46, 125, 50],
+                    fillColor: [126, 69, 232],
                 },
                 columnStyles: {
                     0: {cellWidth: 45},
@@ -175,12 +167,12 @@ export default function LekcijPDFGenerator({lekcija, postignuca, ucenici}) {
                 headStyles: {
                     font: "Roboto",
                     fontStyle: "bold",
-                    fillColor: [46, 125, 50]
+                    fillColor: [126, 69, 232],
                 },
                 columnStyles: {
-                    0: {cellWidth: 50}, // Ime
-                    1: {cellWidth: 50}, // Prezime
-                    2: {cellWidth: 80}, // Email (njemu treba najviše mjesta)
+                    0: {cellWidth: 50},
+                    1: {cellWidth: 50},
+                    2: {cellWidth: 80},
                 }
             });
         } else {
@@ -207,7 +199,6 @@ export default function LekcijPDFGenerator({lekcija, postignuca, ucenici}) {
             );
         }
 
-        // Otvori PDF u novom prozoru
         const pdfBlob = doc.output("blob");
         const pdfUrl = URL.createObjectURL(pdfBlob);
         window.open(pdfUrl, "_blank");

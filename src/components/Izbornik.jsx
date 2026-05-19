@@ -1,8 +1,7 @@
 import useAuth from "../hooks/useAuth"
-
-import {ButtonGroup, Container, Nav, Navbar, NavDropdown} from "react-bootstrap"
+import {Container, Nav, Navbar, NavDropdown} from "react-bootstrap"
 import {useLocation, useNavigate} from "react-router-dom"
-import {DATA_SOURCE, DATA_SOURCES, IME_APLIKACIJE, RouteNames} from "../constants"
+import {IME_APLIKACIJE, RouteNames} from "../constants"
 import {FaUserCircle} from "react-icons/fa";
 
 export default function Izbornik() {
@@ -10,16 +9,6 @@ export default function Izbornik() {
     const {isLoggedIn, logout, authUser} = useAuth()
     const location = useLocation();
 
-    const getDatasourceName = () => {
-        switch (DATA_SOURCE) {
-            case DATA_SOURCES.M:
-                return "Memorija";
-            case DATA_SOURCES.L:
-                return "Local Storage";
-            case DATA_SOURCES.F:
-                return "Firebase";
-        }
-    }
     return (
         <Navbar expand="xl" className="bg-body-tertiary">
             <Container>
@@ -75,23 +64,26 @@ export default function Izbornik() {
                         )}
                     </Nav>
                     <Nav className="ms-auto my-3 my-xl-0">
-
                         {isLoggedIn ? (
                             <NavDropdown
                                 title={
-                                    <>
+                                    <span>
                                         <FaUserCircle size={20} className="me-2"/>{authUser.email}
-                                    </>
+                                    </span>
                                 }
                                 id="user-dropdown"
                                 align="end"
                             >
                                 {authUser.uloga === "admin" &&
                                     <>
-                                        <NavDropdown.Item onClick={() => navigate(RouteNames.GENERIRANJE_PODATAKA)}>
+                                        <NavDropdown.Item
+                                            onClick={() => navigate(RouteNames.GENERIRANJE_PODATAKA)}
+                                        >
                                             Generiraj podatke
                                         </NavDropdown.Item>
-                                        <NavDropdown.Item onClick={() => navigate(RouteNames.OPERATERI)}>
+                                        <NavDropdown.Item
+                                            onClick={() => navigate(RouteNames.OPERATERI)}
+                                        >
                                             Operateri
                                         </NavDropdown.Item>
                                         <hr className={"dropdown-divider"}/>

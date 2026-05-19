@@ -3,17 +3,8 @@ import {CustomSelect} from "../CustomSelect";
 
 export function CustomPaginationScreen(
     {
-        startItem,
-        endItem,
-        renderPages,
-        numberOfResults,
-        currentPage,
-        totalPages,
-        pageSize,
-        handlePageSizeChange,
-        totalItems,
-        handlePageChange,
-        resultsLabel
+        startItem, endItem, renderPages, numberOfResults, currentPage, totalPages,
+        pageSize, handlePageSizeChange, totalItems, handlePageChange, resultsLabel
     }
 ) {
     return (

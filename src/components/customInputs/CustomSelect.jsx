@@ -3,8 +3,8 @@ import "../../styles/customComponents.css"
 
 export function CustomSelect(
     {
-        id, label, podaci, defaultValue, onChange = undefined, value = undefined,
-        className = undefined, additionalClasses = undefined, prefix, isInvalid, onFocus, errors
+        id, label, podaci, defaultValue, prefix, isInvalid, onFocus, errors, onChange = undefined,
+        value = undefined, className = undefined, additionalClasses = undefined
     },
 ) {
     const baseClass = className || "custom-select";

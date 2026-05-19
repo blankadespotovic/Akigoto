@@ -8,8 +8,8 @@ import DOMPurify from "dompurify";
 export function DetaljiLekcije(props) {
     const podaci = props.podaci;
 
-    const [postignuca, setPostignuca] = useState()
-    const [ucenici, setUcenici] = useState()
+    const [postignuca, setPostignuca] = useState([])
+    const [ucenici, setUcenici] = useState([])
     const safeOpis = DOMPurify.sanitize(podaci?.opis);
 
     const ucitajPostignuca = async () => {
@@ -29,7 +29,6 @@ export function DetaljiLekcije(props) {
         }
         setUcenici(ucitaniUcenici)
     }
-
 
     useEffect(() => {
         if (props.show) {

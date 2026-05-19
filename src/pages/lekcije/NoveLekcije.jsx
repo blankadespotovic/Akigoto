@@ -1,31 +1,29 @@
-import { Button, Col, Form, Row } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
-import { RouteNames } from "../../constants";
-import { CustomCard } from "../../components/CustomCard.jsx";
+import {Button, Col, Form, Row} from "react-bootstrap";
+import {Link, useNavigate} from "react-router-dom";
+import {RouteNames} from "../../constants";
+import {CustomCard} from "../../components/CustomCard.jsx";
 import LekcijeService from "../../services/lekcije/LekcijeService";
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import UceniciService from "../../services/ucenici/UceniciService";
-import { CustomInput } from "../../components/customInputs/CustomInput.jsx";
+import {CustomInput} from "../../components/customInputs/CustomInput.jsx";
 import Select from "react-select";
 import PostignucaService from "../../services/postignuca/PostignucaService.js";
 import useBreakpoint from "../../hooks/useBreakpoint.js";
-import { WYSIWYGEditor } from "../../components/customInputs/WYSIWYGEditor.jsx";
-import { ShemaLekcije } from "../../schemes/ShemaLekcije.js";
+import {WYSIWYGEditor} from "../../components/customInputs/WYSIWYGEditor.jsx";
+import {ShemaLekcije} from "../../schemes/ShemaLekcije.js";
 
 export default function NoveLekcije() {
-
     const navigate = useNavigate()
     const sirina = useBreakpoint()
 
     const [ucenici, setUcenici] = useState([])
     const [odabraniUcenik, setOdabraniUcenik] = useState()
     const [odabraniUcenici, setOdabraniUcenici] = useState([])
-
     const [odabranaPostignuca, setOdabranaPostignuca] = useState([])
     const [odabranoPostignuce, setOdabranoPostignuce] = useState()
     const [postignuca, setPostignuca] = useState([])
-
     const [errors, setErrors] = useState({})
+    const [opisVrijednost, setOpisVrijednost] = useState("")
 
     async function dodaj(lekcija) {
         await LekcijeService.dodaj(lekcija).then(() => {
@@ -33,37 +31,37 @@ export default function NoveLekcije() {
         })
     }
 
-    async function ucitajUcenike() {
-        await UceniciService.get().then((odgovor) => {
-            if (!odgovor.success) {
-                alert("Nije implementiran servis za učenika")
-                return
-            }
-            const filtriraniUcenici = odgovor.data.map(
-                uc => ({ value: uc.sifra, label: `${uc.ime} ${uc.prezime}` })
-            )
-            setUcenici(filtriraniUcenici)
-        })
-    }
-
     useEffect(() => {
+        async function ucitajUcenike() {
+            await UceniciService.get().then((odgovor) => {
+                if (!odgovor.success) {
+                    alert("Nije implementiran servis za učenika")
+                    return
+                }
+                const filtriraniUcenici = odgovor.data.map(uc => (
+                    {value: uc.sifra, label: `${uc.ime} ${uc.prezime}`}
+                ))
+                setUcenici(filtriraniUcenici)
+            })
+        }
+
         ucitajUcenike()
     }, [])
 
-    async function ucitajPostignuca() {
-        await PostignucaService.get().then((odgovor) => {
-            if (!odgovor.success) {
-                alert("Nije implementiran servis za učenika")
-                return
-            }
-            const filtriranaPostignuca = odgovor.data.map(
-                p => ({ value: p.sifra, label: p.naziv })
-            )
-            setPostignuca(filtriranaPostignuca)
-        })
-    }
-
     useEffect(() => {
+        async function ucitajPostignuca() {
+            await PostignucaService.get().then((odgovor) => {
+                if (!odgovor.success) {
+                    alert("Nije implementiran servis za učenika")
+                    return
+                }
+                const filtriranaPostignuca = odgovor.data.map(p => (
+                    {value: p.sifra, label: p.naziv}
+                ))
+                setPostignuca(filtriranaPostignuca)
+            })
+        }
+
         ucitajPostignuca()
     }, [])
 
@@ -105,20 +103,16 @@ export default function NoveLekcije() {
         setErrors({});
         const objektPodataka = Object.fromEntries(podaci);
 
-        // Provjera pomoću Zod sheme
         const rezultat = ShemaLekcije.safeParse(objektPodataka);
 
         if (!rezultat.success) {
             const noveGreske = {};
-
-            // Prolazimo kroz sve issues (probleme) koje je Zod pronašao
             rezultat.error.issues.forEach((issue) => {
                 const kljuc = issue.path[0];
                 if (!noveGreske[kljuc]) {
                     noveGreske[kljuc] = issue.message;
                 }
             });
-
             setErrors(noveGreske);
             return;
         }
@@ -137,20 +131,15 @@ export default function NoveLekcije() {
 
     const ocistiGresku = (nazivPolja) => {
         if (errors[nazivPolja]) {
-            const noveGreske = { ...errors };
+            const noveGreske = {...errors};
             delete noveGreske[nazivPolja];
             setErrors(noveGreske);
         }
     };
 
-
-    const [opisVrijednost, setOpisVrijednost] = useState("")
-
     return (
-
         <CustomCard title={"Unos nove lekcije"} textAlign={"left"}>
             <Form onSubmit={odradiSubmit}>
-
                 <Row>
                     <Col xs={12} md={6}>
                         <CustomInput
@@ -160,9 +149,8 @@ export default function NoveLekcije() {
                             placeholder={"Unesite naziv"}
                             isInvalid={!!errors.naziv}
                             errors={errors.naziv}
-                            onFocus={() => ocistiGresku('naziv')}
+                            onFocus={() => ocistiGresku("naziv")}
                         />
-                      
                     </Col>
                     <Col xs={12} md={6}>
                         <CustomInput
@@ -174,13 +162,10 @@ export default function NoveLekcije() {
                             suffix={"min"}
                             isInvalid={!!errors.trajanje}
                             errors={errors.trajanje}
-                            onFocus={() => ocistiGresku('trajanje')}
+                            onFocus={() => ocistiGresku("trajanje")}
                         />
-                    
                     </Col>
                 </Row>
-
-
                 <Form.Group controlId={"opis"}>
                     <Form.Label column={"lg"}>Sadržaj lekcije</Form.Label>
                     <WYSIWYGEditor
@@ -189,13 +174,10 @@ export default function NoveLekcije() {
                         name={"opis"}
                         isInvalid={!!errors.opis}
                         errors={errors.opis}
-                        onFocus={() => ocistiGresku('opis')}
+                        onFocus={() => ocistiGresku("opis")}
                     />
-                  
                 </Form.Group>
-
-
-                <hr />
+                <hr/>
                 <Row gutter={16}>
                     <Col xs={12} md={6}>
                         <Form.Group controlId={"ucenici"}>
@@ -225,22 +207,21 @@ export default function NoveLekcije() {
                                         onClick={() => ukloniUcenike(p.value)}
                                     >
                                         <span className="retro-label">{p.label}</span>
-
                                         <Button
                                             variant="light"
                                             size="sm"
                                             className="retro-remove"
                                             onClick={() => ukloniUcenike(p.value)}
                                         >
-                                            ×
+                                            &times;
                                         </Button>
                                     </li>
                                 ))}
                             </ul>
-                        ) : <><br /><small>Odaberite učenike za prikaz.</small></>}
+                        ) : <><br/><small>Odaberite učenike za prikaz.</small></>}
                     </Col>
                 </Row>
-                <hr />
+                <hr/>
                 <Row gutter={16}>
                     <Col xs={12} md={6}>
                         <Form.Group controlId={"postignuca"}>
@@ -270,22 +251,20 @@ export default function NoveLekcije() {
                                         onClick={() => ukloniPostignuca(p.value)}
                                     >
                                         <span className="retro-label">{p.label}</span>
-
                                         <Button
                                             variant="light"
                                             size="sm"
                                             className="retro-remove"
                                             onClick={() => ukloniPostignuca(p.value)}
                                         >
-                                            ×
+                                            &times;
                                         </Button>
                                     </li>
                                 ))}
                             </ul>
-                        ) : <><br /><small>Odaberite postignuća za prikaz.</small></>}
+                        ) : <><br/><small>Odaberite postignuća za prikaz.</small></>}
                     </Col>
                 </Row>
-
                 <Row className="mt-4">
                     <Col>
                         <Link to={RouteNames.LEKCIJE} className="btn btnCancel">
@@ -300,7 +279,5 @@ export default function NoveLekcije() {
                 </Row>
             </Form>
         </CustomCard>
-
-
     )
 }

@@ -1,66 +1,60 @@
-import { CustomCard } from "../../components/CustomCard.jsx";
-import { Button, ButtonGroup, OverlayTrigger, Table, Tooltip } from "react-bootstrap";
-import { CustomButtons } from "../../components/CustomButtons.jsx";
-import { FaEdit, FaSort, FaSortDown, FaSortUp, FaTrash } from "react-icons/fa";
-import { useState } from "react";
+import {CustomCard} from "../../components/CustomCard.jsx";
+import {OverlayTrigger, Table, Tooltip} from "react-bootstrap";
+import {CustomButtons} from "../../components/CustomButtons.jsx";
+import {FaEdit, FaSort, FaSortDown, FaSortUp, FaTrash} from "react-icons/fa";
+import {useState} from "react";
 
 export function PregledKategorijaTablica(
-    { kategorije, postignuca, navigate, obrisi }
+    {kategorije, postignuca, obrisi}
 ) {
-
-    const [sortConfig, setSortingConfig] = useState({ key: null, direction: null })
+    const [sortingConfig, setSortingConfig] = useState({key: null, direction: null})
 
     const handleSort = (key) => {
-        let direction = 'asc'
-        if (sortConfig.key === key && sortConfig.direction === 'asc') {
-            direction = 'desc'
-        } else if (sortConfig.key === key && sortConfig.direction === 'desc') {
+        let direction = "asc"
+        if (sortingConfig.key === key && sortingConfig.direction === "asc") {
+            direction = "desc"
+        } else if (sortingConfig.key === key && sortingConfig.direction === "desc") {
             direction = null
         }
         setSortingConfig({key, direction})
     }
 
     const getSortIcon = (columnKey) => {
-        if (sortConfig.key !== columnKey || sortConfig.direction === null){
-            return <FaSort />
+        if (sortingConfig.key !== columnKey || sortingConfig.direction === null) {
+            return <FaSort/>
         }
-        return sortConfig.direction === 'asc' ? <FaSortUp /> : <FaSortDown />
+        return sortingConfig.direction === "asc" ? <FaSortUp/> : <FaSortDown/>
     }
 
     const sortedKategorije = () => {
-        if (!kategorije || sortConfig.direction === null) {
+        if (!kategorije || sortingConfig.direction === null) {
             return kategorije
         }
 
-
         const sorted = [...kategorije].sort((a, b) => {
-            let aValue = a[sortConfig.key];
-            let bValue = b[sortConfig.key];
+            let aValue = a[sortingConfig.key];
+            let bValue = b[sortingConfig.key];
 
-            if (typeof aValue === 'string') {
-                const result = aValue.localeCompare(bValue, 'hr', {sensitivity: 'accent'});
-                return sortConfig.direction === 'asc' ? result : -result;
+            if (typeof aValue === "string") {
+                const result = aValue.localeCompare(bValue, "hr", {sensitivity: "accent"});
+                return sortingConfig.direction === "asc" ? result : -result;
             }
 
-            if (typeof aValue === 'number') {
+            if (typeof aValue === "number") {
                 const result = aValue - bValue;
-                return sortConfig.direction === 'asc' ? result : -result;
+                return sortingConfig.direction === "asc" ? result : -result;
             }
-
 
             if (aValue < bValue) {
-                return sortConfig.direction === 'asc' ? -1 : 1;
+                return sortingConfig.direction === "asc" ? -1 : 1;
             }
             if (aValue > bValue) {
-                return sortConfig.direction === 'asc' ? 1 : -1;
+                return sortingConfig.direction === "asc" ? 1 : -1;
             }
             return 0;
-
         });
         return sorted;
     }
-
-
 
     return (
         <CustomCard
@@ -71,54 +65,54 @@ export function PregledKategorijaTablica(
         >
             <Table striped hover responsive>
                 <thead>
-                    <tr>
-                        <th onClick={() => handleSort('naziv')} style={{ cursor: 'pointer' }}>
-                            Naziv {getSortIcon('naziv')}</th>
-                        <th onClick={() => handleSort('brojPostignuca')} style={{ cursor: 'pointer' }} className={"text-end"}>Broj postignuća {getSortIcon('brojPostignuca')}</th>
-                        <th className={"text-center"}>Akcija</th>
-                    </tr>
+                <tr>
+                    <th onClick={() => handleSort("naziv")} style={{cursor: "pointer"}}>
+                        Naziv {getSortIcon("naziv")}</th>
+                    <th onClick={() => handleSort("brojPostignuca")} style={{cursor: "pointer"}}
+                        className={"text-end"}>Broj postignuća {getSortIcon("brojPostignuca")}</th>
+                    <th className={"text-center"}>Akcija</th>
+                </tr>
                 </thead>
                 <tbody>
-                    {sortedKategorije() && sortedKategorije().map((kategorija) => {
-                    const postignucaKategorije = postignuca.filter(p => p.kategorija === kategorija.sifra)
-                    return (
+                {sortedKategorije()?.map((kategorija) => {
+                        const postignucaKategorije = postignuca.filter(p => p.kategorija === kategorija.sifra)
+                        return (
                             <tr key={kategorija.sifra}>
                                 <td>{kategorija.naziv}</td>
                                 <td className={"text-end"}>
-                                <OverlayTrigger
-                                    key={kategorija.sifra}
-                                    placement={"top"}
-                                    overlay={
-                                        <Tooltip id={`tooltip-${kategorija.sifra}`}>
-                                            <div className={"text-start"}>
-                                                <p>Postignuća u kategoriji:</p>
-                                                {postignucaKategorije.map((p, idx) =>
-                                                    <div key={p.sifra}>
-                                                        <span>{idx + 1}. {p.naziv}</span><br/>
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </Tooltip>
-                                    }
-                                >
-                                    <span className={"cursor-pointer"}>{postignucaKategorije.length}</span>
-                                </OverlayTrigger>
-                            </td>
+                                    <OverlayTrigger
+                                        key={kategorija.sifra}
+                                        placement={"top"}
+                                        overlay={
+                                            <Tooltip id={`tooltip-${kategorija.sifra}`}>
+                                                <div className={"text-start"}>
+                                                    <p>Postignuća u kategoriji:</p>
+                                                    {postignucaKategorije.map((p, idx) =>
+                                                        <div key={p.sifra}>
+                                                            <span>{idx + 1}. {p.naziv}</span><br/>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </Tooltip>
+                                        }
+                                    >
+                                        <span className={"cursor-pointer"}>{postignucaKategorije.length}</span>
+                                    </OverlayTrigger>
+                                </td>
                                 <td>
-
                                     <CustomButtons
                                         key={kategorija.sifra}
                                         sifra={kategorija.sifra}
                                         editLink={`/kategorije/${kategorija.sifra}`}
-                                        editLabel={<FaEdit />}
+                                        editLabel={<FaEdit/>}
                                         deleteFunc={() => obrisi(kategorija.sifra)}
-                                        deleteLabel={<FaTrash />}
+                                        deleteLabel={<FaTrash/>}
                                     />
-
                                 </td>
                             </tr>
                         )
-                    })}
+                    }
+                )}
                 </tbody>
             </Table>
         </CustomCard>

@@ -10,11 +10,11 @@ import {FaTrash} from "react-icons/fa";
 import {ShemaUceniciP} from "../../schemes/ShemaUceniciP.js";
 
 export default function PromjenaUcenika() {
-
     const navigate = useNavigate()
     const params = useParams()
     const sirina = useBreakpoint()
     const mobilnaSirina = ["xs", "sm", "md"].includes(sirina)
+
     const [ucenik, setUcenik] = useState({})
     const [errors, setErrors] = useState({})
     const [uplateUcenika, setUplateUcenika] = useState(ucenik?.uplate ?? []);
@@ -59,20 +59,16 @@ export default function PromjenaUcenika() {
         setErrors({});
         const objektPodataka = Object.fromEntries(podaci);
 
-        // Provjera pomoću Zod sheme
         const rezultat = ShemaUceniciP.safeParse(objektPodataka);
 
         if (!rezultat.success) {
             const noveGreske = {};
-
-            // Prolazimo kroz sve issues (probleme) koje je Zod pronašao
             rezultat.error.issues.forEach((issue) => {
                 const kljuc = issue.path[0];
                 if (!noveGreske[kljuc]) {
                     noveGreske[kljuc] = issue.message;
                 }
             });
-
             setErrors(noveGreske);
             return;
         }
@@ -97,9 +93,7 @@ export default function PromjenaUcenika() {
         }
     };
 
-
     return (
-
         <CustomCard title={"Promjena učenika"} textAlign={"left"}>
             <Form onSubmit={odradiSubmit}>
                 <Row>
@@ -114,7 +108,6 @@ export default function PromjenaUcenika() {
                             errors={errors.ime}
                             onFocus={() => ocistiGresku("ime")}
                         />
-
                     </Col>
                     <Col xs={12} md={6}>
                         <CustomInput
@@ -141,7 +134,6 @@ export default function PromjenaUcenika() {
                             errors={errors.prezime}
                             onFocus={() => ocistiGresku("prezime")}
                         />
-
                     </Col>
                     <Col>
                         <CustomInput
@@ -166,7 +158,6 @@ export default function PromjenaUcenika() {
                             errors={errors.email}
                             onFocus={() => ocistiGresku("email")}
                         />
-
                     </Col>
                     <Col xs={12} md={6}>
                         <h4 className="mt-3">Trenutne uplate</h4>
@@ -193,14 +184,10 @@ export default function PromjenaUcenika() {
                                         </tr>
                                     )}
                                 </tbody>
-
                             </Table> : <p>Nema podataka o uplati</p>
                         }
                     </Col>
-
                 </Row>
-
-
                 <Row className="mt-4 justi">
                     <Col xs={12} md={6} className={"order-2 order-md-1"}>
                         <Link to={RouteNames.UCENICI}
@@ -216,8 +203,5 @@ export default function PromjenaUcenika() {
                 </Row>
             </Form>
         </CustomCard>
-
-
     )
-
 }

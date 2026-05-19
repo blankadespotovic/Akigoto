@@ -9,8 +9,8 @@ import {CustomInput} from "../../components/customInputs/CustomInput.jsx";
 import {FaEye, FaEyeSlash, FaLock, FaUser} from "react-icons/fa6";
 
 export default function Registracija() {
-
     const navigate = useNavigate()
+
     const [errors, setErrors] = useState({})
     const [passwordShown, setPasswordShown] = useState(false);
     const [repeatPasswordShown, setRepeatPasswordShown] = useState(false);
@@ -40,13 +40,11 @@ export default function Registracija() {
         setErrors({})
         const objektPodataka = Object.fromEntries(podaci)
 
-        // Provjera podudaranja lozinki
         if (podaci.get("lozinka") !== podaci.get("potvrdaLozinke")) {
             setErrors({potvrdaLozinke: "Lozinke se ne podudaraju!"})
             return
         }
 
-        // Provjera pomoću Zod sheme
         const rezultat = ShemaOperater.safeParse({
             email: objektPodataka.email,
             lozinka: objektPodataka.lozinka,
@@ -55,14 +53,12 @@ export default function Registracija() {
 
         if (!rezultat.success) {
             const noveGreske = {}
-
             rezultat.error.issues.forEach((issue) => {
                 const kljuc = issue.path[0]
                 if (!noveGreske[kljuc]) {
                     noveGreske[kljuc] = issue.message
                 }
             })
-
             setErrors(noveGreske)
             return
         }
@@ -176,9 +172,7 @@ export default function Registracija() {
                         />
                     </Col>
                 </Row>
-
                 <hr/>
-
                 <div className="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
                     <Button
                         type="submit"

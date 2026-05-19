@@ -15,20 +15,17 @@ import {FaMagnifyingGlass} from "react-icons/fa6";
 import useLoading from "../../hooks/useLoading.js";
 
 export default function PregledUcenika() {
-
     const navigate = useNavigate()
     const sirina = useBreakpoint();
+    const {pageSize, setPageSize} = usePaginationSettings("ucenici")
+    const {showLoading, hideLoading, loading} = useLoading()
 
     const [ucenici, setUcenici] = useState([]);
     const [currentPage, setCurrentPage] = useState(1)
     const [totalPages, setTotalPages] = useState(0)
     const [totalItems, setTotalItems] = useState(0)
     const [svaPostignucaSvihUcenika, setSvaPostignucaSvihUcenika] = useState([]);
-    const {pageSize, setPageSize} = usePaginationSettings("ucenici")
     const [vrijednostPretrage, setVrijednostPretrage] = useState("")
-
-    const {showLoading, hideLoading, loading} = useLoading()
-
 
     async function ucitajUcenike(selectedPage, selectedPageSize, vrijednostPretrage) {
         showLoading();
@@ -81,7 +78,6 @@ export default function PregledUcenika() {
         dohvatiSveLekcije();
     }, [ucenici]);
 
-
     function handlePageChange(page) {
         setCurrentPage(page)
     }
@@ -93,9 +89,7 @@ export default function PregledUcenika() {
 
     async function obrisi(sifra) {
         if (!confirm("Sigurno obrisati?")) {
-            return 
-            // samo za potrebe testa prikaza rada loading
-           // await new Promise(resolve => setTimeout(resolve, 2000));
+            return
         }
         await UceniciService.obrisi(sifra)
 
@@ -131,7 +125,6 @@ export default function PregledUcenika() {
                   className="btn btnAdd w-100 my-3">
                 Dodavanje novog učenika
             </Link>
-
             {ucenici.length > 0 && <InputGroup>
                 <Form.Control
                     type={"text"}
@@ -141,33 +134,26 @@ export default function PregledUcenika() {
                     onChange={handleSearchChange}
                 />
                 <InputGroup.Text className={"custom-addon"}>
-                    {vrijednostPretrage !== "" ? (
-                        <FaTimes onClick={handleClear}/>
-                    ) : (
+                    {vrijednostPretrage === "" ? (
                         <FaMagnifyingGlass/>
+                    ) : (
+                        <FaTimes onClick={handleClear}/>
                     )}
                 </InputGroup.Text>
             </InputGroup>}
-
-            {ucenici.length > 0 &&
-                (["xs", "sm", "md"].includes(sirina) ? (
-                        <PregledUcenikaGrid
-                            ucenici={ucenici}
-                            navigate={navigate}
-                            obrisi={obrisi}
-                        />
-                    ) : (
-                        <PregledUcenikaTablica
-                            ucenici={ucenici}
-                            svaPostignucaSvihUcenika={svaPostignucaSvihUcenika}
-                            obrisi={obrisi}
-                        />
-                    )
-
-                )
-
-            }
-
+            {ucenici.length > 0 && ["xs", "sm", "md"].includes(sirina) ? (
+                <PregledUcenikaGrid
+                    ucenici={ucenici}
+                    navigate={navigate}
+                    obrisi={obrisi}
+                />
+            ) : (
+                <PregledUcenikaTablica
+                    ucenici={ucenici}
+                    svaPostignucaSvihUcenika={svaPostignucaSvihUcenika}
+                    obrisi={obrisi}
+                />
+            )}
             <CustomPagination
                 totalPages={totalPages}
                 currentPage={currentPage}
@@ -178,6 +164,5 @@ export default function PregledUcenika() {
                 resultsLabel={"učenika"}
             />
         </>
-
     )
 }

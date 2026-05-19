@@ -1,18 +1,18 @@
-import { Form, InputGroup } from "react-bootstrap";
+import {Form, InputGroup} from "react-bootstrap";
+import {useEffect, useState} from "react";
+import {formatirajVrijeme} from "../../util/dateTimeFormatter";
 import "../../styles/customComponents.css"
-import { useEffect, useState } from "react";
-import { formatirajVrijeme } from "../../util/dateTimeFormatter";
 
 export function CustomInput(
     {
-        id, label, type, required = false, placeholder = undefined, defaultValue = undefined,
-        prefix = undefined, suffix = undefined, trebaFormatiratuVrijeme = false,
-        min = undefined, max = undefined, value = undefined, onChange = undefined,
-        disabled = false, onFocus = undefined, isInvalid, errors, autoComplete
+        id, label, type, isInvalid, errors, autoComplete, placeholder = undefined,
+        defaultValue = undefined, prefix = undefined, suffix = undefined,
+        trebaFormatiratuVrijeme = false, min = undefined, max = undefined,
+        value = undefined, onChange = undefined, disabled = false,
+        onFocus = undefined,
     }
 ) {
     const [vrijednost, setVrijednost] = useState(0)
-
 
     const handleChange = (e) => {
         if (onChange) onChange(e);
@@ -52,11 +52,10 @@ export function CustomInput(
                 />
                 {suffix && <InputGroup.Text className={"custom-addon"}>{suffix}</InputGroup.Text>}
                 {errors && (
-                <Form.Control.Feedback type="invalid">
-                    {errors}
-                </Form.Control.Feedback>
+                    <Form.Control.Feedback type="invalid">
+                        {errors}
+                    </Form.Control.Feedback>
                 )}
-                
             </InputGroup>
             {trebaFormatiratuVrijeme && <div className="input-hint">
                 {formatirajVrijeme(Number(vrijednost))}

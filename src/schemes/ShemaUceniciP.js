@@ -1,12 +1,12 @@
-import { z } from 'zod'
-import { ShemaUcenici } from './ShemaUcenici';
+import {z} from "zod"
+import {ShemaUcenici} from "./ShemaUcenici";
 
 export const ShemaUceniciP = ShemaUcenici.extend({
-iznos: z.coerce.number({
-    invalid_type_error: "Iznos mora biti broj!",
-  })
-    .min(0, "Iznos ne može biti negativan broj!")
-    .max(100, "Iznos ne može prelaziti 100€"),
+    iznos: z.coerce.number({
+        invalid_type_error: "Iznos mora biti broj!",
+    })
+        .min(0, "Iznos ne može biti negativan broj!")
+        .max(100, "Iznos ne može prelaziti 100€"),
 
     datum: z.preprocess(
         (val) => (val === "" ? undefined : val),
@@ -25,7 +25,6 @@ iznos: z.coerce.number({
                 danas.setHours(0, 0, 0, 0);
                 return odabraniDatum >= danas;
             }, "Datum uplate ne može biti u prošlosti!")
-        .optional()
-    )
-
+            .optional()
+    ),
 });

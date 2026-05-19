@@ -12,9 +12,10 @@ import useBreakpoint from "../hooks/useBreakpoint.js";
 const PieChart = HCR.default;
 
 export default function NadzornaPloca() {
-    const [podaci, setPodaci] = useState([]);
     const {showLoading, hideLoading} = useLoading();
     const sirina = useBreakpoint();
+    
+    const [podaci, setPodaci] = useState([]);
 
     useEffect(() => {
         const getPodaci = async () => {

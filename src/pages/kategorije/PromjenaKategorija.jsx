@@ -1,38 +1,36 @@
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { RouteNames } from "../../constants";
-import { Button, Col, Form, Row } from "react-bootstrap";
-import { useEffect, useState } from "react";
-import { CustomCard } from "../../components/CustomCard.jsx";
+import {Link, useNavigate, useParams} from "react-router-dom";
+import {RouteNames} from "../../constants";
+import {Button, Col, Form, Row} from "react-bootstrap";
+import {useEffect, useState} from "react";
+import {CustomCard} from "../../components/CustomCard.jsx";
 import KategorijeService from "../../services/kategorije/KategorijeService.js";
-import { CustomInput } from "../../components/customInputs/CustomInput.jsx";
+import {CustomInput} from "../../components/customInputs/CustomInput.jsx";
 import useBreakpoint from "../../hooks/useBreakpoint.js";
-import { ShemaKategorije } from "../../schemes/ShemaKategorije.js";
+import {ShemaKategorije} from "../../schemes/ShemaKategorije.js";
 
 export default function PromjenaKategorije() {
     const navigate = useNavigate()
     const sirina = useBreakpoint()
     const mobilnaSirina = ["xs", "sm", "md"].includes(sirina);
-
     const params = useParams()
-    const [kategorija, setKategorija] = useState()
 
+    const [kategorija, setKategorija] = useState()
     const [errors, setErrors] = useState({})
 
     useEffect(() => {
+        async function ucitajKategoriju() {
+            await KategorijeService.getBySifra(params.sifra).then((odgovor) => {
+                if (!odgovor.success) {
+                    alert("Nije implementiran servis")
+                    return
+                }
+                const p = odgovor.data
+                setKategorija(p)
+            })
+        }
+
         ucitajKategoriju()
-    }, [])
-
-    async function ucitajKategoriju() {
-        await KategorijeService.getBySifra(params.sifra).then((odgovor) => {
-            if (!odgovor.success) {
-                alert("Nije implementiran servis")
-                return
-            }
-            const p = odgovor.data
-            setKategorija(p)
-        })
-    }
-
+    }, [params.sifra])
 
     async function promjeni(kategorija) {
         await KategorijeService.promjeni(kategorija).then(() => {
@@ -46,40 +44,34 @@ export default function PromjenaKategorije() {
         setErrors({});
         const objektPodataka = Object.fromEntries(podaci);
 
-        // Provjera pomoću Zod sheme
         const rezultat = ShemaKategorije.safeParse(objektPodataka);
 
         if (!rezultat.success) {
             const noveGreske = {};
-
-            // Prolazimo kroz sve issues (probleme) koje je Zod pronašao
             rezultat.error.issues.forEach((issue) => {
                 const kljuc = issue.path[0];
                 if (!noveGreske[kljuc]) {
                     noveGreske[kljuc] = issue.message;
                 }
             });
-
             setErrors(noveGreske);
             return;
         }
         promjeni({
-            sifra: kategorija.sifra,
+            sifra: kategorija?.sifra,
             naziv: podaci.get("naziv")
         })
     }
 
     const ocistiGresku = (nazivPolja) => {
         if (errors[nazivPolja]) {
-            const noveGreske = { ...errors };
+            const noveGreske = {...errors};
             delete noveGreske[nazivPolja];
             setErrors(noveGreske);
         }
     };
 
-
     return (
-
         <CustomCard title={"Promjena kategorije"} textAlign={"left"}>
             <Form onSubmit={odradiSubmit}>
                 <CustomInput
@@ -90,12 +82,12 @@ export default function PromjenaKategorije() {
                     defaultValue={kategorija?.naziv}
                     isInvalid={!!errors.naziv}
                     errors={errors.naziv}
-                    onFocus={() => ocistiGresku('naziv')}
+                    onFocus={() => ocistiGresku("naziv")}
                 />
                 <Row className="mt-4 justi">
                     <Col xs={12} md={6} className={"order-2 order-md-1"}>
                         <Link to={RouteNames.KATEGORIJE}
-                            className={`btn btnCancel${mobilnaSirina ? " w-100 my-1" : ""}`}>
+                              className={`btn btnCancel${mobilnaSirina ? " w-100 my-1" : ""}`}>
                             Odustani
                         </Link>
                     </Col>
@@ -107,7 +99,5 @@ export default function PromjenaKategorije() {
                 </Row>
             </Form>
         </CustomCard>
-
-
     )
 }

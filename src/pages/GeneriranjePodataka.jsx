@@ -21,9 +21,10 @@ import LekcijeServiceFireBase from "../services/lekcije/LekcijeServiceFireBase.j
 import UceniciServiceFireBase from "../services/ucenici/UceniciServiceFireBase.js";
 import OperaterServiceFireBase from "../services/operateri/OperaterServiceFireBase.js";
 
-
 export default function GeneriranjePodataka() {
     const sirina = useBreakpoint()
+    const moiblnaSirina = ["xs", "sm", "md"].includes(sirina)
+
     const [brojKategorija, setBrojKategorija] = useState(5)
     const [ukupnoKategorija, setUkupnoKategorija] = useState()
     const [brojPostignuca, setBrojPostignuca] = useState(20)
@@ -37,7 +38,6 @@ export default function GeneriranjePodataka() {
     const [poruka, setPoruka] = useState(null)
     const [loading, setLoading] = useState(false)
     const [spol, setSpol] = useState(null)
-    const moiblnaSirina = ["xs", "sm", "md"].includes(sirina)
 
     const faker = new Faker({
         locale: [hr]
@@ -105,7 +105,6 @@ export default function GeneriranjePodataka() {
     };
 
     const generirajPostignuca = async (broj) => {
-
         const sveKategorije = await KategorijeService.get();
         for (let i = 0; i < broj; i++) {
             const naziv = faker.helpers.arrayElement([
@@ -129,7 +128,7 @@ export default function GeneriranjePodataka() {
                 "Savladao si osnovne gramatičke strukture"
 
             ]);
-            const kat = parseInt(faker.helpers.arrayElement(sveKategorije.data).sifra)
+            const kat = faker.helpers.arrayElement(sveKategorije.data).sifra
             const postignuce = {
                 naziv: naziv,
                 opis: opis,
@@ -201,12 +200,12 @@ export default function GeneriranjePodataka() {
             };
             await UceniciService.dodaj(ucenik);
         }
-        dohvatiBrojUcenika()
+        await dohvatiBrojUcenika()
     };
 
     const generirajLekcije = async (broj) => {
-        const svaPostignucaIds = svaPostignuca?.map(p => parseInt(p.sifra))
-        const sviUceniciIds = sviUcenici?.map(u => parseInt(u.sifra))
+        const svaPostignucaIds = svaPostignuca?.map(p => p.sifra)
+        const sviUceniciIds = sviUcenici?.map(u => u.sifra)
         for (let i = 0; i < broj; i++) {
             const naziv = faker.helpers.arrayElement([
                 "Prvi koraci",
@@ -237,7 +236,7 @@ export default function GeneriranjePodataka() {
             };
             await LekcijeService.dodaj(lekcija);
         }
-        dohvatiBrojLekcija()
+        await dohvatiBrojLekcija()
     }
 
     const handleGenerirajKategorije = async (e) => {
@@ -315,6 +314,7 @@ export default function GeneriranjePodataka() {
                 tekst: `Uspješno generirano ${brojUcenika} učenika!`
             });
         } catch (error) {
+            console.error(error)
             setPoruka({
                 tip: "danger",
                 tekst: "Greška pri generiranju učenika: " + error.message
@@ -389,8 +389,10 @@ export default function GeneriranjePodataka() {
             });
         } finally {
             setLoading(false);
-            dohvatiBrojKategorija()
-            dohvatiBrojPostignuca()
+            await Promise.all([
+                dohvatiBrojKategorija(),
+                dohvatiBrojPostignuca()
+            ]);
         }
     };
 
@@ -431,7 +433,7 @@ export default function GeneriranjePodataka() {
             });
         } finally {
             setLoading(false)
-            dohvatiBrojPostignuca()
+            await dohvatiBrojPostignuca()
         }
     };
 
@@ -471,7 +473,7 @@ export default function GeneriranjePodataka() {
             });
         } finally {
             setLoading(false);
-            dohvatiBrojUcenika()
+            await dohvatiBrojUcenika()
         }
     };
 
@@ -502,7 +504,7 @@ export default function GeneriranjePodataka() {
             });
         } finally {
             setLoading(false);
-            dohvatiBrojLekcija()
+            await dohvatiBrojLekcija()
         }
     }
 
@@ -529,10 +531,12 @@ export default function GeneriranjePodataka() {
             });
         } finally {
             setLoading(false);
-            dohvatiBrojKategorija();
-            dohvatiBrojPostignuca();
-            dohvatiBrojUcenika();
-            dohvatiBrojLekcija();
+            await Promise.all([
+                dohvatiBrojKategorija(),
+                dohvatiBrojPostignuca(),
+                dohvatiBrojUcenika(),
+                dohvatiBrojLekcija(),
+            ]);
         }
     }
 
@@ -545,7 +549,7 @@ export default function GeneriranjePodataka() {
 
         try {
             const operateriPromises = operaterMemorija.operateri.map(e => {
-                const {sifra, ...ostatak} = e;
+                const {_, ...ostatak} = e;
                 return OperaterServiceFireBase.dodajBezHash(ostatak);
             });
             await Promise.all(operateriPromises);
@@ -567,7 +571,6 @@ export default function GeneriranjePodataka() {
                 mapiranjeSifriPostignuca.push({sifram: sifra, sifraf: noviId});
             }
 
-
             let mapiranjeSifriUcenika = [];
             for (const e of uceniciMemorija.ucenici) {
                 const {sifra, ...ostatak} = e;
@@ -577,13 +580,13 @@ export default function GeneriranjePodataka() {
             }
 
             for (const e of lekcijeMemorija.lekcije) {
-                const {sifra, ...ostatak} = e;
+                const {_, ...ostatak} = e;
                 ostatak.postignuca = ostatak.postignuca.map(pSifra => {
-                    const mPostignuce = mapiranjeSifriPostignuca.find(m => m.sifram == pSifra);
+                    const mPostignuce = mapiranjeSifriPostignuca.find(m => m.sifram === pSifra);
                     return mPostignuce ? mPostignuce.sifraf : null;
                 }).filter(id => id !== null);
                 ostatak.ucenici = ostatak.ucenici.map(pSifra => {
-                    const mUcenik = mapiranjeSifriUcenika.find(m => m.sifram == pSifra);
+                    const mUcenik = mapiranjeSifriUcenika.find(m => m.sifram === pSifra);
                     return mUcenik ? mUcenik.sifraf : null;
                 }).filter(id => id !== null);
                 await LekcijeServiceFireBase.dodaj(ostatak);
@@ -593,7 +596,6 @@ export default function GeneriranjePodataka() {
                 tip: "success",
                 tekst: "Uspješno presipano u Firebase"
             });
-
         } catch (error) {
             console.error("Greška pri presipanju:", error);
             setPoruka({
@@ -639,9 +641,13 @@ export default function GeneriranjePodataka() {
                     podataka
                     iz baze.
                 </CustomAlert>
-                {poruka && (
-                    <CustomAlert variant={poruka.tip} className={"mt-2 mb-0"} dismissible
-                                 onClose={() => setPoruka(null)}>
+                {!!poruka && (
+                    <CustomAlert
+                        variant={poruka.tip}
+                        className={"mt-2 mb-0"}
+                        dismissible
+                        onClose={() => setPoruka(null)}
+                    >
                         {poruka.tekst}
                     </CustomAlert>
                 )}
@@ -659,7 +665,7 @@ export default function GeneriranjePodataka() {
                                 min={1}
                                 max={50}
                                 value={brojKategorija}
-                                onChange={(e) => setBrojKategorija(parseInt(e.target.value))}
+                                onChange={(e) => setBrojKategorija(Number.parseInt(e.target.value))}
                                 disabled={loading}
                             />
                             <Form.Text className="text-muted">
@@ -674,7 +680,7 @@ export default function GeneriranjePodataka() {
                         >
                             {loading ? "Generiranje..." : "Generiraj kategorije"}
                         </Button>
-                        <CustomAlert variant="warning" className="mt-2" style={{fontSize: ".9rem"}}>
+                        <CustomAlert variant="warning" className="mt-2">
                             <strong>Upozorenje:</strong> Ove akcije će dodati nove podatke u postojeće.
                             Ako želite početi ispočetka, prvo obrišite postojeće podatke.
                         </CustomAlert>
@@ -705,7 +711,7 @@ export default function GeneriranjePodataka() {
                                 min={1}
                                 max={200}
                                 value={brojPostignuca}
-                                onChange={(e) => setBrojPostignuca(parseInt(e.target.value))}
+                                onChange={(e) => setBrojPostignuca(Number.parseInt(e.target.value))}
                                 disabled={loading}
                             />
                             <Form.Text className="text-muted">
@@ -720,7 +726,7 @@ export default function GeneriranjePodataka() {
                         >
                             {loading ? "Generiranje..." : "Generiraj postignuća"}
                         </Button>
-                        <CustomAlert variant="warning" className="mt-2" style={{fontSize: ".9rem"}}>
+                        <CustomAlert variant="warning" className="mt-2">
                             <strong>Upozorenje:</strong> Ove akcije će dodati nove podatke u postojeće.
                             Ako želite početi ispočetka, prvo obrišite postojeće podatke.
                         </CustomAlert>
@@ -751,7 +757,7 @@ export default function GeneriranjePodataka() {
                                 min={1}
                                 max={50}
                                 value={brojUcenika}
-                                onChange={(e) => setBrojUcenika(parseInt(e.target.value))}
+                                onChange={(e) => setBrojUcenika(Number.parseInt(e.target.value))}
                                 disabled={loading}
                             />
                             <Form.Text className="text-muted">
@@ -780,7 +786,6 @@ export default function GeneriranjePodataka() {
                                         onChange={() => setSpol("male")}
                                         disabled={loading}
                                     />
-
                                     <Form.Check
                                         type="radio"
                                         label="Ž"
@@ -800,7 +805,7 @@ export default function GeneriranjePodataka() {
                                 </Col>
                             </Row>
                         </Form.Group>
-                        <CustomAlert variant="warning" className="mt-2" style={{fontSize: ".9rem"}}>
+                        <CustomAlert variant="warning" className="mt-2">
                             <strong>Upozorenje:</strong> Ove akcije će dodati nove podatke u postojeće.
                             Ako želite početi ispočetka, prvo obrišite postojeće podatke.
                         </CustomAlert>
@@ -831,7 +836,7 @@ export default function GeneriranjePodataka() {
                                 min={1}
                                 max={50}
                                 value={brojLekcija}
-                                onChange={(e) => setBrojLekcija(parseInt(e.target.value))}
+                                onChange={(e) => setBrojLekcija(Number.parseInt(e.target.value))}
                                 disabled={loading}
                             />
                             <Form.Text className="text-muted">
@@ -846,7 +851,7 @@ export default function GeneriranjePodataka() {
                         >
                             {loading ? "Generiranje..." : "Generiraj lekcije"}
                         </Button>
-                        <CustomAlert variant="warning" className="mt-2" style={{fontSize: ".9rem"}}>
+                        <CustomAlert variant="warning" className="mt-2">
                             <strong>Upozorenje:</strong> Ove akcije će dodati nove podatke u postojeće.
                             Ako želite početi ispočetka, prvo obrišite postojeće podatke.
                         </CustomAlert>
@@ -916,6 +921,5 @@ export default function GeneriranjePodataka() {
                 </Col>
             )}
         </Row>
-
     );
 }

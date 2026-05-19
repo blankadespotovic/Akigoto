@@ -1,21 +1,21 @@
-import { Link, useNavigate } from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import KategorijeService from "../../services/kategorije/KategorijeService.js";
-import { RouteNames } from "../../constants.js";
-import { CustomCard } from "../../components/CustomCard.jsx";
-import { Button, Col, Form, Row } from "react-bootstrap";
-import { CustomInput } from "../../components/customInputs/CustomInput.jsx";
+import {RouteNames} from "../../constants.js";
+import {CustomCard} from "../../components/CustomCard.jsx";
+import {Button, Col, Form, Row} from "react-bootstrap";
+import {CustomInput} from "../../components/customInputs/CustomInput.jsx";
 import useBreakpoint from "../../hooks/useBreakpoint.js";
-import { useState } from "react";
-import { ShemaKategorije } from "../../schemes/ShemaKategorije.js";
+import {useState} from "react";
+import {ShemaKategorije} from "../../schemes/ShemaKategorije.js";
 
 export default function NovaKategorija() {
     const navigate = useNavigate()
     const sirina = useBreakpoint()
     const mobilnaSirina = ["xs", "sm", "md"].includes(sirina);
+
     const [errors, setErrors] = useState({})
 
     async function dodaj(kategorija) {
-        //console.table(kategorija)
         await KategorijeService.dodaj(kategorija).then(() => {
             navigate(RouteNames.KATEGORIJE)
         })
@@ -28,13 +28,10 @@ export default function NovaKategorija() {
         setErrors({});
         const objektPodataka = Object.fromEntries(podaci);
 
-        // Provjera pomoću Zod sheme
         const rezultat = ShemaKategorije.safeParse(objektPodataka);
 
         if (!rezultat.success) {
             const noveGreske = {};
-
-            // Prolazimo kroz sve issues (probleme) koje je Zod pronašao
             rezultat.error.issues.forEach((issue) => {
                 const kljuc = issue.path[0];
                 if (!noveGreske[kljuc]) {
@@ -46,14 +43,12 @@ export default function NovaKategorija() {
             return;
         }
 
-
-        dodaj({ naziv: podaci.get("naziv") })
+        dodaj({naziv: podaci.get("naziv")})
     }
-
 
     const ocistiGresku = (nazivPolja) => {
         if (errors[nazivPolja]) {
-            const noveGreske = { ...errors };
+            const noveGreske = {...errors};
             delete noveGreske[nazivPolja];
             setErrors(noveGreske);
         }
@@ -69,13 +64,13 @@ export default function NovaKategorija() {
                     placeholder={"Unesite naziv"}
                     isInvalid={!!errors.naziv}
                     errors={errors.naziv}
-                    onFocus={() => ocistiGresku('naziv')}
+                    onFocus={() => ocistiGresku("naziv")}
                 />
 
-               
                 <Row className="mt-4">
                     <Col xs={12} md={6} className={"order-2 order-md-1"}>
-                        <Link to={RouteNames.KATEGORIJE} className={`btn btnCancel${mobilnaSirina ? " w-100 my-1" : ""}`}>
+                        <Link to={RouteNames.KATEGORIJE}
+                              className={`btn btnCancel${mobilnaSirina ? " w-100 my-1" : ""}`}>
                             Odustani
                         </Link>
                     </Col>

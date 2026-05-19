@@ -1,7 +1,5 @@
 import {useEffect, useState} from "react"
-
 import useAuth from "../../hooks/useAuth"
-
 import {Button, Col, Form, Row} from "react-bootstrap"
 import {ShemaLogin} from "../../schemes/ShemaOperater"
 import {CustomInput} from "../../components/customInputs/CustomInput.jsx";
@@ -10,15 +8,16 @@ import {FaEye, FaEyeSlash, FaLock, FaUser} from "react-icons/fa6";
 import useBreakpoint from "../../hooks/useBreakpoint.js";
 
 export default function Login() {
+    const sirina = useBreakpoint()
+    const moiblnaSirina = ["xs", "sm", "md"].includes(sirina)
+
+    const {login} = useAuth();
+
     const [errors, setErrors] = useState({})
     const [passwordShown, setPasswordShown] = useState(false);
     const [passwordIcon, setPasswordIcon] = useState()
     const [emailValue, setEmailValue] = useState("");
     const [passwordValue, setPasswordValue] = useState("");
-    const sirina = useBreakpoint()
-    const moiblnaSirina = ["xs", "sm", "md"].includes(sirina)
-
-    const {login} = useAuth();
 
     function odradiSubmit(e) {
         e.preventDefault()
@@ -50,10 +49,15 @@ export default function Login() {
     useEffect(() => {
         const getPasswordIcon = () => {
             if (passwordShown) {
-                setPasswordIcon(<FaEyeSlash onClick={() => setPasswordShown(!passwordShown)}
-                                            className={"cursor-pointer"}/>)
+                setPasswordIcon(<FaEyeSlash
+                    onClick={() => setPasswordShown(!passwordShown)}
+                    className={"cursor-pointer"}
+                />)
             } else {
-                setPasswordIcon(<FaEye onClick={() => setPasswordShown(!passwordShown)} className={"cursor-pointer"}/>)
+                setPasswordIcon(<FaEye
+                    onClick={() => setPasswordShown(!passwordShown)}
+                    className={"cursor-pointer"}
+                />)
             }
         }
         getPasswordIcon();
@@ -74,7 +78,7 @@ export default function Login() {
             >
                 <Row>
                     <Col xs={12}>
-                        <Row className={`${!moiblnaSirina && 'w-100'} mt-2 mb-4 gap-2 gap-md-0`}>
+                        <Row className={`${!moiblnaSirina && "w-100"} mt-2 mb-4 gap-2 gap-md-0`}>
                             <Col xs={12} md={6}>
                                 <Button
                                     className={"btn btnInfo w-100 mx-md-2"}

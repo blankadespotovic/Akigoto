@@ -1,20 +1,19 @@
-import { useEffect, useState } from 'react'
-import { Button, Col, Form, Row } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
-import { RouteNames } from "../../constants";
-import { CustomCard } from "../../components/CustomCard.jsx";
+import {useState} from "react"
+import {Button, Col, Form, Row} from "react-bootstrap";
+import {Link, useNavigate} from "react-router-dom";
+import {RouteNames} from "../../constants";
+import {CustomCard} from "../../components/CustomCard.jsx";
 import UceniciService from "../../services/ucenici/UceniciService";
-import { CustomInput } from "../../components/customInputs/CustomInput.jsx";
+import {CustomInput} from "../../components/customInputs/CustomInput.jsx";
 import useBreakpoint from "../../hooks/useBreakpoint.js";
-import { ShemaUcenici } from '../../schemes/ShemaUcenici.js';
+import {ShemaUcenici} from "../../schemes/ShemaUcenici.js";
 
 export default function NoviUcenici() {
-
     const navigate = useNavigate()
     const sirina = useBreakpoint()
     const mobilnaSirina = ["xs", "sm", "md"].includes(sirina);
-    const [errors, setErrors] = useState({})
 
+    const [errors, setErrors] = useState({})
 
     async function dodaj(ucenik) {
         await UceniciService.dodaj(ucenik).then(() => {
@@ -22,49 +21,42 @@ export default function NoviUcenici() {
         })
     }
 
-
     function odradiSubmit(e) {
         e.preventDefault()
         const podaci = new FormData(e.target)
         setErrors({});
         const objektPodataka = Object.fromEntries(podaci);
 
-        // Provjera pomoću Zod sheme
         const rezultat = ShemaUcenici.safeParse(objektPodataka);
 
         if (!rezultat.success) {
             const noveGreske = {};
-
-            // Prolazimo kroz sve issues (probleme) koje je Zod pronašao
             rezultat.error.issues.forEach((issue) => {
                 const kljuc = issue.path[0];
                 if (!noveGreske[kljuc]) {
                     noveGreske[kljuc] = issue.message;
                 }
             });
-
             setErrors(noveGreske);
             return;
-        } 
+        }
+
         dodaj({
-            ime: podaci.get('ime'),
-            prezime: podaci.get('prezime'),
-            email: podaci.get('email'),
+            ime: podaci.get("ime"),
+            prezime: podaci.get("prezime"),
+            email: podaci.get("email"),
         })
     }
 
     const ocistiGresku = (nazivPolja) => {
         if (errors[nazivPolja]) {
-            const noveGreske = { ...errors };
+            const noveGreske = {...errors};
             delete noveGreske[nazivPolja];
             setErrors(noveGreske);
         }
     };
 
-
-
     return (
-
         <CustomCard title={"Unos novog učenika"} textAlign={"left"}>
             <Form onSubmit={odradiSubmit}>
                 <CustomInput
@@ -74,9 +66,8 @@ export default function NoviUcenici() {
                     placeholder={"Unesite ime"}
                     isInvalid={!!errors.ime}
                     errors={errors.ime}
-                    onFocus={() => ocistiGresku('ime')}
+                    onFocus={() => ocistiGresku("ime")}
                 />
-                
                 <CustomInput
                     id={"prezime"}
                     type={"text"}
@@ -84,9 +75,8 @@ export default function NoviUcenici() {
                     placeholder={"Unesite prezime"}
                     isInvalid={!!errors.prezime}
                     errors={errors.prezime}
-                    onFocus={() => ocistiGresku('prezime')}
+                    onFocus={() => ocistiGresku("prezime")}
                 />
-                 
                 <CustomInput
                     id={"email"}
                     type={"email"}
@@ -94,14 +84,12 @@ export default function NoviUcenici() {
                     placeholder={"Unesite e-mail"}
                     isInvalid={!!errors.email}
                     errors={errors.email}
-                    onFocus={() => ocistiGresku('email')}
+                    onFocus={() => ocistiGresku("email")}
                 />
-                 
-
                 <Row className="mt-4 justi">
                     <Col xs={12} md={6} className={"order-2 order-md-1"}>
                         <Link to={RouteNames.UCENICI}
-                            className={`btn btnCancel${mobilnaSirina ? " w-100 my-1" : ""}`}>
+                              className={`btn btnCancel${mobilnaSirina ? " w-100 my-1" : ""}`}>
                             Odustani
                         </Link>
                     </Col>
@@ -113,7 +101,5 @@ export default function NoviUcenici() {
                 </Row>
             </Form>
         </CustomCard>
-
-
     )
 }

@@ -3,47 +3,37 @@ import {Link, useNavigate, useParams} from "react-router-dom"
 import OperaterService from "../../services/operateri/OperaterService"
 import {Button, Col, Form, Row} from "react-bootstrap"
 import {RouteNames, ULOGE} from "../../constants"
-import {z} from "zod"
 import {CustomCard} from "../../components/CustomCard.jsx";
 import useBreakpoint from "../../hooks/useBreakpoint.js";
 import {CustomInput} from "../../components/customInputs/CustomInput.jsx";
 import {CustomSelect} from "../../components/customInputs/CustomSelect.jsx";
+import {ShemaOperaterPromjena} from "../../schemes/ShemaOperater.js";
 
 export default function OperaterPromjena() {
 
     const navigate = useNavigate()
     const params = useParams()
-    const [operater, setOperater] = useState({})
-    const [errors, setErrors] = useState({})
     const sirina = useBreakpoint()
     const mobilnaSirina = ["xs", "sm", "md"].includes(sirina)
+
+    const [operater, setOperater] = useState({})
+    const [errors, setErrors] = useState({})
     const [operaterUloga, setOperaterUloga] = useState();
 
-    // Shema za email i ulogu (bez lozinke)
-    const ShemaEmailUloga = z.object({
-        email: z.string()
-            .trim()
-            .min(1, "Email je obavezan!")
-            .email("Unesite ispravan email format!"),
-        uloga: z.enum(["admin", "korisnik"], {
-            errorMap: () => ({message: "Uloga mora biti 'admin' ili 'korisnik'!"})
-        })
-    })
-
-    async function ucitajOperatera() {
-        const odgovor = await OperaterService.getBySifra(params.sifra)
-        if (!odgovor.success) {
-            alert("Operater nije pronađen")
-            navigate(RouteNames.OPERATERI)
-            return
-        }
-        setOperaterUloga(odgovor.data.uloga);
-        setOperater(odgovor.data)
-    }
-
     useEffect(() => {
+        async function ucitajOperatera() {
+            const odgovor = await OperaterService.getBySifra(params.sifra)
+            if (!odgovor.success) {
+                alert("Operater nije pronađen")
+                navigate(RouteNames.OPERATERI)
+                return
+            }
+            setOperaterUloga(odgovor.data.uloga);
+            setOperater(odgovor.data)
+        }
+
         ucitajOperatera()
-    }, [])
+    }, [navigate, params.sifra])
 
     async function promjeni(operater) {
         const rezultat = await OperaterService.promjeni(params.sifra, operater)
@@ -61,8 +51,7 @@ export default function OperaterPromjena() {
         setErrors({})
         const objektPodataka = Object.fromEntries(podaci)
 
-        // Provjera pomoću Zod sheme
-        const rezultat = ShemaEmailUloga.safeParse(objektPodataka)
+        const rezultat = ShemaOperaterPromjena.safeParse(objektPodataka)
 
         if (!rezultat.success) {
             const noveGreske = {}

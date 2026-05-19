@@ -3,9 +3,10 @@ import {useNavigate} from "react-router-dom"
 
 export function CustomButtons(
     {
-        sifra, customClass, editLink, editLabel = "Promijeni", deleteFunc, deleteLabel = "ObriÅ¡i",
-        detailsFunc, detailsLabel = "Detalji", isDetails = false, pdfFunc, pdfLabel = "PFD",
-        needsPdf = false, isChangePwd = false, changePwdFunc, changePwdLabel = "Pormijeni lozinku"
+        sifra, customClass, editLink, detailsFunc, pdfFunc, changePwdFunc, deleteFunc,
+        editLabel = "Promijeni", deleteLabel = "Obriši", detailsLabel = "Detalji",
+        isDetails = false, pdfLabel = "PFD", needsPdf = false, isChangePwd = false,
+        changePwdLabel = "Pormijeni lozinku"
     }
 ) {
     const navigate = useNavigate()

@@ -6,27 +6,26 @@ import {CustomAlert} from "../../components/CustomAlert.jsx";
 import KategorijeService from "../../services/kategorije/KategorijeService.js";
 import useBreakpoint from "../../hooks/useBreakpoint.js";
 import {PregledPostignucaTablica} from "./PregledPostignucaTablica.jsx";
-import { PregledPostignucaGrid } from "./PregledPostignucaGrid.jsx";
+import {PregledPostignucaGrid} from "./PregledPostignucaGrid.jsx";
 import useLoading from "../../hooks/useLoading.js";
 
 export default function PregledPostignuca() {
-
     const navigate = useNavigate()
     const sirina = useBreakpoint();
+    const {showLoading, hideLoading, loading} = useLoading()
+
     const [postignuca, setPostignuca] = useState([])
     const [kategorije, setKategorije] = useState([])
     const [brojKategorija, setBrojKategorija] = useState(-1)
-    const { showLoading, hideLoading, loading } = useLoading()
-    
-
-    const dohvatiSveKategorije = async () => {
-        const sveKategorije = await KategorijeService.get()
-        const podaciKategorija = sveKategorije.data;
-        setKategorije(podaciKategorija)
-        setBrojKategorija(podaciKategorija.length)
-    }
 
     useEffect(() => {
+        const dohvatiSveKategorije = async () => {
+            const sveKategorije = await KategorijeService.get()
+            const podaciKategorija = sveKategorije.data;
+            setKategorije(podaciKategorija)
+            setBrojKategorija(podaciKategorija.length)
+        }
+
         dohvatiSveKategorije()
     }, [])
 
@@ -48,13 +47,13 @@ export default function PregledPostignuca() {
 
     async function obrisi(sifra) {
         if (!confirm("Sigurno obrisati?")) {
-            return 
+            return
         }
         await PostignucaService.obrisi(sifra)
         await ucitajPostignuca()
         hideLoading()
     }
-    
+
     return !loading && (
         <>
             {brojKategorija < 1 ? (
@@ -67,24 +66,20 @@ export default function PregledPostignuca() {
                 </Link>
             )}
 
-            {postignuca.length > 0 &&
-                (["xs", "sm", "md"].includes(sirina) ? (
-                        <PregledPostignucaGrid
-                            kategorije={kategorije}
-                            postignuca={postignuca}
-                            navigate={navigate}
-                            obrisi={obrisi}
-                        />
-                    ) : (
-                        <PregledPostignucaTablica
-                            kategorije={kategorije}
-                            postignuca={postignuca}
-                            navigate={navigate}
-                            obrisi={obrisi}
-                        />
-                    )
-                )}
+            {postignuca.length > 0 && ["xs", "sm", "md"].includes(sirina) ? (
+                <PregledPostignucaGrid
+                    kategorije={kategorije}
+                    postignuca={postignuca}
+                    navigate={navigate}
+                    obrisi={obrisi}
+                />
+            ) : (
+                <PregledPostignucaTablica
+                    kategorije={kategorije}
+                    postignuca={postignuca}
+                    obrisi={obrisi}
+                />
+            )}
         </>
-
     )
 }

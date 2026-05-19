@@ -11,13 +11,13 @@ import {FaEye, FaEyeSlash, FaLock} from "react-icons/fa6";
 import useBreakpoint from "../../hooks/useBreakpoint.js";
 
 export default function OperaterPromjenaLozinke() {
-
     const navigate = useNavigate()
     const params = useParams()
-    const [operater, setOperater] = useState({})
-    const [errors, setErrors] = useState({})
     const sirina = useBreakpoint()
     const mobilnaSirina = ["xs", "sm", "md"].includes(sirina)
+    
+    const [operater, setOperater] = useState({})
+    const [errors, setErrors] = useState({})
     const [passwordShown, setPasswordShown] = useState(false);
     const [repeatPasswordShown, setRepeatPasswordShown] = useState(false);
     const [passwordIcon, setPasswordIcon] = useState(
@@ -33,19 +33,19 @@ export default function OperaterPromjenaLozinke() {
         />
     );
 
-    async function ucitajOperatera() {
-        const odgovor = await OperaterService.getBySifra(params.sifra)
-        if (!odgovor.success) {
-            alert("Operater nije pronađen")
-            navigate(RouteNames.OPERATERI)
-            return
-        }
-        setOperater(odgovor.data)
-    }
-
     useEffect(() => {
+        async function ucitajOperatera() {
+            const odgovor = await OperaterService.getBySifra(params.sifra)
+            if (!odgovor.success) {
+                alert("Operater nije pronađen")
+                navigate(RouteNames.OPERATERI)
+                return
+            }
+            setOperater(odgovor.data)
+        }
+        
         ucitajOperatera()
-    }, [])
+    }, [navigate, params.sifra])
 
     useEffect(() => {
         const getPasswordIcon = () => {
@@ -106,7 +106,6 @@ export default function OperaterPromjenaLozinke() {
         setErrors({})
         const objektPodataka = Object.fromEntries(podaci)
 
-        // Provjera pomoću Zod sheme
         const rezultat = ShemaPromjenaLozinke.safeParse(objektPodataka)
 
         if (!rezultat.success) {
@@ -180,7 +179,6 @@ export default function OperaterPromjenaLozinke() {
                         />
                     </Col>
                 </Row>
-
                 <Row className="mt-4 justi">
                     <Col xs={12} md={6} className={"order-2 order-md-1"}>
                         <Link to={RouteNames.OPERATERI}

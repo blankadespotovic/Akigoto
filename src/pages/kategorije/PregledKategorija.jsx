@@ -16,7 +16,7 @@ export default function PregledKategorija() {
     const [postignuca, setPostignuca] = useState([])
     const [kategorijeSPostignucima, setKategorijeSPostignucima] = useState([])
 
-    const { showLoading, hideLoading, loading } = useLoading()
+    const {showLoading, hideLoading, loading} = useLoading()
 
     async function ucitajKategorije() {
         showLoading();
@@ -65,13 +65,11 @@ export default function PregledKategorija() {
 
     async function obrisi(sifra) {
         if (!confirm("Sigurno obrisati?\nOPREZ! Obrisat će se sva postignuća iz kategorije.")) {
-            return 
-         // samo za potrebe testa prikaza rada loading
-        //await new Promise(resolve => setTimeout(resolve, 2000));
+            return
         }
         await KategorijeService.obrisi(sifra)
         ucitajKategorije()
-       hideLoading()
+        hideLoading()
     }
 
     return !loading && (
@@ -81,24 +79,22 @@ export default function PregledKategorija() {
                 Dodavanje nove kategorije
             </Link>
 
-            {kategorije.length > 0 &&
-                (["xs", "sm", "md"].includes(sirina) ? (
-                        <PregledKategorijaGrid
-                            kategorije={kategorije}
-                            postignuca={postignuca}
-                            navigate={navigate}
-                            obrisi={obrisi}
-                        />
-                    ) : (
-                    kategorijeSPostignucima && <PregledKategorijaTablica
+            {kategorije.length > 0 && (["xs", "sm", "md"].includes(sirina) ? (
+                    <PregledKategorijaGrid
+                        kategorije={kategorije}
+                        postignuca={postignuca}
+                        navigate={navigate}
+                        obrisi={obrisi}
+                    />
+                ) : (kategorijeSPostignucima && (
+                        <PregledKategorijaTablica
                             kategorije={kategorijeSPostignucima}
                             postignuca={postignuca}
-                            navigate={navigate}
                             obrisi={obrisi}
                         />
                     )
-
-                )}
+                )
+            )}
         </>
     )
 }

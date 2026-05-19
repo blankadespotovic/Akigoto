@@ -8,28 +8,27 @@ import UceniciService from "../../services/ucenici/UceniciService.js";
 export function PregledUcenikaTablica(
     {ucenici, svaPostignucaSvihUcenika, obrisi}
 ) {
-
     const [ukupnoNaplaceno, setUkupnoNaplaceno] = useState(0)
 
     useEffect(() => {
+        async function izracunaUkupnoNaplaceno() {
+            await UceniciService.get().then((odgovor) => {
+                if (!odgovor.success) {
+                    alert("Nije implementiran servis")
+                    return
+                }
+                let ukupnoSvi = 0
+                odgovor.data.map(ucenik => {
+                    let ukupnoNaplacenoPoUceniku = 0
+                    ucenik.uplate.map(u => ukupnoNaplacenoPoUceniku += u.iznos)
+                    ukupnoSvi += ukupnoNaplacenoPoUceniku
+                })
+                setUkupnoNaplaceno(ukupnoSvi)
+            })
+        }
+
         izracunaUkupnoNaplaceno()
     }, [])
-
-    async function izracunaUkupnoNaplaceno() {
-        await UceniciService.get().then((odgovor) => {
-            if (!odgovor.success) {
-                alert("Nije implementiran servis")
-                return
-            }
-            let ukupnoSvi = 0
-            odgovor.data.map(ucenik => {
-                let ukupnoNaplacenoPoUceniku = 0
-                ucenik.uplate.map(u => ukupnoNaplacenoPoUceniku += u.iznos)
-                ukupnoSvi += ukupnoNaplacenoPoUceniku
-            })
-            setUkupnoNaplaceno(ukupnoSvi)
-        })
-    }
 
     return (
         <CustomCard
@@ -69,8 +68,9 @@ export function PregledUcenikaTablica(
                                                 <p>Postignuća učenika:</p>
                                                 {svaPostignucaUcenika?.map((p, idx) =>
                                                     <div key={p.sifra}>
-                                                        <span
-                                                            style={{color: p.zavrseno ? "green" : "red"}}>{idx + 1}. {p.naziv}</span><br/>
+                                                        <span style={{color: p.zavrseno ? "green" : "red"}}>
+                                                            {idx + 1}. {p.naziv}
+                                                        </span><br/>
                                                     </div>
                                                 )}
                                             </div>
@@ -91,7 +91,9 @@ export function PregledUcenikaTablica(
                                                 .sort((a, b) => new Date(a.datum) - new Date(b.datum))
                                                 .map((u, idx) =>
                                                     <div key={`naplata-${u.datum}`}>
-                                                        <span>{idx + 1}. {new Date(u.datum).toLocaleDateString("hr-HR")} - ${u.iznos}€</span><br/>
+                                                        <span>
+                                                            {idx + 1}. {new Date(u.datum).toLocaleDateString("hr-HR")} - ${u.iznos}€
+                                                        </span><br/>
                                                     </div>
                                                 )}
                                         </div>

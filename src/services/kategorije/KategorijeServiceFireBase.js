@@ -14,6 +14,37 @@ async function get() {
     }) }
 }
 
+
+
+async function getBySifra(sifra) {
+    try {
+        const docRef = doc(getFirebaseDB(), PrefixStorage.KATEGORIJE, sifra);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+
+            return {
+                success: true,
+                data: {
+                    sifra: docSnap.id,
+                    ...data,
+                }
+            };
+        } else {
+            return {
+                success: false,
+                message: "Kategorija s tom šifrom ne postoji u bazi."
+            };
+        }
+    } catch (e) {
+        console.error("Greška kod dohvaćanja po šifri: ", e);
+        return {
+            success: false,
+            message: e.message
+        };
+    }
+}
+
 async function dodaj(kategorija) {
     try {
         const skupKategorija = collection(getFirebaseDB(), PrefixStorage.KATEGORIJE);
@@ -28,36 +59,6 @@ async function dodaj(kategorija) {
         return {
             success: false,
             message: e.message
-        };
-    }
-}
-
-
-async function getBySifra(sifra) {
-    try {
-        const docRef = doc(getFirebaseDB(), PrefixStorage.KATEGORIJE, sifra);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-            const data = docSnap.data();
-          
-            return {
-                success: true,
-                data: {
-                    sifra: docSnap.id,
-                    ...data,
-                }
-            };
-        } else {
-            return { 
-                success: false, 
-                message: "Kategorija s tom šifrom ne postoji u bazi." 
-            };
-        }
-    } catch (e) {
-        console.error("Greška kod dohvaćanja po šifri: ", e);
-        return { 
-            success: false, 
-            message: e.message 
         };
     }
 }

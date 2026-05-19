@@ -1,5 +1,5 @@
 import {CustomCard} from "../components/CustomCard.jsx";
-import {DATA_SOURCE, DATA_SOURCES, IME_APLIKACIJE, RouteNames} from "../constants";
+import {IME_APLIKACIJE, RouteNames} from "../constants";
 import shiba from "../assets/shiba.png"
 import {useEffect, useState} from "react";
 import KategorijeService from "../services/kategorije/KategorijeService";
@@ -7,14 +7,14 @@ import UceniciService from "../services/ucenici/UceniciService";
 import LekcijeService from "../services/lekcije/LekcijeService";
 import PostignucaService from "../services/postignuca/PostignucaService.js";
 import OperaterService from "../services/operateri/OperaterService.js";
-import {Badge, Button, ButtonGroup, Col, Container, Row} from "react-bootstrap";
+import {Badge, Button, Col, Container, Row} from "react-bootstrap";
 import {useNavigate} from "react-router-dom";
 import useAuth from "../hooks/useAuth.js";
-import OperaterServiceLocalStorage from "../services/operateri/OperaterServiceLocalStorage.js";
 
 export default function Home() {
     const {isLoggedIn} = useAuth()
     const navigate = useNavigate();
+
     const [brojPostignuca, setBrojPostignuca] = useState(0)
     const [brojKategorija, setBrojKategorija] = useState(0)
     const [brojUcenika, setBrojUcenika] = useState(0)
@@ -27,17 +27,6 @@ export default function Home() {
     const [animatedUcenici, setAnimatedUcenici] = useState(0)
     const [animatedLekcije, setAnimatedLekcije] = useState(0)
     const [animatedOperateri, setAnimatedOperateri] = useState(0);
-
-    const [switchToLSDisabled, setSwitchToLSDisabled] = useState(true);
-
-    useEffect(() => {
-        const checkLocalStorage = async () => {
-            const {data} = await OperaterServiceLocalStorage.get();
-            setSwitchToLSDisabled(data.length < 1);
-        }
-
-        void checkLocalStorage();
-    }, []);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -54,7 +43,6 @@ export default function Home() {
                 setBrojPostignuca(postignucaRezultat.data.length)
                 setBrojOperatera(operateri.data.length);
 
-                // Izračunaj broj admina i korisnika
                 const admini = operateri.data.filter(op => op.uloga === "admin").length;
                 const korisnici = operateri.data.filter(op => op.uloga === "korisnik").length;
                 setBrojAdmina(admini);
@@ -170,16 +158,13 @@ export default function Home() {
                     </Col>
                 </Row>
             </div>
-
         </div>
     )
 
     return (
         <div className="d-flex flex-column flex-lg-row gap-3">
             <CustomCard
-                style={{
-                    flex: 1,
-                }}
+                style={{flex: 1}}
                 title={`Što je ${IME_APLIKACIJE}?`}
                 bodyImg={shiba}
                 isHomepage={true}
@@ -187,14 +172,11 @@ export default function Home() {
                 {homeCardChildren}
             </CustomCard>
             <CustomCard
-                style={{
-                    flex: "0 0 25%",
-                }}
+                style={{flex: "0 0 25%"}}
                 title={"Statistika"}
             >
                 {statsCardChildren}
             </CustomCard>
         </div>
     );
-
 }

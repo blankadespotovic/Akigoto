@@ -1,20 +1,24 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { RouteNames } from "../../constants.js";
+import {useEffect, useState} from "react";
+import {Link} from "react-router-dom";
+import {RouteNames} from "../../constants.js";
 import LekcijeService from "../../services/lekcije/LekcijeService.js";
-import { DetaljiLekcije } from "../../components/DetaljiLekcije.jsx";
-import { PregledLekcijaTablica } from "./PregledLekcijaTablica.jsx";
+import {DetaljiLekcije} from "../../components/DetaljiLekcije.jsx";
+import {PregledLekcijaTablica} from "./PregledLekcijaTablica.jsx";
 import useBreakpoint from "../../hooks/useBreakpoint.js";
-import { PregledLekcijaGrid } from "./PregledLekcijaGrid.jsx";
+import {PregledLekcijaGrid} from "./PregledLekcijaGrid.jsx";
 import PostignucaService from "../../services/postignuca/PostignucaService.js";
-import { CustomAlert } from "../../components/CustomAlert.jsx";
+import {CustomAlert} from "../../components/CustomAlert.jsx";
 import LekcijPDFGenerator from "../../components/LekcijaPDFGenerator.jsx";
 import UceniciService from "../../services/ucenici/UceniciService.js";
-import { usePaginationSettings } from "../../hooks/usePaginationService.js";
-import { CustomPagination } from "../../components/customInputs/pagination/CustomPagination.jsx";
+import {usePaginationSettings} from "../../hooks/usePaginationService.js";
+import {CustomPagination} from "../../components/customInputs/pagination/CustomPagination.jsx";
 import useLoading from "../../hooks/useLoading.js";
 
 export default function PregledLekcija() {
+    const {pageSize, setPageSize} = usePaginationSettings("lekcije")
+    const {showLoading, hideLoading} = useLoading()
+
+    const sirina = useBreakpoint()
 
     const [lekcije, setLekcije] = useState([]);
     const [modalShow, setModalShow] = useState(false)
@@ -23,10 +27,6 @@ export default function PregledLekcija() {
     const [currentPage, setCurrentPage] = useState(1)
     const [totalPages, setTotalPages] = useState(0)
     const [totalItems, setTotalItems] = useState(0)
-    const { pageSize, setPageSize } = usePaginationSettings("lekcije")
-    const sirina = useBreakpoint()
-
-    const { showLoading, hideLoading } = useLoading()
 
     async function ucitajLekcije(selectedPage, selectedPageSize) {
         showLoading();
@@ -52,9 +52,7 @@ export default function PregledLekcija() {
 
     async function obrisi(sifra) {
         if (!confirm("Sigurno obrisati?")) {
-         return 
-        //  // samo za potrebe testa prikaza rada loading
-        // await new Promise(resolve => setTimeout(resolve, 2000));
+            return
         }
         await LekcijeService.obrisi(sifra)
         const newTotalItems = totalItems - 1;
@@ -64,11 +62,10 @@ export default function PregledLekcija() {
         } else {
             await ucitajLekcije(currentPage, pageSize)
         }
-         hideLoading()
+        hideLoading()
     }
 
     async function generirajPDFZaLekciju(lekcija) {
-        // Dohvati postignuća
         const postignucaIds = lekcija.postignuca
         const postignucaLekcije = []
         for (const sifraPostignuca of postignucaIds) {
@@ -83,7 +80,6 @@ export default function PregledLekcija() {
             }
         }
 
-        // Dohvati učenike
         const uceniciIds = lekcija.ucenici
         const uceniciLekcije = []
         for (const sifraUcenik of uceniciIds) {
@@ -113,42 +109,35 @@ export default function PregledLekcija() {
     }
 
     return (
-
         <>
-
             <Link to={RouteNames.LEKCIJE_NOVE} id="btnAdd"
-                className="btn btnAdd w-100 my-3">
+                  className="btn btnAdd w-100 my-3">
                 Dodavanje nove lekcije
             </Link>
             {poruka && (
                 <CustomAlert variant={poruka.tip} className={"mt-2 mb-0"} dismissible
-                    onClose={() => setPoruka(null)}>
+                             onClose={() => setPoruka(null)}>
                     {poruka.tekst}
                 </CustomAlert>
             )}
 
-
-            {lekcije.length > 0 && (
-                ["xs", "sm", "md"].includes(sirina) ? (
-                    <PregledLekcijaGrid
-                        lekcije={lekcije}
-                        setPodaci={setPodaci}
-                        setModalShow={setModalShow}
-                        obrisi={obrisi}
-                        generirajPDFZaLekciju={generirajPDFZaLekciju}
-                    />
-                ) : (
-                    <PregledLekcijaTablica
-                        lekcije={lekcije}
-                        setPodaci={setPodaci}
-                        setModalShow={setModalShow}
-                        obrisi={obrisi}
-                        generirajPDFZaLekciju={generirajPDFZaLekciju}
-                    />
-                )
-            )
-            }
-
+            {lekcije.length > 0 && ["xs", "sm", "md"].includes(sirina) ? (
+                <PregledLekcijaGrid
+                    lekcije={lekcije}
+                    setPodaci={setPodaci}
+                    setModalShow={setModalShow}
+                    obrisi={obrisi}
+                    generirajPDFZaLekciju={generirajPDFZaLekciju}
+                />
+            ) : (
+                <PregledLekcijaTablica
+                    lekcije={lekcije}
+                    setPodaci={setPodaci}
+                    setModalShow={setModalShow}
+                    obrisi={obrisi}
+                    generirajPDFZaLekciju={generirajPDFZaLekciju}
+                />
+            )}
             <CustomPagination
                 totalPages={totalPages}
                 currentPage={currentPage}
@@ -158,13 +147,11 @@ export default function PregledLekcija() {
                 totalItems={totalItems}
                 resultsLabel={"lekcija"}
             />
-
             <DetaljiLekcije
                 show={modalShow}
                 onHide={() => setModalShow(false)}
                 podaci={podaci}
             />
         </>
-
     )
 }

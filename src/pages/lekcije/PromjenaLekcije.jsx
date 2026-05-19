@@ -1,78 +1,75 @@
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { RouteNames } from "../../constants";
-import { Button, Col, Form, Row } from "react-bootstrap";
-import { useEffect, useState } from "react";
-import { CustomCard } from "../../components/CustomCard.jsx";
+import {Link, useNavigate, useParams} from "react-router-dom";
+import {RouteNames} from "../../constants";
+import {Button, Col, Form, Row} from "react-bootstrap";
+import {useEffect, useState} from "react";
+import {CustomCard} from "../../components/CustomCard.jsx";
 import LekcijeService from "../../services/lekcije/LekcijeService";
 import UceniciService from "../../services/ucenici/UceniciService";
-import { CustomInput } from "../../components/customInputs/CustomInput.jsx";
+import {CustomInput} from "../../components/customInputs/CustomInput.jsx";
 import Select from "react-select";
 import PostignucaService from "../../services/postignuca/PostignucaService.js";
 import useBreakpoint from "../../hooks/useBreakpoint.js";
-import { WYSIWYGEditor } from "../../components/customInputs/WYSIWYGEditor.jsx";
-import { ShemaLekcije } from "../../schemes/ShemaLekcije.js";
+import {WYSIWYGEditor} from "../../components/customInputs/WYSIWYGEditor.jsx";
+import {ShemaLekcije} from "../../schemes/ShemaLekcije.js";
 
 export default function PromjenaLekcije() {
-
     const navigate = useNavigate()
     const params = useParams()
     const sirina = useBreakpoint()
+
     const [lekcija, setLekcija] = useState({})
     const [opisVrijednost, setOpisVrijednost] = useState()
-
     const [ucenici, setUcenici] = useState([])
     const [odabraniUcenik, setOdabraniUcenik] = useState()
     const [odabraniUcenici, setOdabraniUcenici] = useState([])
-
     const [odabranaPostignuca, setOdabranaPostignuca] = useState([])
     const [odabranoPostignuce, setOdabranoPostignuce] = useState()
     const [postignuca, setPostignuca] = useState([])
-
     const [errors, setErrors] = useState({})
 
-    async function ucitajLekciju() {
-        await LekcijeService.getBySifra(params.sifra).then((odgovor) => {
-            if (!odgovor.success) {
-                alert("Nije implementiran servis")
-                return
-            }
-            const p = odgovor.data
-            setLekcija(p)
-            setOpisVrijednost(p.opis)
-        })
-    }
-
-    async function ucitajUcenike() {
-        await UceniciService.get().then((odgovor) => {
-            if (!odgovor.success) {
-                alert("Nije implementiran servis za učenika")
-                return
-            }
-            const filtriraniUcenici = odgovor.data.map(
-                uc => ({ value: uc.sifra, label: `${uc.ime} ${uc.prezime}` })
-            )
-            setUcenici(filtriraniUcenici)
-        })
-    }
-
-    async function ucitajPostignuca() {
-        await PostignucaService.get().then((odgovor) => {
-            if (!odgovor.success) {
-                alert("Nije implementiran servis za učenika")
-                return
-            }
-            const filtriranaPostignuca = odgovor.data.map(
-                p => ({ value: parseInt(p.sifra), label: p.naziv })
-            )
-            setPostignuca(filtriranaPostignuca)
-        })
-    }
-
     useEffect(() => {
+        async function ucitajLekciju() {
+            await LekcijeService.getBySifra(params.sifra).then((odgovor) => {
+                if (!odgovor.success) {
+                    alert("Nije implementiran servis")
+                    return
+                }
+                const p = odgovor.data
+                setLekcija(p)
+                setOpisVrijednost(p.opis)
+            })
+        }
+
         ucitajLekciju()
-    }, [])
+    }, [params.sifra])
 
     useEffect(() => {
+        async function ucitajUcenike() {
+            await UceniciService.get().then((odgovor) => {
+                if (!odgovor.success) {
+                    alert("Nije implementiran servis za učenika")
+                    return
+                }
+                const filtriraniUcenici = odgovor.data.map(uc => (
+                    {value: uc.sifra, label: `${uc.ime} ${uc.prezime}`}
+                ))
+                setUcenici(filtriraniUcenici)
+            })
+        }
+
+        async function ucitajPostignuca() {
+            await PostignucaService.get().then((odgovor) => {
+                if (!odgovor.success) {
+                    alert("Nije implementiran servis za učenika")
+                    return
+                }
+                const filtriranaPostignuca = odgovor.data.map(p => (
+                    {value: p.sifra, label: p.naziv}
+                ))
+                setPostignuca(filtriranaPostignuca)
+            })
+        }
+
         if (lekcija) {
             ucitajUcenike()
             ucitajPostignuca()
@@ -149,7 +146,6 @@ export default function PromjenaLekcije() {
         setOdabranaPostignuca(prev => prev.filter(p => p.value !== sifra));
     }
 
-
     async function promjeni(lekcija) {
         await LekcijeService.promjeni(lekcija).then(() => {
             navigate(RouteNames.LEKCIJE)
@@ -163,24 +159,19 @@ export default function PromjenaLekcije() {
         setErrors({});
         const objektPodataka = Object.fromEntries(podaci);
 
-        // Provjera pomoću Zod sheme
         const rezultat = ShemaLekcije.safeParse(objektPodataka);
 
         if (!rezultat.success) {
             const noveGreske = {};
-
-            // Prolazimo kroz sve issues (probleme) koje je Zod pronašao
             rezultat.error.issues.forEach((issue) => {
                 const kljuc = issue.path[0];
                 if (!noveGreske[kljuc]) {
                     noveGreske[kljuc] = issue.message;
                 }
             });
-
             setErrors(noveGreske);
             return;
         }
-
 
         const postignucaIds = odabranaPostignuca.map(p => p.value)
         const uceniciIds = odabraniUcenici.map(uc => uc.value)
@@ -195,19 +186,17 @@ export default function PromjenaLekcije() {
         })
     }
 
-     const ocistiGresku = (nazivPolja) => {
+    const ocistiGresku = (nazivPolja) => {
         if (errors[nazivPolja]) {
-            const noveGreske = { ...errors };
+            const noveGreske = {...errors};
             delete noveGreske[nazivPolja];
             setErrors(noveGreske);
         }
     };
 
     return (
-
         <CustomCard title={"Promjena lekcije"} textAlign={"left"}>
             <Form onSubmit={odradiSubmit}>
-
                 <Row>
                     <Col xs={12} md={6}>
                         <CustomInput
@@ -218,7 +207,7 @@ export default function PromjenaLekcije() {
                             defaultValue={lekcija.naziv}
                             isInvalid={!!errors.naziv}
                             errors={errors.naziv}
-                            onFocus={() => ocistiGresku('naziv')}
+                            onFocus={() => ocistiGresku("naziv")}
                         />
                     </Col>
                     <Col xs={12} md={6}>
@@ -232,11 +221,10 @@ export default function PromjenaLekcije() {
                             defaultValue={lekcija.trajanje}
                             isInvalid={!!errors.trajanje}
                             errors={errors.trajanje}
-                            onFocus={() => ocistiGresku('trajanje')}
+                            onFocus={() => ocistiGresku("trajanje")}
                         />
                     </Col>
                 </Row>
-
                 <Form.Group controlId={"opis"}>
                     <Form.Label column={"lg"}>Sadržaj lekcije</Form.Label>
                     <WYSIWYGEditor
@@ -245,11 +233,10 @@ export default function PromjenaLekcije() {
                         name={"opis"}
                         isInvalid={!!errors.opis}
                         errors={errors.opis}
-                        onFocus={() => ocistiGresku('opis')}
+                        onFocus={() => ocistiGresku("opis")}
                     />
                 </Form.Group>
-
-                <hr />
+                <hr/>
                 <Row gutter={16}>
                     <Col xs={12} md={6}>
                         <Form.Group controlId={"ucenici"}>
@@ -265,7 +252,7 @@ export default function PromjenaLekcije() {
                                 menuPortalTarget={document.body}
                                 closeMenuOnSelect={["xs", "sm", "md"].includes(sirina)}
                                 blurInputOnSelect={["xs", "sm", "md"].includes(sirina)}
-                                noOptionsMessage={() => 'Nema učenika'}
+                                noOptionsMessage={() => "Nema učenika"}
                             />
                         </Form.Group>
                     </Col>
@@ -280,22 +267,21 @@ export default function PromjenaLekcije() {
                                         onClick={() => ukloniUcenike(p.value)}
                                     >
                                         <span className="retro-label">{p.label}</span>
-
                                         <Button
                                             variant="light"
                                             size="sm"
                                             className="retro-remove"
                                             onClick={() => ukloniUcenike(p.value)}
                                         >
-                                            ×
+                                            &times;
                                         </Button>
                                     </li>
                                 ))}
                             </ul>
-                        ) : <><br /><small>Odaberite učenike za prikaz.</small></>}
+                        ) : <><br/><small>Odaberite učenike za prikaz.</small></>}
                     </Col>
                 </Row>
-                <hr />
+                <hr/>
                 <Row gutter={16}>
                     <Col xs={12} md={6}>
                         <Form.Group controlId={"postignuca"}>
@@ -311,7 +297,7 @@ export default function PromjenaLekcije() {
                                 menuPortalTarget={document.body}
                                 closeMenuOnSelect={["xs", "sm", "md"].includes(sirina)}
                                 blurInputOnSelect={["xs", "sm", "md"].includes(sirina)}
-                                noOptionsMessage={() => 'Nema postignuća'}
+                                noOptionsMessage={() => "Nema postignuća"}
                             />
                         </Form.Group>
                     </Col>
@@ -332,15 +318,14 @@ export default function PromjenaLekcije() {
                                             className="retro-remove"
                                             onClick={() => ukloniPostignuca(p.value)}
                                         >
-                                            ×
+                                            &times;
                                         </Button>
                                     </li>
                                 ))}
                             </ul>
-                        ) : <><br /><small>Odaberite postignuća za prikaz.</small></>}
+                        ) : <><br/><small>Odaberite postignuća za prikaz.</small></>}
                     </Col>
                 </Row>
-
                 <Row className="mt-4">
                     <Col>
                         <Link to={RouteNames.LEKCIJE} className="btn btnCancel">
@@ -355,8 +340,5 @@ export default function PromjenaLekcije() {
                 </Row>
             </Form>
         </CustomCard>
-
-
     )
-
 }

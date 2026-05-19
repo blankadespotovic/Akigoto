@@ -10,6 +10,12 @@ async function getBySifra(sifra) {
     return { success: true, data: ucenici.find(p => p.sifra === sifra) }
 }
 
+async function getLastFewIds(brojUcenika) {
+    const zadnjiUcenici = ucenici.slice(-brojUcenika)
+    const zadnjiUceniciIds = zadnjiUcenici.map(u => Number.parseInt(u.sifra))
+    return { success: true, data: zadnjiUceniciIds }
+}
+
 async function dodaj(ucenik) {
  if(ucenici.length === 0){
     ucenik.sifra = '1'
@@ -17,22 +23,15 @@ async function dodaj(ucenik) {
     ucenik.sifra = ucenici.at(-1).sifra + 1
  }
 
- ucenik.uplate = [];
+ if (!ucenik.uplate || ucenik.uplate.length < 1) {
+     ucenik.uplate = [];
+ }
 
  ucenici.push(ucenik)
 }
 
-async function promjeni(ucenik, datum, iznos) {
+async function promjeni(ucenik) {
     const index = ucenici.findIndex(u => u.sifra === ucenik.sifra)
-    if (index !== -1) {
-        const uplate = ucenik.uplate
-        const sljedecaSifra = Math.max(...uplate.map(uplata => parseInt(uplata.sifra))) + 1;
-        if (iznos && datum) {
-            uplate.push({ sifra: sljedecaSifra, datum, iznos: Number.parseFloat(iznos) })
-        }
-        ucenik.uplate = uplate
-        
-    }
     ucenici[index] = ucenik;
 }
 
@@ -91,6 +90,7 @@ export default {
     get,
     dodaj,
     getBySifra,
+    getLastFewIds,
     promjeni,
     obrisi,
     obrisiUplatu,

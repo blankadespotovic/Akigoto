@@ -5,7 +5,6 @@ import {FaMedal} from "react-icons/fa";
 export function PregledKategorijaGrid(
     {kategorije, postignuca, navigate, obrisi}
 ) {
-
     return (
         <Container className="pt-0 py-3 px-0">
             {kategorije.map((kategorija) => {
@@ -18,13 +17,10 @@ export function PregledKategorijaGrid(
                         textAlign={"start"}
                         padding={".5rem 1rem"}
                     >
-
                         <Row className={"mt-2"}>
                             <Col xs={7}>
-                                <FaMedal color={"lightblue"} className={"mb-1"}/>&nbsp;<b>{brojPostignucaUKategoriji}</b>&nbsp;{tekst}
-                            </Col>
-                            <Col xs={5}>
-
+                                <FaMedal color={"lightblue"} className={"mb-1"}/>&nbsp;
+                                <b>{brojPostignucaUKategoriji}</b>&nbsp;{tekst}
                             </Col>
                         </Row>
                         <Row>
