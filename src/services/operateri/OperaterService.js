@@ -1,44 +1,56 @@
 import OperaterServiceLocalStorage from "./OperaterServiceLocalStorage"
 import OperaterServiceMemorija from "./OperaterServiceMemorija"
-import { DATA_SOURCE } from "../../constants"
+import {DATA_SOURCE} from "../../constants"
 import OperaterServiceFireBase from "./OperaterServiceFireBase"
 
-let Servis = null
+let Servis;
 
-// 1. Odabir servisa
 switch (DATA_SOURCE) {
-    case 'memorija':
+    case "memorija":
         Servis = OperaterServiceMemorija
         break
-    case 'localStorage':
+    case "localStorage":
         Servis = OperaterServiceLocalStorage
         break
-    case 'firebase':
+    case "firebase":
         Servis = OperaterServiceFireBase;
         break;
     default:
         Servis = null
 }
 
-// 2. Definiranje defaultnog (praznog) ponašanja ako Servis nije pronađen
 const PrazanServis = {
-    get: async () => ({ success: false, data: [] }),
-    getBySifra: async (sifra) => ({ success: false, data: null }),
-    dodaj: async (operater) => { console.error("Servis nije učitan"); return { success: false } },
-    promjeni: async (sifra, operater) => { console.error("Servis nije učitan"); return { success: false } },
-    promjeniLozinku: async (sifra, novaLozinka) => { console.error("Servis nije učitan"); return { success: false } },
-    obrisi: async (sifra) => { console.error("Servis nije učitan"); return { success: false } },
-    prijava: async (email, lozinka) => { console.error("Servis nije učitan"); return { success: false, message: "Servis nije učitan" } }
+    get: async () => ({success: false, data: []}),
+    getBySifra: async (sifra) => ({success: false, data: null}),
+    dodaj: async (operater) => {
+        console.error("Servis nije učitan");
+        return {success: false}
+    },
+    promjeni: async (sifra, operater) => {
+        console.error("Servis nije učitan");
+        return {success: false}
+    },
+    promjeniLozinku: async (sifra, novaLozinka) => {
+        console.error("Servis nije učitan");
+        return {success: false}
+    },
+    obrisi: async (sifra) => {
+        console.error("Servis nije učitan");
+        return {success: false}
+    },
+    prijava: async (email, lozinka) => {
+        console.error("Servis nije učitan");
+        return {success: false, message: "Servis nije učitan"}
+    }
 }
 
-// 3. Jedan jedini export na kraju
-// Ako Servis postoji, koristi njega, inače koristi PrazanServis
 const AktivniServis = Servis || PrazanServis
 
 export default {
     get: () => AktivniServis.get(),
     getBySifra: (sifra) => AktivniServis.getBySifra(sifra),
     dodaj: (operater) => AktivniServis.dodaj(operater),
+    dodajBezHash: (operater) => AktivniServis.dodajBezHash(operater),
     promjeni: (sifra, operater) => AktivniServis.promjeni(sifra, operater),
     promjeniLozinku: (sifra, novaLozinka) => AktivniServis.promjeniLozinku(sifra, novaLozinka),
     obrisi: (sifra) => AktivniServis.obrisi(sifra),

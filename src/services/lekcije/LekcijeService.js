@@ -3,7 +3,7 @@ import LekcijeServiceMemorija from "./LekcijeServiceMemorija";
 import { DATA_SOURCE } from "../../constants";
 import LekcijeServiceFireBase from "./LekcijeServiceFireBase";
 
-let Servis = null;
+let Servis;
 
 
 switch (DATA_SOURCE) {
@@ -23,7 +23,6 @@ switch (DATA_SOURCE) {
 
 const PrazanServis = {
     get: async () => ({ success: false, data: [] }),
-    getAll: async () => ({ success: false, data: [] }),
     getBySifra: async (sifra) => ({ success: false, data: {} }),
     dodaj: async (lekcija) => {
         console.error("Servis nije učitan");

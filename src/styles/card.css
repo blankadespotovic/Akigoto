@@ -1,7 +1,7 @@
 .window {
     background: var(--white);
     border: groove white;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
     overflow: hidden;
     margin-top: 20px;
 }
@@ -29,7 +29,7 @@
     gap: 6px;
 }
 
-.window-body{
+.window-body {
     font-size: 1.3rem;
 }
 
@@ -39,45 +39,14 @@
     border-radius: 50%;
 }
 
-.dot.pink { background: #FF8FA3; }
-.dot.yellow { background: #FFE58F; }
-.dot.green { background: #A8E6CF; }
-
-.statistikaContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  padding: 20px;
+.dot.pink {
+    background: #FF8FA3;
 }
 
-.statKartica {
-  padding: 18px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, #667eea33, #764ba233);
-  border: 1px solid rgba(255,255,255,0.25);
-  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
-  text-align: center;
-  transition: all 0.25s ease;
-  flex: 1;
+.dot.yellow {
+    background: #FFE58F;
 }
 
-.statKartica:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 22px rgba(0,0,0,0.25);
-}
-
-.statLabel {
-  display: block;
-  font-size: 1.2rem;
-  color: #523962;
-  opacity: 0.7;
-  margin-bottom: 8px;
-}
-
-.statValue {
-  font-size: 2.5rem;
-  font-weight: 700;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.dot.green {
+    background: #A8E6CF;
 }

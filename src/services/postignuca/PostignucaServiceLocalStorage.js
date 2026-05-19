@@ -30,7 +30,7 @@ async function dodaj(postignuce) {
     if (postignuca.length === 0) {
         postignuce.sifra = '1'
     } else {
-        postignuce.sifra = String(parseInt(postignuca[postignuca.length - 1].sifra) + 1)
+        postignuce.sifra = String(Number.parseInt(postignuca[postignuca.length - 1].sifra) + 1)
     }
 
     postignuca.push(postignuce)
@@ -39,7 +39,6 @@ async function dodaj(postignuce) {
 }
 
 async function promjeni(postignuce) {
-
     const postignuca = dohvatiSveIzStorage()
     const index = nadiIndexPostignuca(postignuce.sifra)
 

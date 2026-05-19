@@ -1,10 +1,5 @@
 import { PrefixStorage } from "../../constants.js";
 
-
-function nadiIndexKategorije(sifra) {
-    return kategorije.findIndex(kat => kat.sifra === sifra)
-}
-
 function dohvatiSveIzStorage() {
     const podaci = localStorage.getItem(PrefixStorage.KATEGORIJE);
     return podaci ? JSON.parse(podaci) : [];
@@ -12,6 +7,11 @@ function dohvatiSveIzStorage() {
 
 function spremiUStorage(podaci, key) {
     localStorage.setItem(key, JSON.stringify(podaci));
+}
+
+function nadiIndexKategorije(sifra) {
+    const kategorije = dohvatiSveIzStorage();
+    return kategorije.findIndex(kat => kat.sifra === sifra)
 }
 
 async function get() {
@@ -31,7 +31,7 @@ async function dodaj(kategorija) {
     if (kategorije.length === 0) {
         kategorija.sifra = '1'
     } else {
-        kategorija.sifra = String(parseInt(kategorije[kategorije.length - 1].sifra) + 1)
+        kategorija.sifra = String(Number.parseInt(kategorije[kategorije.length - 1].sifra) + 1)
     }
     kategorije.push(kategorija)
     spremiUStorage(kategorije, PrefixStorage.KATEGORIJE);
@@ -74,8 +74,8 @@ async function obrisi(sifra) {
 
 export default {
     get,
-    dodaj,
     getBySifra,
+    dodaj,
     promjeni,
     obrisi
 }

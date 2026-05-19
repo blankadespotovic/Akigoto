@@ -126,29 +126,29 @@ export default function Home() {
 
     const statsCardChildren = (
         <div className="d-flex flex-row gap-3 align-items-center justify-content-center flex-wrap">
-            <div className="statKartica">
-                <span className="statLabel">Postignuća</span>
-                <span className="statValue">{animatedPostignuca}</span>
+            <div className="stat-kartica">
+                <span className="stat-label">Postignuća</span>
+                <span className="stat-value">{animatedPostignuca}</span>
             </div>
 
-            <div className="statKartica">
-                <span className="statLabel">Kategorije</span>
-                <span className="statValue">{animatedKategorija}</span>
+            <div className="stat-kartica">
+                <span className="stat-label">Kategorije</span>
+                <span className="stat-value">{animatedKategorija}</span>
             </div>
 
-            <div className="statKartica">
-                <span className="statLabel">Učenici</span>
-                <span className="statValue">{animatedUcenici}</span>
+            <div className="stat-kartica">
+                <span className="stat-label">Učenici</span>
+                <span className="stat-value">{animatedUcenici}</span>
             </div>
 
-            <div className="statKartica">
-                <span className="statLabel">Lekcije</span>
-                <span className="statValue">{animatedLekcije}</span>
+            <div className="stat-kartica">
+                <span className="stat-label">Lekcije</span>
+                <span className="stat-value">{animatedLekcije}</span>
             </div>
 
-            <div className="statKartica">
-                <span className="statLabel">Operateri</span>
-                <span className="statValue">{animatedOperateri}</span>
+            <div className="stat-kartica">
+                <span className="stat-label">Operateri</span>
+                <span className="stat-value">{animatedOperateri}</span>
                 <Row>
                     <Col xs={12} xl={6}>
                         <Badge bg={"none"} className={"badge-admin w-100"}>Admin: {brojAdmina}</Badge>

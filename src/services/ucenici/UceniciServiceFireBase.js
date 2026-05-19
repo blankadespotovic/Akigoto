@@ -13,7 +13,6 @@ import {
 import getFirebaseDB from "../Firebase";
 import {PrefixStorage} from "../../constants";
 
-// 1/4 Read - dohvati sve
 async function get() {
     try {
         const skupUcenika = collection(getFirebaseDB(), PrefixStorage.UCENICI);
@@ -28,7 +27,6 @@ async function get() {
     }
 }
 
-// Dohvati jedan po šifri
 async function getBySifra(sifra) {
     try {
         const docRef = doc(getFirebaseDB(), PrefixStorage.UCENICI, sifra);
@@ -56,7 +54,6 @@ async function getLastFewIds(brojUcenika) {
     return {success: true, data: zadnjiUceniciIds}
 }
 
-// 2/4 Create - dodaj novi
 async function dodaj(ucenik) {
     try {
         const skupUcenika = collection(getFirebaseDB(), PrefixStorage.UCENICI);
@@ -69,12 +66,11 @@ async function dodaj(ucenik) {
     }
 }
 
-// 3/4 Update - promjeni postojeći
 async function promjeni(ucenik, datum, iznos) {
     try {
         const docRef = doc(getFirebaseDB(), PrefixStorage.UCENICI, ucenik.sifra);
         const uplate = ucenik.uplate
-        const sljedecaSifra = Math.max(...uplate.map(uplata => parseInt(uplata.sifra))) + 1;
+        const sljedecaSifra = Math.max(...uplate.map(uplata => Number.parseInt(uplata.sifra))) + 1;
         if (iznos && datum) {
             uplate.push({sifra: sljedecaSifra, datum, iznos: Number.parseFloat(iznos)})
         }
@@ -86,7 +82,6 @@ async function promjeni(ucenik, datum, iznos) {
     }
 }
 
-// 4/4 Delete - obriši
 async function obrisi(sifra) {
     try {
         const docRef = doc(getFirebaseDB(), PrefixStorage.UCENICI, sifra);
@@ -130,7 +125,6 @@ async function getPage(page = 1, pageSize = 8, searchTerm = "") {
             }
         });
 
-        // Filtriranje (budući da Firestore ne podržava kompleksni "OR" search na više polja s "includes")
         if (searchTerm && searchTerm.trim() !== "") {
             const lowerSearchTerm = searchTerm.toLowerCase().trim();
             ucenici = ucenici.filter(u =>
@@ -160,9 +154,9 @@ async function getPage(page = 1, pageSize = 8, searchTerm = "") {
 
 export default {
     get,
-    dodaj,
     getBySifra,
     getLastFewIds,
+    dodaj,
     promjeni,
     obrisi,
     obrisiUplatu,

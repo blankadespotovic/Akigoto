@@ -1,20 +1,20 @@
-import { collection, doc, updateDoc,getDoc, getDocs, addDoc, deleteDoc, Timestamp } from "firebase/firestore";
+import {addDoc, collection, deleteDoc, doc, getDoc, getDocs, updateDoc} from "firebase/firestore";
 import getFirebaseDB from "../Firebase";
-import { PrefixStorage } from "../../constants";
+import {PrefixStorage} from "../../constants";
 
 async function get() {
     const skupKategorija = collection(getFirebaseDB(), PrefixStorage.KATEGORIJE);
     const kategorijeSnapshot = await getDocs(skupKategorija);
-    return {success: true, data: kategorijeSnapshot.docs.map(doc => {
-        const data = doc.data();
-        return {
-            sifra: doc.id,
-            ...data,
-        };
-    }) }
+    return {
+        success: true, data: kategorijeSnapshot.docs.map(doc => {
+            const data = doc.data();
+            return {
+                sifra: doc.id,
+                ...data,
+            };
+        })
+    }
 }
-
-
 
 async function getBySifra(sifra) {
     try {
@@ -49,7 +49,6 @@ async function dodaj(kategorija) {
     try {
         const skupKategorija = collection(getFirebaseDB(), PrefixStorage.KATEGORIJE);
         const docRef = await addDoc(skupKategorija, kategorija);
-        
         return {
             success: true,
             id: docRef.id
@@ -63,19 +62,16 @@ async function dodaj(kategorija) {
     }
 }
 
-
 async function promjeni(kategorija) {
     try {
         const docRef = doc(getFirebaseDB(), PrefixStorage.KATEGORIJE, kategorija.sifra);
         await updateDoc(docRef, kategorija);
-
-        return { success: true };
+        return {success: true};
     } catch (e) {
         console.error("Greška kod promjene: ", e);
-        return { success: false, message: e.message };
+        return {success: false, message: e.message};
     }
 }
-
 
 async function obrisi(sifra) {
     try {

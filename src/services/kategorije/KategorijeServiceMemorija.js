@@ -15,9 +15,9 @@ async function getBySifra(sifra) {
 
 async function dodaj(kategorija) {
     if (kategorije.length === 0) {
-        kategorija.sifra = '1'
+        kategorija.sifra = "1"
     } else {
-        kategorija.sifra = String(parseInt(kategorije[kategorije.length - 1].sifra) + 1)
+        kategorija.sifra = String(Number.parseInt(kategorije.at(-1).sifra) + 1)
     }
     kategorije.push(kategorija)
 }
@@ -29,9 +29,9 @@ async function promjeni(kategorija) {
 
 function obrisiPostignucaKategorije(sifraKategorije) {
     const postignucaKategorije = postignuca
-        .filter(pos => pos.kategorija === parseInt(sifraKategorije))
+        .filter(pos => pos.kategorija === sifraKategorije)
         .map(() => postignuca.findIndex(pos => pos.kategorija === sifraKategorije))
-    for(const sifra of postignucaKategorije) {
+    for (const sifra of postignucaKategorije) {
         postignuca.splice(sifra, 1)
     }
 }
@@ -44,8 +44,8 @@ async function obrisi(sifra) {
 
 export default {
     get,
-    dodaj,
     getBySifra,
+    dodaj,
     promjeni,
     obrisi
 }

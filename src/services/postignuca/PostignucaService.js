@@ -3,7 +3,7 @@ import PostignucaServiceMemorija from "./PostignucaServiceMemorija";
 import { DATA_SOURCE } from "../../constants";
 import PostignucaServiceFireBase from "./PostignucaServiceFireBase";
 
-let Servis = null;
+let Servis;
 
 
 switch (DATA_SOURCE) {

@@ -1,24 +1,55 @@
-import { collection, doc, updateDoc, getDoc, getDocs, addDoc, deleteDoc, query, orderBy, limit, startAfter, where } from "firebase/firestore";
+import {addDoc, collection, deleteDoc, doc, getDoc, getDocs, orderBy, query, updateDoc} from "firebase/firestore";
 import getFirebaseDB from "../Firebase";
-import { PrefixStorage } from "../../constants";
+import {PrefixStorage} from "../../constants";
 
 async function get() {
     const skupLekcija = collection(getFirebaseDB(), PrefixStorage.LEKCIJE);
     const postignucaSnapshot = await getDocs(skupLekcija);
-    return {success: true, data: postignucaSnapshot.docs.map(doc => {
-        const data = doc.data();
+    return {
+        success: true, data: postignucaSnapshot.docs.map(doc => {
+            const data = doc.data();
+            return {
+                sifra: doc.id,
+                ...data,
+            };
+        })
+    }
+}
+
+async function getBySifra(sifra) {
+    try {
+        const docRef = doc(getFirebaseDB(), PrefixStorage.LEKCIJE, sifra);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+
+            return {
+                success: true,
+                data: {
+                    sifra: docSnap.id,
+                    ...data,
+                }
+            };
+        } else {
+            return {
+                success: false,
+                message: "Lekcija s tom šifrom ne postoji u bazi."
+            };
+        }
+    } catch (e) {
+        console.error("Greška kod dohvaćanja po šifri: ", e);
         return {
-            sifra: doc.id,
-            ...data,
+            success: false,
+            message: e.message
         };
-    }) }
+    }
 }
 
 async function dodaj(lekcija) {
     try {
         const skupLekcija = collection(getFirebaseDB(), PrefixStorage.LEKCIJE);
         const docRef = await addDoc(skupLekcija, lekcija);
-        
+
         return {
             success: true,
             id: docRef.id
@@ -32,49 +63,17 @@ async function dodaj(lekcija) {
     }
 }
 
-
-async function getBySifra(sifra) {
-    try {
-        const docRef = doc(getFirebaseDB(), PrefixStorage.LEKCIJE, sifra);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-            const data = docSnap.data();
-          
-            return {
-                success: true,
-                data: {
-                    sifra: docSnap.id,
-                    ...data,
-                }
-            };
-        } else {
-            return { 
-                success: false, 
-                message: "Lekcija s tom šifrom ne postoji u bazi." 
-            };
-        }
-    } catch (e) {
-        console.error("Greška kod dohvaćanja po šifri: ", e);
-        return { 
-            success: false, 
-            message: e.message 
-        };
-    }
-}
-
-
 async function promjeni(lekcija) {
     try {
         const docRef = doc(getFirebaseDB(), PrefixStorage.LEKCIJE, lekcija.sifra);
         await updateDoc(docRef, lekcija);
 
-        return { success: true };
+        return {success: true};
     } catch (e) {
         console.error("Greška kod promjene: ", e);
-        return { success: false, message: e.message };
+        return {success: false, message: e.message};
     }
 }
-
 
 async function obrisi(sifra) {
     try {
@@ -93,7 +92,7 @@ async function obrisi(sifra) {
     }
 }
 
-async function getPage(page = 1, pageSize = 8, searchTerm = '') {
+async function getPage(page = 1, pageSize = 8) {
     try {
         const skupLekcija = collection(getFirebaseDB(), PrefixStorage.LEKCIJE);
         let q = query(skupLekcija, orderBy("naziv"));
@@ -120,15 +119,15 @@ async function getPage(page = 1, pageSize = 8, searchTerm = '') {
             totalItems: totalItems
         };
     } catch (e) {
-        return { success: false, message: e.message };
+        return {success: false, message: e.message};
     }
 }
 
 export default {
     get,
+    getBySifra,
     dodaj,
     promjeni,
-    getBySifra,
     obrisi,
     getPage
 }

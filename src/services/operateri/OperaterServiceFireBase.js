@@ -150,11 +150,11 @@ async function prijava(email, lozinka) {
 
 export default {
     get,
-    dodaj,
     getBySifra,
+    dodaj,
+    dodajBezHash,
     promjeni,
     promjeniLozinku,
     obrisi,
     prijava,
-    dodajBezHash
 }

@@ -1,38 +1,31 @@
-import bcrypt from 'bcryptjs'
-import { PrefixStorage } from '../../constants'
+import bcrypt from "bcryptjs"
+import {PrefixStorage} from "../../constants"
 
-
-// Pomoćna funkcija za dohvaćanje podataka iz local storage-a
 function dohvatiSveIzStorage() {
     const podaci = localStorage.getItem(PrefixStorage.OPERATERI)
     return podaci ? JSON.parse(podaci) : []
 }
 
-// Pomoćna funkcija za spremanje podataka
 function spremiUStorage(podaci) {
     localStorage.setItem(PrefixStorage.OPERATERI, JSON.stringify(podaci))
 }
 
-// 1/4 Read - dohvati sve
 async function get() {
     const operateri = dohvatiSveIzStorage()
-    // Ne vraćamo lozinke u listi
     const operateriBezcLozinki = operateri.map(op => ({
         sifra: op.sifra,
         email: op.email,
         uloga: op.uloga
     }))
-    return { success: true, data: [...operateriBezcLozinki] }
+    return {success: true, data: [...operateriBezcLozinki]}
 }
 
-// Dohvati jedan po šifri
 async function getBySifra(sifra) {
     const operateri = dohvatiSveIzStorage()
     const operater = operateri.find(o => o.sifra === sifra)
     if (!operater) {
-        return { success: false, data: null }
+        return {success: false, data: null}
     }
-    // Ne vraćamo lozinku
     return {
         success: true, data: {
             sifra: operater.sifra,
@@ -42,36 +35,31 @@ async function getBySifra(sifra) {
     }
 }
 
-// 2/4 Create - dodaj novi
 async function dodaj(operater) {
     const operateri = dohvatiSveIzStorage()
 
     if (operateri.length === 0) {
-        operater.sifra = '1'
-        operater.uloga = 'admin'
+        operater.sifra = "1"
+        operater.uloga = "admin"
     } else {
-        // Pronalaženje najveće šifre da izbjegnemo duplikate
-        operater.sifra = String(parseInt(operateri[operateri.length - 1].sifra) + 1)
+        operater.sifra = String(Number.parseInt(operateri[operateri.length - 1].sifra) + 1)
     }
 
-    // Hashiraj lozinku prije spremanja
     operater.lozinka = bcrypt.hashSync(operater.lozinka, 10)
 
     operateri.push(operater)
     spremiUStorage(operateri)
-    return { success: true, data: { sifra: operater.sifra, email: operater.email } }
+    return {success: true, data: {sifra: operater.sifra, email: operater.email}}
 }
 
-// 3/4 Update - promjeni postojeći
 async function promjeni(sifra, operater) {
     const operateri = dohvatiSveIzStorage()
     const index = operateri.findIndex(o => o.sifra === sifra)
 
     if (index === -1) {
-        return { success: false, message: "Operater nije pronađen" }
+        return {success: false, message: "Operater nije pronađen"}
     }
 
-    // Ažuriraj email i ulogu, ne lozinku
     operateri[index] = {
         ...operateri[index],
         email: operater.email,
@@ -79,54 +67,51 @@ async function promjeni(sifra, operater) {
         sifra: sifra
     }
     spremiUStorage(operateri)
-    return { success: true, data: { sifra: operateri[index].sifra, email: operateri[index].email, uloga: operateri[index].uloga } }
+    return {
+        success: true,
+        data: {sifra: operateri[index].sifra, email: operateri[index].email, uloga: operateri[index].uloga}
+    }
 }
 
-// Posebna funkcija za promjenu lozinke
 async function promjeniLozinku(sifra, novaLozinka) {
     const operateri = dohvatiSveIzStorage()
     const index = operateri.findIndex(o => o.sifra === sifra)
 
     if (index === -1) {
-        return { success: false, message: "Operater nije pronađen" }
+        return {success: false, message: "Operater nije pronađen"}
     }
 
-    // Hashiraj novu lozinku
     operateri[index].lozinka = bcrypt.hashSync(novaLozinka, 10)
     spremiUStorage(operateri)
 
-    return { success: true, message: "Lozinka uspješno promijenjena" }
+    return {success: true, message: "Lozinka uspješno promijenjena"}
 }
 
-// 4/4 Delete - obriši
 async function obrisi(sifra) {
     let operateri = dohvatiSveIzStorage()
     const initialLength = operateri.length
     operateri = operateri.filter(o => o.sifra !== sifra)
 
     if (operateri.length === initialLength) {
-        return { success: false, message: "Operater nije pronađen" }
+        return {success: false, message: "Operater nije pronađen"}
     }
 
     spremiUStorage(operateri)
-    return { success: true, message: 'Operater obrisan' }
+    return {success: true, message: "Operater obrisan"}
 }
 
-// Funkcija za prijavu
 async function prijava(email, lozinka) {
     const operateri = dohvatiSveIzStorage()
     const operater = operateri.find(o => o.email === email)
     if (!operater) {
-        return { success: false, message: "Email i lozinka ne odgovaraju" } // iako bi ovdje mogli napisati i da email ne postoji ali to onda napadačima omogućuje da zna tko je a tko nije registriran
+        return {success: false, message: "Email i lozinka ne odgovaraju"}
     }
 
-    // Provjeri lozinku pomoću bcrypt
     const isMatch = bcrypt.compareSync(lozinka, operater.lozinka)
     if (!isMatch) {
-        return { success: false, message: "Email i lozinka ne odgovaraju" }
+        return {success: false, message: "Email i lozinka ne odgovaraju"}
     }
 
-    // Vrati operatera bez lozinke
     return {
         success: true,
         data: {
@@ -139,8 +124,8 @@ async function prijava(email, lozinka) {
 
 export default {
     get,
-    dodaj,
     getBySifra,
+    dodaj,
     promjeni,
     promjeniLozinku,
     obrisi,

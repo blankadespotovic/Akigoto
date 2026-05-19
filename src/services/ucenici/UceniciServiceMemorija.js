@@ -1,43 +1,50 @@
-import { DEFAULT_PAGE_SIZE } from "../../constants"
-import { ucenici } from "./UceniciPodaci"
-
+import {DEFAULT_PAGE_SIZE} from "../../constants"
+import {ucenici} from "./UceniciPodaci"
 
 async function get() {
-    return { success: true, data: [...ucenici] }
+    return {success: true, data: [...ucenici]}
 }
 
 async function getBySifra(sifra) {
-    return { success: true, data: ucenici.find(p => p.sifra === sifra) }
+    return {success: true, data: ucenici.find(p => p.sifra === sifra)}
 }
 
 async function getLastFewIds(brojUcenika) {
     const zadnjiUcenici = ucenici.slice(-brojUcenika)
     const zadnjiUceniciIds = zadnjiUcenici.map(u => Number.parseInt(u.sifra))
-    return { success: true, data: zadnjiUceniciIds }
+    return {success: true, data: zadnjiUceniciIds}
 }
 
 async function dodaj(ucenik) {
- if(ucenici.length === 0){
-    ucenik.sifra = '1'
- }else {
-    ucenik.sifra = ucenici.at(-1).sifra + 1
- }
+    if (ucenici.length === 0) {
+        ucenik.sifra = "1"
+    } else {
+        ucenik.sifra = ucenici.at(-1).sifra + 1
+    }
 
- if (!ucenik.uplate || ucenik.uplate.length < 1) {
-     ucenik.uplate = [];
- }
+    if (!ucenik.uplate || ucenik.uplate.length < 1) {
+        ucenik.uplate = [];
+    }
 
- ucenici.push(ucenik)
+    ucenici.push(ucenik)
 }
 
-async function promjeni(ucenik) {
+async function promjeni(ucenik, datum, iznos) {
     const index = ucenici.findIndex(u => u.sifra === ucenik.sifra)
+    if (index !== -1) {
+        const uplate = ucenik.uplate
+        const sljedecaSifra = Math.max(...uplate.map(uplata => Number.parseInt(uplata.sifra))) + 1;
+        if (iznos && datum) {
+            uplate.push({ sifra: sljedecaSifra, datum, iznos: Number.parseFloat(iznos) })
+        }
+        ucenik.uplate = uplate
+    }
     ucenici[index] = ucenik;
 }
 
-async function obrisi(sifra){
+async function obrisi(sifra) {
     const index = ucenici.findIndex(u => u.sifra === sifra)
-    ucenici.splice(index,1)
+    ucenici.splice(index, 1)
 }
 
 async function obrisiUplatu(ucenikSifra, sifra) {
@@ -51,20 +58,19 @@ async function obrisiUplatu(ucenikSifra, sifra) {
     ucenici[ucenikIndex] = ucenik;
 }
 
-async function getPage(page = 1, pageSize = DEFAULT_PAGE_SIZE, vrijednostPretrage){
+async function getPage(page = 1, pageSize = DEFAULT_PAGE_SIZE, vrijednostPretrage = "") {
+    let filteredUcenici = [...ucenici];
 
-     let filteredUcenici = [...ucenici];
-
-    if (vrijednostPretrage && vrijednostPretrage.trim() !== '') {
+    if (vrijednostPretrage && vrijednostPretrage.trim() !== "") {
         const lowerVrijednostPretrage = vrijednostPretrage.toLowerCase().trim();
         filteredUcenici = filteredUcenici.filter(ucenik => {
-            const ime = (ucenik.ime || '').toLowerCase();
-            const prezime = (ucenik.prezime || '').toLowerCase();
-            const email = (ucenik.email || '').toLowerCase();
-            
+            const ime = (ucenik.ime || "").toLowerCase();
+            const prezime = (ucenik.prezime || "").toLowerCase();
+            const email = (ucenik.email || "").toLowerCase();
+
             return ime.includes(lowerVrijednostPretrage) ||
-                   prezime.includes(lowerVrijednostPretrage) ||
-                   email.includes(lowerVrijednostPretrage);
+                prezime.includes(lowerVrijednostPretrage) ||
+                email.includes(lowerVrijednostPretrage);
         });
     }
 
@@ -75,7 +81,7 @@ async function getPage(page = 1, pageSize = DEFAULT_PAGE_SIZE, vrijednostPretrag
     const totalPages = Math.ceil(totalItems / pageSize);
 
 
- return {
+    return {
         success: true,
         data: paginatedData,
         currentPage: page,
@@ -85,12 +91,11 @@ async function getPage(page = 1, pageSize = DEFAULT_PAGE_SIZE, vrijednostPretrag
     };
 }
 
-
 export default {
     get,
-    dodaj,
     getBySifra,
     getLastFewIds,
+    dodaj,
     promjeni,
     obrisi,
     obrisiUplatu,

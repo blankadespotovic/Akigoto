@@ -3,7 +3,7 @@ import KategorijeServiceMemorija from "./KategorijeServiceMemorija.js";
 import { DATA_SOURCE } from "../../constants.js";
 import KategorijeServiceFireBase from "./KategorijeServiceFireBase.js";
 
-let Servis = null;
+let Servis;
 
 
 switch (DATA_SOURCE) {

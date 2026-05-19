@@ -1,5 +1,5 @@
-import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import {initializeApp} from "firebase/app";
+import {getFirestore} from "firebase/firestore";
 
 // https://console.firebase.google.com/project/edunovafd1/firestore/databases/-default-/security/rules
 
@@ -21,5 +21,4 @@ export default function getFirebaseDB() {
     const app = initializeApp(firebaseConfig);
 
     return getFirestore(app);
-
 }

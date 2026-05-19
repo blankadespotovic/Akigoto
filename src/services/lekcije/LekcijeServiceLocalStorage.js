@@ -1,5 +1,4 @@
-import { DEFAULT_PAGE_SIZE, PrefixStorage } from "../../constants";
-
+import {DEFAULT_PAGE_SIZE, PrefixStorage} from "../../constants";
 
 function dohvatiSveIzStorage() {
     const podaci = localStorage.getItem(PrefixStorage.LEKCIJE);
@@ -12,57 +11,52 @@ function spremiUStorage(podaci) {
 
 async function get() {
     const lekcije = dohvatiSveIzStorage();
-    return { success: true, data: [...lekcije] };
+    return {success: true, data: [...lekcije]};
 }
 
 async function getBySifra(sifra) {
     const lekcije = dohvatiSveIzStorage();
     const lekcija = lekcije.find(p => p.sifra === sifra);
-    return { success: true, data: lekcija }
+    return {success: true, data: lekcija}
 }
 
 async function dodaj(lekcija) {
     let lekcije = dohvatiSveIzStorage();
 
     if (lekcije.length === 0) {
-        lekcija.sifra = '1'
+        lekcija.sifra = "1"
     } else {
-        lekcija.sifra = String(parseInt(lekcije[lekcije.length - 1].sifra) + 1)
+        lekcija.sifra = String(Number.parseInt(lekcije.at(-1).sifra) + 1)
     }
 
     lekcije.push(lekcija)
     spremiUStorage(lekcije);
-    return { data: lekcija };
+    return {data: lekcija};
 
 }
 
 async function promjeni(lekcija) {
-
     const lekcije = dohvatiSveIzStorage()
     const index = lekcije.findIndex(u => u.sifra === lekcija.sifra)
 
-
     if (index !== -1) {
-    
-    lekcije[index] = lekcija
-        
+        lekcije[index] = lekcija
         spremiUStorage(lekcije)
     }
-    return { data: lekcija }
+    return {data: lekcija}
 }
-
 
 async function obrisi(sifra) {
     let lekcije = dohvatiSveIzStorage();
     lekcije = lekcije.filter(u => u.sifra !== sifra)
     spremiUStorage(lekcije);
-    return { message: "Obrisano" };
+    return {message: "Obrisano"};
 }
 
 async function getPage(page = 1, pageSize = DEFAULT_PAGE_SIZE) {
     const lekcije = dohvatiSveIzStorage();
-    const startIndex = (page - 1) * pageSize; 
-    const endIndex = startIndex + pageSize; 
+    const startIndex = (page - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
     const paginatedData = lekcije.slice(startIndex, endIndex);
     const totalItems = lekcije.length;
     const totalPages = Math.ceil(totalItems / pageSize);
@@ -78,10 +72,9 @@ async function getPage(page = 1, pageSize = DEFAULT_PAGE_SIZE) {
 }
 
 export default {
-    dohvatiSveIzStorage,
     get,
-    dodaj,
     getBySifra,
+    dodaj,
     promjeni,
     obrisi,
     getPage

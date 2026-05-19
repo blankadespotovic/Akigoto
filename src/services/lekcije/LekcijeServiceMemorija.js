@@ -1,22 +1,22 @@
-import { lekcije } from "./LekcijePodaci"
-
+import {lekcije} from "./LekcijePodaci"
+import {DEFAULT_PAGE_SIZE} from "../../constants.js";
 
 async function get() {
-    return { success: true, data: [...lekcije] }
+    return {success: true, data: [...lekcije]}
 }
 
 async function getBySifra(sifra) {
-    return { success: true, data: lekcije.find(p => p.sifra === sifra) }
+    return {success: true, data: lekcije.find(p => p.sifra === sifra)}
 }
 
 async function dodaj(lekcija) {
- if(lekcije.length === 0){
-    lekcija.sifra = '1'
- }else {
-    lekcija.sifra = String(parseInt(lekcije[lekcije.length - 1].sifra) + 1)
- }
+    if (lekcije.length === 0) {
+        lekcija.sifra = "1"
+    } else {
+        lekcija.sifra = String(Number.parseInt(lekcije.at(-1).sifra) + 1)
+    }
 
- lekcije.push(lekcija)
+    lekcije.push(lekcija)
 }
 
 async function promjeni(lekcija) {
@@ -24,14 +24,14 @@ async function promjeni(lekcija) {
     lekcije[index] = lekcija;
 }
 
-async function obrisi(sifra){
+async function obrisi(sifra) {
     const index = lekcije.findIndex(l => l.sifra === sifra)
-    lekcije.splice(index,1)
+    lekcije.splice(index, 1)
 }
 
 async function getPage(page = 1, pageSize = DEFAULT_PAGE_SIZE) {
-    const startIndex = (page - 1) * pageSize; 
-    const endIndex = startIndex + pageSize; 
+    const startIndex = (page - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
     const paginatedData = lekcije.slice(startIndex, endIndex);
     const totalItems = lekcije.length;
     const totalPages = Math.ceil(totalItems / pageSize);
@@ -46,11 +46,10 @@ async function getPage(page = 1, pageSize = DEFAULT_PAGE_SIZE) {
     };
 }
 
-
 export default {
     get,
-    dodaj,
     getBySifra,
+    dodaj,
     promjeni,
     obrisi,
     getPage
