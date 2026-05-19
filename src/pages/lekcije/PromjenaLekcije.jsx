@@ -49,7 +49,7 @@ export default function PromjenaLekcije() {
                 return
             }
             const filtriraniUcenici = odgovor.data.map(
-                uc => ({ value: parseInt(uc.sifra), label: `${uc.ime} ${uc.prezime}` })
+                uc => ({ value: uc.sifra, label: `${uc.ime} ${uc.prezime}` })
             )
             setUcenici(filtriraniUcenici)
         })
