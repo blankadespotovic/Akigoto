@@ -40,7 +40,7 @@ function App() {
             <Container className="d-flex flex-column min-vh-100">
                 <Izbornik/>
 
-                {isLoggedIn && <DataSourcePicker />}
+                {isLoggedIn && authUser?.uloga === "admin" && <DataSourcePicker />}
 
                 <Routes>
                     <Route path={RouteNames.HOME} element={<Home/>}/>

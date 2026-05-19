@@ -22,8 +22,17 @@ async function dodaj(ucenik) {
  ucenici.push(ucenik)
 }
 
-async function promjeni(ucenik) {
+async function promjeni(ucenik, datum, iznos) {
     const index = ucenici.findIndex(u => u.sifra === ucenik.sifra)
+    if (index !== -1) {
+        const uplate = ucenik.uplate
+        const sljedecaSifra = Math.max(...uplate.map(uplata => parseInt(uplata.sifra))) + 1;
+        if (iznos && datum) {
+            uplate.push({ sifra: sljedecaSifra, datum, iznos: Number.parseFloat(iznos) })
+        }
+        ucenik.uplate = uplate
+        
+    }
     ucenici[index] = ucenik;
 }
 
