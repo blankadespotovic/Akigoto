@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
-import {RouteNames} from "../../constants.js";
+import {DATA_SOURCE, DATA_SOURCES, RouteNames} from "../../constants.js";
 import UceniciService from "../../services/ucenici/UceniciService.js";
 import {PregledUcenikaTablica} from "./PregledUcenikaTablica.jsx";
 import useBreakpoint from "../../hooks/useBreakpoint.js";
@@ -28,7 +28,8 @@ export default function PregledUcenika() {
     const [vrijednostPretrage, setVrijednostPretrage] = useState("")
 
     async function ucitajUcenike(selectedPage, selectedPageSize, vrijednostPretrage) {
-        showLoading();
+        if(DATA_SOURCE !== DATA_SOURCES.F)
+            showLoading();
         await UceniciService.getPage(selectedPage, selectedPageSize, vrijednostPretrage).then((odgovor) => {
             if (!odgovor.success) {
                 alert("Nije implementiran servis")
@@ -37,7 +38,8 @@ export default function PregledUcenika() {
             setUcenici(odgovor.data)
             setTotalPages(odgovor.totalPages)
             setTotalItems(odgovor.totalItems)
-            hideLoading()
+            if(DATA_SOURCE !== DATA_SOURCES.F)
+                hideLoading()
         })
     }
 
@@ -125,7 +127,7 @@ export default function PregledUcenika() {
                   className="btn btnAdd w-100 my-3">
                 Dodavanje novog učenika
             </Link>
-            {ucenici.length > 0 && <InputGroup>
+            <InputGroup>
                 <Form.Control
                     type={"text"}
                     value={vrijednostPretrage}
@@ -140,7 +142,7 @@ export default function PregledUcenika() {
                         <FaTimes onClick={handleClear}/>
                     )}
                 </InputGroup.Text>
-            </InputGroup>}
+            </InputGroup>
             {ucenici.length > 0 && ["xs", "sm", "md"].includes(sirina) ? (
                 <PregledUcenikaGrid
                     ucenici={ucenici}
